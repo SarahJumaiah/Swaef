@@ -86,7 +86,6 @@ const Home = () => {
           وتقليل المخاطر الصحية.
         </p>
       </section>
-
       {/* لماذا سواعف */}
       <section
         ref={whySwa3efRef}
@@ -185,7 +184,6 @@ const Home = () => {
             لخدمتك على مدار الساعة.
           </p>
         </div>
-
         <div className="mt-4 md:mt-0 md:w-1/2 text-left">
           <br />
           <p className="text-gray-600 mb-2">الهاتف: +966 123456789</p>
