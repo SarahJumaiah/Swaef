@@ -70,7 +70,7 @@ const Home = () => {
   className="about my-24 opacity-0 transition-opacity duration-700 w-[90%] md:w-[70%] mx-auto"
 >
   <h2 className="text-right text-4xl text-[#E11936] font-bold mb-6 mt-14">
-    من نحن؟
+    من نحن
   </h2>
 
   <div className="  rounded-lg shadow-md p-8">
@@ -112,8 +112,8 @@ const Home = () => {
   className="whyswa3ef p-8 w-[80%] mx-auto my-24 opacity-0 transition-opacity duration-700"
 >
   <h2 className="text-[#E11936] text-4xl font-bold mb-10 text-right">
-    لماذا سواعف؟
-  </h2>
+   لماذا سواعف
+  </h2> <br />
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
     <div className="bg-white p-8 rounded-xl shadow-lg transform transition-transform hover:scale-105 hover:shadow-2xl relative flex flex-col items-center">
       <div className="bg-gradient-to-r from-[#E11936] to-[#FF6B6B] p-4 rounded-full shadow-lg absolute -top-10 left-1/2 transform -translate-x-1/2">
