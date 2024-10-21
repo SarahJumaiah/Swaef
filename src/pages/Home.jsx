@@ -9,8 +9,6 @@ const Home = () => {
   const joinRef = useRef(null);
   const contactRef = useRef(null);
 
-
-
   useEffect(() => {
     const observerOptions = {
       threshold: 0.3,
@@ -41,26 +39,21 @@ const Home = () => {
 
   return (
     <div>
-<header
-  className="relative h-screen p-8 text-center bg-white text-gray-800 shadow-lg flex flex-col justify-center items-center overflow-hidden"
+      <header className="relative h-screen p-8 text-center bg-white text-gray-800 shadow-lg flex flex-col justify-center items-center overflow-hidden">
+        <div className="relative z-10 mx-auto">
+          <h1 className="text-4xl font-extrabold mb-8 leading-tight drop-shadow-lg headertxt">
+            هل انت في حالة
+            <span className="text-red-600 mx-2 font-black">طوارئ</span>؟
+            <br />
+            اضغط هنا لطلب أقرب مسعف إليك!
+          </h1>
 
->
-  <div className="relative z-10 mx-auto">
-    <h1 className="text-4xl font-extrabold mb-8 leading-tight drop-shadow-lg headertxt">
-      هل انت في حالة
-      <span className="text-red-600 mx-2 font-black">طوارئ</span>؟
-      <br />
-      اضغط هنا لطلب أقرب مسعف إليك!
-    </h1>
-
-    <button className="relative text-3xl mx-auto bg-red-600 text-white font-bold w-44 h-44 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-2xl focus:outline-none wave-button">
-      نداء استغاثه
-      <span className="absolute inset-0 bg-transparent rounded-full pointer-events-none wave-effect mx-auto"></span>
-    </button>
-  </div>
-</header>
-
-
+          <button className="relative text-3xl mx-auto bg-red-600 text-white font-bold w-44 h-44 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-2xl focus:outline-none wave-button">
+            نداء استغاثه
+            <span className="absolute inset-0 bg-transparent rounded-full pointer-events-none wave-effect mx-auto"></span>
+          </button>
+        </div>
+      </header>
 
       <Navbar />
 
