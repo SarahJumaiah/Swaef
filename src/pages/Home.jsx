@@ -40,15 +40,7 @@ const Home = () => {
 
   return (
     <div>
-      <header className="h-[80vh] relative h-screen p-8 text-center bg-white text-gray-800 shadow-lg flex flex-col justify-center items-center overflow-hidden header">
-        <div className="absolute top-0 left-0 right-0 flex justify-between items-center p-4 w-full">
-          <div className="flex items-center">
-            <img src={logo} alt="Logo" className="w-10 h-10 mr-2" />
-            <span className="text-xl text-black">سواعف</span>
-          </div>
-        </div>
-
-        <div className="relative z-10 mx-auto">
+      <header className="h-[79vh] relative h-screen p-8 text-center bg-white text-gray-800 shadow-lg flex flex-col justify-center items-center overflow-hidden header">        <div className="relative z-10 mx-auto">
           <h1 className="text-4xl mb-16 leading-tight drop-shadow-lg headertxt">
             هل انت في حالة
             <span className="text-red-600 mx-2 font-extrabold">طوارئ</span>
