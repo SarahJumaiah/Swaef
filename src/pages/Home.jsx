@@ -40,10 +40,10 @@ const Home = () => {
 
   return (
     <div>
-      <header className="h-[79vh] relative h-screen p-8 text-center bg-white text-gray-800 shadow-lg flex flex-col justify-center items-center overflow-hidden header">        <div className="relative z-10 mx-auto">
+      <header className="h-[79vh] relative p-8 text-center bg-white text-gray-800 shadow-lg flex flex-col justify-center items-center overflow-hidden header">        <div className="relative z-10 mx-auto">
           <h1 className="text-4xl mb-16 leading-tight drop-shadow-lg headertxt">
             هل انت في حالة
-            <span className="text-red-600 mx-2 font-extrabold">طوارئ</span>
+            <span className="text-red-600 mx-2 font-extrabold">طوارئ</span>؟
             <br />
           </h1>
 
