@@ -3,11 +3,11 @@
 @tailwind components;
 
 @tailwind utilities;
-
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap');
 
 body {
   @apply bg-gray-100 text-gray-900;
-  font-family: 'Times New Roman', Times, serif;
+ font-family: "Tajawal", serif;
 }
 
 @keyframes slideIn {
@@ -52,7 +52,7 @@ body {
     opacity: 1;
   }
   70% {
-    transform: translate(-50%, -50%) scale(4);
+    transform: translate(-50%, -50%) scale(2);
     opacity: 0;
   }
   100% {
@@ -60,6 +60,8 @@ body {
     opacity: 0;
   }
 }
+
+
 
 /* nav */
 .initial-navbar {
@@ -69,7 +71,7 @@ body {
   height: 200px;
   position: relative;
   top: 0;
-  border: 3px solid rgb(241, 221, 221);
+  /* border: 3px solid rgb(241, 221, 221); */
 }
 
 .sticky-navbar {
@@ -90,8 +92,15 @@ ul li {
   border-bottom: 2px solid red;
 }
 
+.header{
+  /* background: linear-gradient(to right, #ff5f5f, #e09c9c); */
+  
+}
+
 .headertxt{
-  color:rgb(101, 0, 0);
+  color:rgb(0, 0, 0);
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-weight: bold;
 }
 
 @media (max-width: 768px) {

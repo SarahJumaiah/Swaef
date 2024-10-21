@@ -37,7 +37,7 @@ const Navbar = () => {
       >
         {!isSticky && (
           <div className="flex items-center justify-between w-full px-40 flex-col lg:flex-row">
-            <ul className="flex flex-row space-x-2 lg:space-x-8 text-center text-black mb-4 lg:mb-0">
+            <ul className="flex flex-row space-x-2 lg:space-x-8 text-center text-black mb-4 lg:mb-0 mr-12">
               <li>
                 <Link
                   to="/"
@@ -64,8 +64,8 @@ const Navbar = () => {
                 alt="Logo"
                 className={`${
                   isSticky
-                    ? "h-8 w-8"
-                    : "h-24 w-40 md:h-24 md:w-24 lg:h-32 lg:w-32 lg:mt-10"
+                    ? "h-8 w-8 "
+                    : "h-24 w-40 md:h-24 md:w-24 lg:h-32 lg:w-32 lg:mt-10 "
                 } transition-all duration-500 transform ${
                   isSticky ? "" : "rotate-[360deg]"
                 }`}
@@ -87,7 +87,7 @@ const Navbar = () => {
                   to="/join"
                   className="hidden lg:flex hover:text-red-500 font-bold border-b-2 border-red-500"
                 >
-                  الانضمام كمسعف
+                  انضم كمسعف
                 </Link>
               </li>
             </ul>
