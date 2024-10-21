@@ -64,7 +64,7 @@ const Navbar = () => {
                 alt="Logo"
                 className={`${
                   isSticky
-                    ? "h-8 w-8"
+                    ? "h-8 w-8 "
                     : "h-24 w-40 md:h-24 md:w-24 lg:h-32 lg:w-32 lg:mt-10"
                 } transition-all duration-500 transform ${
                   isSticky ? "" : "rotate-[360deg]"
