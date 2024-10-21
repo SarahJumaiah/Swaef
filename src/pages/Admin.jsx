@@ -297,10 +297,10 @@ const Admin = () => {
       </button>
 
       <aside
-        className={`fixed top-0 right-0 h-full w-1/2 bg-[rgb(108,17,17)] text-white p-6 transform ${
-          isSidebarOpen ? "translate-x-0" : "translate-x-full"
-        } transition-transform lg:relative lg:translate-x-0 w-full lg:w-1/4 z-50`}
-      >
+  className={`fixed top-0 right-0 h-screen w-1/2 bg-[rgb(108,17,17)] text-white p-6 transform ${
+    isSidebarOpen ? "translate-x-0" : "translate-x-full"
+  } transition-transform lg:relative lg:translate-x-0 lg:w-1/4 z-50`}
+>
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold">المشرف</h2>
         </div>
