@@ -53,7 +53,7 @@ const MedicMap = () => {
     fetchCase();
 
     // إعادة البحث عن حالات جديدة كل 10 ثوانٍ
-    const intervalId = setInterval(fetchCase, 10000);
+    const intervalId = setInterval(fetchCase, 60000);
 
     return () => {
       socket.off('locationUpdate');
