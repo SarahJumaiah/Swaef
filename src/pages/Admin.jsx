@@ -171,7 +171,7 @@ const Admin = () => {
   );
 
   const renderParamedicsList = () => (
-    <section className="bg-gray-100 p-6 lg:p-10">
+    <section className="bg-gray-100 p-6 lg:p-10 h-[50vh]">
       <h2 className="text-2xl font-semibold text-[#ab1c1c] mb-4">
         طلبات المسعفين
       </h2>
@@ -334,7 +334,7 @@ const Admin = () => {
         </nav>
       </aside>
 
-      <main className="w-full lg:w-3/4 p-4 sm:p-10">{renderContent()}</main>
+<main className="w-full lg:w-3/4 p-4 sm:p-10 h-screen">{renderContent()}</main>
     </div>
   );
 };
