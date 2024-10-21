@@ -84,7 +84,7 @@ const Navbar = () => {
               </li>
               <li>
                 <Link
-                  to="/join"
+                  to="/sign"
                   className="hidden lg:flex hover:text-red-500 font-bold border-b-2 border-red-500"
                 >
                   انضم كمسعف
@@ -137,7 +137,7 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/join" className="hover:text-red-500 font-bold">
+                <Link to="/sign" className="hover:text-red-500 font-bold">
                   الانضمام كمسعف
                 </Link>
               </li>
@@ -172,7 +172,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <Link to="/join" className="hover:text-red-500 font-bold">
+              <Link to="/sign" className="hover:text-red-500 font-bold">
                 الانضمام كمسعف
               </Link>
             </li>
