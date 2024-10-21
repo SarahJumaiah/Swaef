@@ -1,82 +1,189 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
+import { FiMenu, FiX } from "react-icons/fi"; 
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isSticky, setIsSticky] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      setIsSticky(scrollPosition > 600); 
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const closeMenu = () => {
-    setIsOpen(false); 
+    setMenuOpen(!menuOpen);
   };
 
   return (
-    <nav className="bg-white bg-opacity-10 backdrop-blur-lg w-full md:w-[97%] md:mr-5 md:ml-5 rounded-b-xl p-4 flex items-center fixed top-0 z-50">
-      <div className="flex items-center justify-between w-full">
-        <div className="flex items-center">
-          <img src={logo} alt="Logo" className="h-12 mr-4" />
-          <span className="text-xl text-white mr-2 font-semibold">سواعف</span>
-        </div>
+    <nav
+      className={`${
+        isSticky ? "sticky-navbar" : "initial-navbar"
+      } transition-all duration-500 ease-in-out w-full z-50 `}
+    >
+      <div
+        className={`flex items-center justify-between w-full px-8 ${
+          isSticky ? "" : "flex-col"
+        }`}
+      >
+        {!isSticky && (
+          <div className="flex items-center justify-between w-full px-40 flex-col lg:flex-row">
+            <ul className="flex flex-row space-x-2 lg:space-x-8 text-center text-black mb-4 lg:mb-0 mr-12">
+              <li>
+                <Link
+                  to="/"
+                  className="hidden lg:flex  hover:text-red-500 font-bold border-b-2 border-red-500 "
+                  style={{ position: "relative", top: "-14px" }}
+                >
+                  الرئيسية
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/about"
+                  className="hidden lg:flex hover:text-red-500 font-bold border-b-2 border-red-500"
+                  style={{ position: "relative", top: "4px", right: "30px" }}
+                >
+                  من نحن
+                </Link>
+              </li>
+            </ul>
 
-        <button
-          className="text-white md:hidden focus:outline-none"
-          onClick={toggleMenu}
-        >
-          <i className={`fas ${isOpen ? "fa-times" : "fa-bars"} text-3xl`}></i>
-        </button>
+            <div className="logo-container flex justify-center mb-4 lg:mb-0">
+              <img
+                src={logo}
+                alt="Logo"
+                className={`${
+                  isSticky
+                    ? "h-8 w-8 "
+                    : "h-24 w-40 md:h-24 md:w-24 lg:h-32 lg:w-32 lg:mt-10 "
+                } transition-all duration-500 transform ${
+                  isSticky ? "" : "rotate-[360deg]"
+                }`}
+              />
+            </div>
 
-        <ul
-          className={` md:flex md:space-x-4 items-center text-right list-none mx-auto space-y-4 md:space-y-0 md:static absolute left-0 w-full md:w-auto bg-[#02525] md:bg-transparent bg-opacity-90 md:translate-x-0 transform ${
-            isOpen ? "translate-x-0" : "-translate-x-full"
-          } transition-transform duration-300 ease-in-out md:flex-row p-4 md:p-0`}
-        >
-          <li className="ml-4">
-            <Link
-              to="/"
-              className="text-white  hover:text-[#0a7d77] font-bold"
-              onClick={closeMenu} 
-            >
-              الرئيسية
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/about"
-              className="text-white  hover:text-[#0a7d77] font-bold"
-              onClick={closeMenu} 
-            >
-              من نحن
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/contact"
-              className="text-white  hover:text-[#0a7d77] font-bold"
-              onClick={closeMenu}
-            >
-              تواصل معنا
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/join"
-              className="text-white  hover:text-[#0a7d77] font-bold"
-              onClick={closeMenu} 
-            >
-              الانضمام كمسعف
-            </Link>
-          </li>
-        </ul>
+            <ul className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-8 text-center text-black">
+              <li>
+                <Link
+                  to="/contact"
+                  className="hidden lg:flex hover:text-red-500 font-bold border-b-2 border-red-500"
+                  style={{ position: "relative", top: "4px", left: "30px" }}
+                >
+                  تواصل معنا
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/join"
+                  className="hidden lg:flex hover:text-red-500 font-bold border-b-2 border-red-500"
+                >
+                  انضم كمسعف
+                </Link>
+              </li>
+            </ul>
+          </div>
+        )}
 
-        <div className="hidden md:block">
-          <button className="bg-[#0a7d77] text-white font-semibold py-2 px-4 rounded-lg">
-            تسجيل الدخول
-          </button>
-        </div>
+        {/* mobile nav */}
+        {isSticky && (
+          <div className="flex items-center justify-between w-full px-8">
+            <div className="flex items-center">
+              <img
+                src={logo}
+                alt="Logo"
+                className={`h-8 w-8 transition-all duration-500`}
+              />
+              <span className="text-lg transition-all duration-500 text-black font-semibold ml-4">
+                سواعف
+              </span>
+            </div>
+
+            {/* Burger Menu */}
+            <div className="md:hidden flex items-center pt-5">
+              <button
+                onClick={toggleMenu}
+                className="text-3xl text-black focus:outline-none mt-1"
+                style={{ position: "relative", top: "-10px" }}
+              >
+                {menuOpen ? <FiX /> : <FiMenu />}{" "}
+              </button>
+            </div>
+
+            {/* Nav links for large  */}
+            <ul className="hidden md:flex space-x-8 text-center text-black">
+              <li>
+                <Link to="/" className="hover:text-red-500 font-bold ml-7">
+                  الرئيسية
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" className="hover:text-red-500 font-bold">
+                  من نحن
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="hover:text-red-500 font-bold">
+                  تواصل معنا
+                </Link>
+              </li>
+              <li>
+                <Link to="/join" className="hover:text-red-500 font-bold">
+                  الانضمام كمسعف
+                </Link>
+              </li>
+            </ul>
+
+            <div className="hidden md:block">
+              <button className="py-1 px-2 text-sm bg-red-700 text-white font-semibold rounded-full transition-all duration-300 shadow-md">
+                تسجيل الدخول
+              </button>
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <div className="md:hidden absolute top-16 left-0 w-full bg-white shadow-lg">
+          <ul className="flex flex-col items-center space-y-4 py-4 text-black">
+            <li>
+              <Link to="/" className="hover:text-red-500 font-bold">
+                الرئيسية
+              </Link>
+            </li>
+            <li>
+              <Link to="/about" className="hover:text-red-500 font-bold">
+                من نحن
+              </Link>
+            </li>
+            <li>
+              <Link to="/contact" className="hover:text-red-500 font-bold">
+                تواصل معنا
+              </Link>
+            </li>
+            <li>
+              <Link to="/join" className="hover:text-red-500 font-bold">
+                الانضمام كمسعف
+              </Link>
+            </li>
+            <li>
+              <button className="py-1 px-2 text-sm bg-red-700 text-white font-semibold rounded-full transition-all duration-300 shadow-md">
+                تسجيل الدخول
+              </button>
+            </li>
+          </ul>
+        </div>
+      )}
     </nav>
   );
 };
