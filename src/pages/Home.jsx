@@ -9,6 +9,31 @@ const Home = () => {
   const whySwa3efRef = useRef(null);
   const joinRef = useRef(null);
   const contactRef = useRef(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    status: '',
+  });
+  const statuses = ['كسور', 'حروق', 'اغماء', 'اختناق'];
+
+  const handleStatusChange = (status) => {
+    setFormData((prevData) => ({ ...prevData, status }));
+  };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+  const handleSend = () => {
+    // Handle sending the data here (e.g., API call)
+    console.log(formData);
+    
+    // Optionally, reset the fields after sending
+    setFormData({ name: '', phone: '', status: '' });
+    
+    // Optionally, navigate to another modal or section here
+  };
 
   useEffect(() => {
     const observerOptions = {
@@ -40,19 +65,86 @@ const Home = () => {
 
   return (
     <div>
-      <header className="h-[79vh] relative h-screen p-8 text-center bg-white text-gray-800 shadow-lg flex flex-col justify-center items-center overflow-hidden header">        <div className="relative z-10 mx-auto">
-          <h1 className="text-4xl mb-16 leading-tight drop-shadow-lg headertxt">
-            هل انت في حالة
-            <span className="text-red-600 mx-2 font-extrabold">طوارئ</span>
-            <br />
-          </h1>
+    <header className="h-[79vh] relative p-8 text-center bg-white text-gray-800 shadow-lg flex flex-col justify-center items-center overflow-hidden header">
+      <div className="relative z-10 mx-auto">
+        <h1 className="text-4xl mb-16 leading-tight drop-shadow-lg headertxt">
+          هل انت في حالة
+          <span className="text-red-600 mx-2 font-extrabold">طوارئ؟</span>
+          <br />
+        </h1>
 
-          <button className="relative text-3xl mx-auto bg-red-600 text-white font-bold w-44 h-44 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-2xl focus:outline-none wave-button">
-            نداء استغاثه
-            <span className="absolute inset-0 bg-transparent rounded-full pointer-events-none wave-effect mx-auto"></span>
-          </button>
-        </div>
-      </header>
+        <button
+          onClick={() => setIsModalOpen(!isModalOpen)}
+          className="relative text-3xl mx-auto bg-red-600 text-white font-bold w-44 h-44 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-2xl focus:outline-none wave-button"
+        >
+          نداء استغاثه
+          <span className="absolute inset-0 bg-transparent rounded-full pointer-events-none wave-effect mx-auto"></span>
+        </button>
+
+        {isModalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white p-6 rounded-lg max-w-md w-full relative">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-2 left-2 text-xl mb-4 text-gray-600 hover:text-red-600 focus:outline-none">
+                ✖</button>
+
+<div className="mb-4 flex items-center border-b-2 border-b-[#ab1c1c]">
+
+  <input
+    type="text"
+    name="name"
+    value={formData.name}
+    onChange={handleInputChange}
+    className=" p-2 w-full bg-transparent focus:outline-none focus:border-b-blue-600"
+    placeholder=" أدخل اسمك" />
+    <span className="text-[#ab1c1c]">*</span>
+</div>
+
+<div className="mb-4 flex items-center border-b-2 border-b-[#ab1c1c]">
+
+  <input
+    type="text"
+    name="name"
+    value={formData.phone}
+    onChange={handleInputChange}
+    className=" p-2 w-full bg-transparent focus:outline-none focus:border-b-blue-600"
+    placeholder="أدخل رقم هاتفك" />
+    <span className="text-[#ab1c1c]">*</span>
+</div>
+
+
+<div className="mb-4">
+  <p className="block mb-1 text-right text-gray-500">اختر الحالة</p>
+  <div className="flex flex-wrap gap-2">
+    {statuses.map((statusOption) => (
+      <button
+        key={statusOption}
+        onClick={() => handleStatusChange(statusOption)}
+        className={`flex-1 p-2 border rounded transition duration-300 ease-in-out ${
+          formData.status === statusOption
+            ? 'bg-[#ab1c1c] text-white' 
+            : 'border-[#ab1c1c]" text-[#ab1c1c] hover:bg-[#ab1c1c] hover:text-white' 
+        }`}
+      >
+        {statusOption}
+      </button>
+    ))}
+  </div>
+</div>
+
+
+              <button
+                onClick={handleSend}
+                className="bg-[#ab1c1c] text-white px-4 py-2 rounded"
+              >
+                إرسال
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </header>
 
       <Navbar />
 
