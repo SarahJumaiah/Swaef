@@ -28,7 +28,7 @@ const Navbar = ({ scrollToSection }) => {
     <nav
       className={`${
         isSticky ? "sticky-navbar" : "initial-navbar"
-      } transition-all duration-500 ease-in-out w-full z-50`}
+      } transition-all duration-500 ease-in-out w-full z-1`}
     >
       <div
         className={`flex items-center justify-between w-full px-8 ${
@@ -140,9 +140,9 @@ const Navbar = ({ scrollToSection }) => {
             </ul>
 
             <div className="hidden md:block">
-              <button className="py-1 px-2 text-sm bg-red-700 text-white font-semibold rounded-full transition-all duration-300 shadow-md">
+              <Link to="/login" className="py-1 px-2 text-sm bg-red-700 text-white font-semibold rounded-full transition-all duration-300 shadow-md">
                 تسجيل الدخول
-              </button>
+              </Link>
             </div>
           </div>
         )}
@@ -177,9 +177,9 @@ const Navbar = ({ scrollToSection }) => {
               الانضمام كمسعف
             </li>
             <li>
-              <button className="py-1 px-2 text-sm bg-red-700 text-white font-semibold rounded-full transition-all duration-300 shadow-md">
+              <Link to='/login' className="py-1 px-2 text-sm bg-red-700 text-white font-semibold rounded-full transition-all duration-300 shadow-md">
                 تسجيل الدخول
-              </button>
+              </Link>
             </li>
           </ul>
         </div>

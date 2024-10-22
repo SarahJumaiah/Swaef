@@ -1,8 +1,13 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import logo from "../assets/logo.png";
-import { useEffect, useRef , useState} from "react";
+import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
+import Swal from 'sweetalert2';
+
 
 const Home = () => {
   const homeRef = useRef(null);
@@ -10,76 +15,222 @@ const Home = () => {
   const whySwa3efRef = useRef(null);
   const joinRef = useRef(null);
   const contactRef = useRef(null);
+
+
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isOrderSent, setIsOrderSent] = useState(false)
-  const [isSolved, setIsSolved] = useState(false); 
-const [rating, setRating] = useState(null);
-
+  const [isOrderSent, setIsOrderSent] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    status: '',
+    name: "",
+    phone: "",
+    status: "",
   });
-  const statuses = ['كسور', 'حروق', 'اغماء', 'اختناق'];
+  const [responderInfo, setResponderInfo] = useState(null);
+  const [isAccepted, setIsAccepted] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [rating, setRating] = useState(null);
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false); // لإظهار حالة التحميل عند الإرسال
+  const [timer, setTimer] = useState(180); // مؤقت العد التنازلي (3 دقائق)
+  const [isCancelled, setIsCancelled] = useState(false); // حالة إلغاء الطلب
+  const [caseId, setCaseId] = useState(null); // لتخزين معرف الحالة
 
+  const statuses = ["كسور", "حروق", "اغماء", "اختناق"];
+
+  // تغيير الحالة
   const handleStatusChange = (status) => {
     setFormData((prevData) => ({ ...prevData, status }));
   };
 
+  // عند تغيير البيانات المدخلة
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const [errors, setErrors] = useState({
-    name: false,
-    phone: false,
-    status: false,
-  });
-  
-  const handleSend = () => {
+  // دالة لبدء العد التنازلي
+  useEffect(() => {
+    let countdown;
+    if (isOrderSent && !isAccepted && !isCancelled) {
+      countdown = setInterval(() => {
+        setTimer((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(countdown);
+            setIsCancelled(true); // إلغاء الطلب
+            updateCaseStatusToCancelled(); // تحديث الحالة إلى "ملغي"
+          }
+          return prevTime - 1;
+        });
+      }, 1000); // عد تنازلي كل ثانية
+    }
+    return () => clearInterval(countdown);
+  }, [isOrderSent, isAccepted, isCancelled]);
+
+  // تحديث الحالة إلى "ملغي" عند انتهاء الوقت
+  const updateCaseStatusToCancelled = async () => {
+    if (caseId) {
+      try {
+        await axios.put(
+          `https://67073bf9a0e04071d2298046.mockapi.io/users/${caseId}`,
+          {
+            status: "ملغي",
+          }
+        );
+      } catch (error) {
+        console.error("Error updating case status to cancelled:", error);
+      }
+    }
+  };
+
+  // عند إرسال الطلب
+  const handleSend = async () => {
     const newErrors = {
       name: !formData.name,
       phone: !formData.phone,
       status: !formData.status,
     };
-  
-    setErrors(newErrors);
-  
+
     if (newErrors.name || newErrors.phone || newErrors.status) {
-      return;
+      Swal.fire({
+        icon: 'error',
+        title: 'خطأ',
+        text: 'يرجى ملء جميع الحقول المطلوبة.',
+        confirmButtonText: 'حسنًا',
+        confirmButtonColor: '#ab1c1c'
+      });
+      return; // توقف في حال وجود أخطاء
     }
 
-    setFormData({ name: '', phone: '', status: '' });
-    setErrors({ name: false, phone: false, status: false });
-    setIsOrderSent(true);
-  };
+    setLoading(true); // إظهار حالة التحميل أثناء الإرسال
 
-  const handleRating = (rate) => {
-    setRating(rate);
-  };
+    try {
+      // إرسال بيانات الحالة إلى الخادم
+      const caseData = {
+        case_id: uuidv4(),
+        case_type: formData.status,
+        location: null, // لم يتم تحديد الموقع بعد
+        assigned_responder: null,
+        status: "الحالة معلقة حتى يتم قبولها",
+        patient: {
+          name: formData.name,
+          phone: formData.phone,
+        },
+        is_accepted: false,
+      };
 
-  
+      const postResponse = await axios.post(
+        "https://67073bf9a0e04071d2298046.mockapi.io/users",
+        caseData
+      );
+      setIsOrderSent(true);
+      setTimer(180); // إعادة ضبط المؤقت إلى 3 دقائق
+      setCaseId(caseData.case_id); // تخزين معرف الحالة للاستخدام لاحقًا
 
-  useEffect(() => {
-    if (isOrderSent) {
-      const solveTimeout = setTimeout(() => {
-        setIsSolved(true);
-      }, 10000);
+      // تحقق من حالة الطلب بشكل دوري كل 5 ثوانٍ
+      const interval = setInterval(async () => {
+        const updatedResponse = await axios.get(
+          `https://67073bf9a0e04071d2298046.mockapi.io/users/${caseData.case_id}`
+        );
+        const updatedData = updatedResponse.data;
 
-      return () => clearTimeout(solveTimeout);
+        if (updatedData.is_accepted && updatedData.assigned_responder) {
+          setResponderInfo(updatedData.assigned_responder);
+          setIsAccepted(true);
+
+          // بعد قبول المسعف، الحصول على الموقع
+          getLocationAndUpdateCase(caseData.case_id);
+
+          clearInterval(interval); // إيقاف التحقق عند قبول الحالة
+        }
+
+        if (updatedData.status === "مكتملة") {
+          setIsCompleted(true);
+          clearInterval(interval); // إيقاف التحقق بعد اكتمال الحالة
+        }
+      }, 5000); // تحديث كل 5 ثوانٍ
+    } catch (error) {
+      console.error("Error sending data:", error);
+      
+      Swal.fire({
+        icon: 'error',
+        title: 'خطأ',
+        text: 'حدث خطأ أثناء إرسال البيانات. يرجى المحاولة مرة أخرى لاحقًا.',
+        confirmButtonText: 'حسنًا',
+        confirmButtonColor: '#ab1c1c'
+      });
+    } finally {
+      setLoading(false); // إخفاء حالة التحميل بعد الإرسال
     }
-  }, [isOrderSent]);
-  
+  };
 
+  // الحصول على الموقع وتحديث الحالة
+  const getLocationAndUpdateCase = async (caseId) => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
 
+          try {
+            // استخدام Mapbox API للحصول على العنوان من الإحداثيات
+            const response = await axios.get(
+              `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=pk.eyJ1IjoienlhZDIyIiwiYSI6ImNtMmhyZjYwbjBlNzUycXF2eW5ucjdrNTIifQ.gl1phZ7zs3yRryUmKgrKMQ`,
+              { timeout: 10000 } // 10 ثوانٍ مهلة زمنية
+            );
 
+            const address =
+              response.data.features[0]?.place_name || "العنوان غير متاح";
+
+            // تحديث الحالة بالموقع
+            await axios.put(
+              `https://67073bf9a0e04071d2298046.mockapi.io/users/${caseId}`,
+              {
+                location: {
+                  latitude,
+                  longitude,
+                  address,
+                },
+              }
+            );
+          } catch (error) {
+            console.error("Error fetching location:", error);
+          }
+        },
+        (error) => {
+          console.error("Error getting location", error);
+        
+          Swal.fire({
+            icon: 'error',
+            title: 'خطأ في تحديد الموقع',
+            text: 'فشل في تحديد الموقع. يرجى التأكد من تفعيل خدمات الموقع.',
+            confirmButtonText: 'حسنًا',
+            confirmButtonColor: '#ab1c1c'
+          });
+        }
+      );
+    }
+  };
+
+  // إرسال التقييم
+  const handleFeedbackSubmit = async () => {
+    setFeedbackSubmitted(true);
+    setIsModalOpen(false);
+    setIsOrderSent(false); // السماح ببدء طلب جديد
+    setFormData({ name: "", phone: "", status: "" }); // تصفية البيانات القديمة
+    setRating(null); // إعادة ضبط التقييم
+  };
+
+  // إعادة إرسال الطلب بعد انتهاء الوقت
+  const handleRetry = () => {
+    setIsOrderSent(false);
+    setIsCancelled(false);
+    setTimer(10); // إعادة ضبط المؤقت إلى 3 دقائق
+  };
 
   const scrollToSection = (section) => {
-    const offset = 150; 
-  
+    const offset = 150;
+
     let target = null;
-    
+
     switch (section) {
       case "home":
         target = homeRef.current;
@@ -96,16 +247,16 @@ const [rating, setRating] = useState(null);
       default:
         break;
     }
-  
+
     if (target) {
-      const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+      const targetPosition =
+        target.getBoundingClientRect().top + window.pageYOffset - offset;
       window.scrollTo({
         top: targetPosition,
         behavior: "smooth",
       });
     }
   };
-  
 
   useEffect(() => {
     const observerOptions = {
@@ -137,146 +288,170 @@ const [rating, setRating] = useState(null);
 
   return (
     <div>
-      <header
-        ref={homeRef}
-        className="h-[79vh] relative p-8 text-center bg-white text-gray-800 shadow-lg flex flex-col justify-center items-center overflow-hidden header"
-      >
+      <header className="h-[79vh] relative p-8 text-center bg-white text-gray-800 shadow-lg flex flex-col justify-center items-center overflow-hidden header">
         <div className="relative z-10 mx-auto">
           <h1 className="text-4xl mb-16 leading-tight drop-shadow-lg headertxt">
- نحن هنا لمساعدتك في حالات
-            <span className="text-red-600 font-extrabold"> الطوارئ</span>
-            <br />
+            هل انت في حالة{" "}
+            <span className="text-red-600 mx-2 font-extrabold">طوارئ؟</span>
           </h1>
-
-    <button
-      onClick={() => setIsModalOpen(!isModalOpen)}
-      className="relative text-3xl mx-auto bg-[#ab1c1c] text-white font-bold w-44 h-44 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-2xl focus:outline-none wave-button"
-    >
-      نداء استغاثه
-      <span className="absolute inset-0 bg-transparent rounded-full pointer-events-none wave-effect mx-auto"></span>
-    </button>
-
-    {isModalOpen && (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-100">
-        <div className="bg-white p-10 rounded-lg max-w-md w-full relative shadow-lg">
           <button
-            onClick={() => setIsModalOpen(false)}
-            className="absolute top-2 left-2 text-xl text-gray-600 hover:text-[#ab1c1c] focus:outline-none"
+            onClick={() => setIsModalOpen(!isModalOpen)}
+            className="relative text-3xl mx-auto bg-[#ab1c1c] text-white font-bold w-44 h-44 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-2xl"
           >
-            ✖
+            نداء استغاثه
           </button>
+          {isModalOpen && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-100">
+              <div className="bg-white p-10 rounded-lg max-w-md w-full relative shadow-lg">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="absolute top-2 left-2 text-xl text-gray-600 hover:text-[#ab1c1c]"
+                >
+                  ✖
+                </button>
 
-          {!isOrderSent ? (
-            <div>
-              {/* Name Input */}
-              <div className="mb-4 flex items-center border-b-2 border-[#ab1c1c]">
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="p-2 w-full bg-transparent focus:outline-none"
-                  placeholder="أدخل اسمك"
-                />
-                <span className="text-[#ab1c1c]">*</span>
-              </div>
-              {errors.name && <p className="text-red-600 text-xs text-right mt-1">الاسم مطلوب.</p>}
+                {loading ? (
+                  <div className="flex flex-col items-center justify-center h-full">
+  <div
+    className="animate-spin w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full"
+    role="status"
+  ></div>
+  <p className="mt-4 text-lg text-gray-600">جاري البحث عن مسعف...</p>
+</div>
+                ) : !isOrderSent ? (
+                  <>
+                    <div className="mb-4 flex items-center border-b-2 border-[#ab1c1c]">
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        placeholder="أدخل اسمك"
+                        className="p-2 w-full bg-transparent focus:outline-none"
+                      />
+                    </div>
+                    <div className="mb-4 flex items-center border-b-2 gap-2 border-[#ab1c1c]">
+                      <input
+                        type="text"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        maxLength={10}
+                        placeholder="أدخل رقم هاتفك"
+                        className="p-2 w-full bg-transparent focus:outline-none"
+                      />
+                      <span className="mr-2 text-[#ab1c1c]">966+</span>
+                    </div>
 
-              {/* Phone Input */}
-              <div className="mb-4 flex items-center border-b-2 gap-2 border-[#ab1c1c]">
-                <input
-                  type="text"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  className="p-2 w-full bg-transparent focus:outline-none"
-                  placeholder="أدخل رقم هاتفك"
-                />
-                <span className="mr-2 text-[#ab1c1c]">966+</span>
-                <span className="text-[#ab1c1c]">*</span>
-              </div>
-              {errors.phone && <p className="text-red-600 text-xs text-right mt-1">رقم الهاتف مطلوب.</p>}
+                    <div className="mb-4">
+                      <p className="block mb-1 text-right text-gray-500">
+                        اختر الحالة
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {statuses.map((statusOption) => (
+                          <button
+                            key={statusOption}
+                            onClick={() => handleStatusChange(statusOption)}
+                            className={`flex-1 p-2 border rounded-full transition duration-300 ease-in-out ${
+                              formData.status === statusOption
+                                ? "bg-[#ab1c1c] text-white"
+                                : "border-[#ab1c1c] text-[#ab1c1c] hover:bg-[#ab1c1c] hover:text-white"
+                            }`}
+                          >
+                            {statusOption}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
 
-              {/* Status Selection */}
-              <div className="mb-4">
-                <p className="block mb-1 text-right text-gray-500">اختر الحالة</p>
-                <div className="flex flex-wrap gap-2">
-                  {statuses.map((statusOption) => (
                     <button
-                      key={statusOption}
-                      onClick={() => handleStatusChange(statusOption)}
-                      className={`flex-1 p-2 border rounded-full transition duration-300 ease-in-out ${
-                        formData.status === statusOption
-                          ? 'bg-[#ab1c1c] text-white'
-                          : 'border-[#ab1c1c] text-[#ab1c1c] hover:bg-[#ab1c1c] hover:text-white'
-                      }`}
+                      onClick={handleSend}
+                      className="py-2 px-4 w-full bg-[#ab1c1c] text-white font-bold rounded-full"
                     >
-                      {statusOption}
+                      إرسال
                     </button>
-                  ))}
-                </div>
-                {errors.status && <p className="text-red-600 text-xs text-right mt-1">يرجى اختيار الحالة.</p>}
+                  </>
+                ) : isCancelled ? (
+<div className="text-center">
+  <p className="text-red-600 mb-4">
+    عذرًا، لم يتوفر مسعف في الوقت المحدد. نقدر صبرك ونسأل الله لك السلامة.
+  </p>
+  <div className="flex flex-col items-center gap-4"> 
+    <button
+      onClick={handleRetry}
+      className="py-2 px-4 bg-[#ab1c1c] text-white rounded-full transition duration-300 hover:bg-[#9b1b1b]"
+    >
+      إعادة المحاولة
+    </button>
+    <button
+      onClick={() => (window.location.href = "tel:998")}
+      className="py-2 px-4 bg-[#ab1c1c] text-white rounded-full transition duration-300 hover:bg-[#9b1b1b]"
+    >
+      الاتصال بالهلال الأحمر (998)
+    </button>
+  </div>
+</div>
+
+
+                ) : !isAccepted ? (
+<div className="flex flex-col items-center">
+  <div
+    className="animate-spin inline-block w-8 h-8 border-4 border-t-transparent border-red-500 rounded-full"
+    role="status"
+  ></div>
+  <p className="mt-4 text-gray-600">
+    جاري البحث عن مسعف... ({timer} ثواني متبقية)
+  </p>
+</div>
+
+                ) : isCompleted ? (
+                  <>
+                  <div className="text-center text-[#ab1c1c]">
+  <p className="text-2xl">الحمدلله على سلامتك.</p>
+  <p className="text-lg mb-4">
+    تم التعامل مع الحالة بنجاح. ممتنين لمساعدتك، نتمنى لك الشفاء العاجل!
+  </p>
+
+  <p className="mb-4">يرجى تقييم المسعف:</p>
+  
+  <div className="flex justify-center gap-2 mb-4">
+    {[1, 2, 3, 4, 5].map((star) => (
+      <button
+        key={star}
+        onClick={() => setRating(star)}
+        className={`text-2xl ${rating >= star ? 'text-[#ab1c1c]' : 'text-gray-400'}`}
+      >
+        ★
+      </button>
+    ))}
+  </div>
+
+  <button
+    onClick={handleFeedbackSubmit}
+    className="mt-4 py-2 px-4 bg-[#ab1c1c] text-white rounded-full"
+  >
+    إرسال التقييم
+  </button>
+</div>
+
+                  </>
+                ) : (
+<div className="text-center">
+  <p className="text-lg mb-4 text-[#ab1c1c]">
+    تم استلام طلب الاستغاثة الخاص بك، وأقرب مسعف في طريقه إليك الآن. نحن هنا لمساعدتك.
+  </p>
+  
+  <p className="mb-4">
+    <strong>المسعف:</strong> {responderInfo?.name || "غير متوفر"}<br />
+    <strong>رقم الهاتف:</strong> {responderInfo?.phone || "غير متوفر"}
+  </p>
+</div>
+                )}
               </div>
-
-              {/* Send Button */}
-              <button
-                onClick={handleSend}
-                className="py-2 px-4 w-full text-sm bg-[#ab1c1c] text-white font-semibold rounded-full transition-all duration-300 shadow-md"
-              >
-                إرسال
-              </button>
-            </div>
-          ) : isSolved ? (
-            <div className="text-center text-[#ab1c1c]">
-              <p className="text-2xl">الحمدلله على سلامتك.</p>
-              <p className="text-lg mb-4">تم التعامل مع الحالة بنجاح. ممتنين لمساعدتك، نتمنى لك الشفاء العاجل!</p>
-
-              <p className="mb-4">يرجى تقييم المسعف:</p>
-              <div className="flex justify-center gap-2 mb-4">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    onClick={() => handleRating(star)}
-                    className={`text-2xl ${rating >= star ? 'text-[#ab1c1c]' : 'text-gray-400'}`}
-                  >
-                    ★
-                  </button>
-                ))}
-              </div>
-
-              {/* Rating Submission Button */}
-              <button
-                onClick={() => {
-                  setIsModalOpen(false);
-                  setIsOrderSent(false);
-                  setIsSolved(false);
-                  setFormData({ name: '', phone: '', status: '' });
-                  setRating(null);
-                  setErrors({ name: false, phone: false, status: false });
-                }}
-                className="py-2 px-4 text-sm bg-[#ab1c1c] text-white font-semibold rounded-full transition-all duration-300 shadow-md"
-              >
-                إرسال التقييم
-              </button>
-            </div>
-          ) : (
-            <div className="text-center">
-              <p className="text-lg mb-4 text-[#ab1c1c]">تم استلام طلب الاستغاثة الخاص بك، وأقرب مسعف في طريقه إليك الآن. نحن هنا لمساعدتك.</p>
-              <p className="mb-4">
-                <strong>المسعف:</strong> محمد عبدالعزيز<br />
-                <strong>رقم الهاتف:</strong> 0555555555
-              </p>
-              <button className="py-2 px-4 text-sm bg-[#ab1c1c] text-white font-semibold rounded-full transition-all duration-300 shadow-md">
-                اتصل بالمسعف
-              </button>
             </div>
           )}
         </div>
-      </div>
-    )}
-  </div>
-</header>
-
+      </header>
 
       <Navbar scrollToSection={scrollToSection} />
 
@@ -402,9 +577,9 @@ const [rating, setRating] = useState(null);
             إنقاذ الأرواح من خلال خبرتك الطبية. نحن نربطك بالمرضى في لحظات
             الطوارئ لتقديم الدعم الفوري. كل مسعف يعدّ بطلًا .
           </p>
-          <button className="mt-6 text-lg bg-gradient-to-r from-[#ab1c1c] to-red-500 hover:scale-105 transform transition-transform text-white py-3 px-8 rounded-full shadow-lg font-bold">
+          <Link to='/sign' className="mt-6 text-lg bg-gradient-to-r from-[#ab1c1c] to-red-500 hover:scale-105 transform transition-transform text-white py-3 px-8 rounded-full shadow-lg font-bold">
             انضم الآن
-          </button>
+          </Link>
         </div>
 
         <div className="md:w-1/2 mt-8 md:mt-0 relative">
