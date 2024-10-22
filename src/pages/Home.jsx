@@ -1,10 +1,11 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import logo from "../assets/logo.png";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef , useState} from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const Home = () => {
+  const homeRef = useRef(null);
   const aboutRef = useRef(null);
   const whySwa3efRef = useRef(null);
   const joinRef = useRef(null);
@@ -74,6 +75,38 @@ const [rating, setRating] = useState(null);
 
 
 
+  const scrollToSection = (section) => {
+    const offset = 150; 
+  
+    let target = null;
+    
+    switch (section) {
+      case "home":
+        target = homeRef.current;
+        break;
+      case "about":
+        target = aboutRef.current;
+        break;
+      case "contact":
+        target = contactRef.current;
+        break;
+      case "join":
+        target = joinRef.current;
+        break;
+      default:
+        break;
+    }
+  
+    if (target) {
+      const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({
+        top: targetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
+  
+
   useEffect(() => {
     const observerOptions = {
       threshold: 0.3,
@@ -104,13 +137,16 @@ const [rating, setRating] = useState(null);
 
   return (
     <div>
-<header className="h-[79vh] relative p-8 text-center bg-white text-gray-800 shadow-lg flex flex-col justify-center items-center overflow-hidden header">
-  <div className="relative z-10 mx-auto">
-    <h1 className="text-4xl mb-16 leading-tight drop-shadow-lg headertxt">
-      هل انت في حالة
-      <span className="text-red-600 mx-2 font-extrabold">طوارئ؟</span>
-      <br />
-    </h1>
+      <header
+        ref={homeRef}
+        className="h-[79vh] relative p-8 text-center bg-white text-gray-800 shadow-lg flex flex-col justify-center items-center overflow-hidden header"
+      >
+        <div className="relative z-10 mx-auto">
+          <h1 className="text-4xl mb-16 leading-tight drop-shadow-lg headertxt">
+            هل انت في حالة
+            <span className="text-red-600 mx-2 font-extrabold">طوارئ</span>؟
+            <br />
+          </h1>
 
     <button
       onClick={() => setIsModalOpen(!isModalOpen)}
@@ -242,7 +278,7 @@ const [rating, setRating] = useState(null);
 </header>
 
 
-      <Navbar />
+      <Navbar scrollToSection={scrollToSection} />
 
       {/* من نحن */}
       <section
