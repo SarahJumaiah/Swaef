@@ -283,9 +283,10 @@ const Home = () => {
     <div>
       <header className="h-[79vh] relative p-8 text-center bg-white text-gray-800 shadow-lg flex flex-col justify-center items-center overflow-hidden header">
         <div className="relative z-10 mx-auto">
-          <h1 className="text-4xl mb-16 leading-tight drop-shadow-lg headertxt">
-            هل انت في حالة{" "}
-            <span className="text-red-600 mx-2 font-extrabold">طوارئ؟</span>
+        <h1 className="text-4xl mb-16 leading-tight drop-shadow-lg headertxt">
+ نحن هنا لمساعدتك في حالات
+            <span className="text-red-600 font-extrabold"> الطوارئ</span>
+            <br />
           </h1>
           <button
             onClick={() => setIsModalOpen(!isModalOpen)}
