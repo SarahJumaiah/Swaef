@@ -289,7 +289,7 @@ const Home = () => {
           </h1>
           <button
             onClick={() => setIsModalOpen(!isModalOpen)}
-            className="relative text-3xl mx-auto bg-[#ab1c1c] text-white font-bold w-44 h-44 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-2xl"
+            className="relative text-3xl mx-auto bg-red-600 text-white font-bold w-44 h-44 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-2xl focus:outline-none wave-button"
           >
             نداء استغاثه
           </button>
