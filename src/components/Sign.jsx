@@ -60,7 +60,7 @@ function Sign() {
               />
             </div>
 
-            {/* File Upload */}
+
             <div>
               <label
                 htmlFor="file-upload"
