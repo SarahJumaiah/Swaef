@@ -40,14 +40,14 @@ const Navbar = ({ scrollToSection }) => {
             <ul className="flex flex-row space-x-2 lg:space-x-8 text-center text-black mb-4 lg:mb-0 mr-12">
               <li
                 onClick={() => scrollToSection("home")}
-                className="hidden lg:flex hover:text-red-500 font-bold border-b-2 border-red-500 cursor-pointer"
+                className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer"
                 style={{ position: "relative", top: "-14px" }}
               >
                 الرئيسية
               </li>
               <li
                 onClick={() => scrollToSection("about")}
-                className="hidden lg:flex hover:text-red-500 font-bold border-b-2 border-red-500 cursor-pointer"
+                className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer"
                 style={{ position: "relative", top: "4px", right: "30px" }}
               >
                 من نحن
@@ -71,14 +71,14 @@ const Navbar = ({ scrollToSection }) => {
             <ul className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-8 text-center text-black">
               <li
                 onClick={() => scrollToSection("contact")}
-                className="hidden lg:flex hover:text-red-500 font-bold border-b-2 border-red-500 cursor-pointer"
+                className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer"
                 style={{ position: "relative", top: "4px", left: "30px" }}
               >
                 تواصل معنا
               </li>
               <li
                 onClick={() => scrollToSection("join")}
-                className="hidden lg:flex hover:text-red-500 font-bold border-b-2 border-red-500 cursor-pointer"
+                className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer"
               >
                 الانضمام كمسعف
               </li>

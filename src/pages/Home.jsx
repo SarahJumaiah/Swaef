@@ -79,8 +79,8 @@ const Home = () => {
       >
         <div className="relative z-10 mx-auto">
           <h1 className="text-4xl mb-16 leading-tight drop-shadow-lg headertxt">
-            هل انت في حالة
-            <span className="text-red-600 mx-2 font-extrabold">طوارئ</span>؟
+ نحن هنا لمساعدتك في حالات
+            <span className="text-red-600 font-extrabold"> الطوارئ</span>
             <br />
           </h1>
 
