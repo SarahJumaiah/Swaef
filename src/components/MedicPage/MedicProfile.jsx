@@ -10,7 +10,7 @@ const MedicProfile = () => {
   useEffect(() => {
     const fetchMedicData = async () => {
       try {
-        const response = await fetch('https://6715da9e33bc2bfe40bb51e2.mockapi.io/users');
+        const response = await fetch('https://67073bf9a0e04071d2298046.mockapi.io/users');
         const data = await response.json();
         const medic = data[0]; // Assuming the first user is the medic
         setMedicData(medic); // تخزين بيانات المسعف
