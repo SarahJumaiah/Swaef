@@ -28,7 +28,7 @@ const Navbar = ({ scrollToSection }) => {
     <nav
       className={`${
         isSticky ? "sticky-navbar" : "initial-navbar"
-      } transition-all duration-500 ease-in-out w-full z-50`}
+      } transition-all duration-500 ease-in-out w-full z-1`}
     >
       <div
         className={`flex items-center justify-between w-full px-8 ${
