@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import logo from '../assets/logo.png'
 
 ChartJS.register(CategoryScale, LinearScale, ArcElement, Tooltip, Legend);
 
@@ -296,43 +297,63 @@ const Admin = () => {
         {isSidebarOpen ? "✖" : "☰"}{" "}
       </button>
 
+      
       <aside
-  className={`fixed top-0 right-0 h-screen w-1/2 bg-[rgb(108,17,17)] text-white p-6 transform ${
+  className={`fixed top-0 right-0 h-screen w-1/2 bg-[#f9f9f9] border shadow-xl text-[#ab1c1c] p-6 transform ${
     isSidebarOpen ? "translate-x-0" : "translate-x-full"
   } transition-transform lg:relative lg:translate-x-0 lg:w-1/4 z-50`}
 >
-        <div className="mb-8 text-center">
-          <h2 className="text-3xl font-bold">المشرف</h2>
-        </div>
-        <nav>
-          <ul className="space-y-8">
-            <li
-              className={`font-bold text-xl cursor-pointer hover:bg-[#892222] p-3 rounded-lg ${
-                selectedSection === "الملخص" ? "bg-[#892222]" : ""
-              }`}
-              onClick={() => setSelectedSection("الملخص")}
-            >
-              الملخص
-            </li>
-            <li
-              className={`font-bold text-xl cursor-pointer hover:bg-[#892222] p-3 rounded-lg ${
-                selectedSection === "المسعفين" ? "bg-[#892222]" : ""
-              }`}
-              onClick={() => setSelectedSection("المسعفين")}
-            >
-              المسعفين
-            </li>
-            <li
-              className={`font-bold text-xl cursor-pointer hover:bg-[#892222] p-3 rounded-lg ${
-                selectedSection === "تسجيل خروج" ? "bg-[#892222]" : ""
-              }`}
-              onClick={handleLogout}
-            >
-              تسجيل خروج
-            </li>
-          </ul>
-        </nav>
-      </aside>
+  <div className="mb-8 text-center">
+
+    <img src={logo} alt="" className="w-16" />
+  </div>
+  <nav>
+    <ul className="space-y-6">
+      <li
+        className={`font-bold text-xl cursor-pointer relative p-3 transition duration-200 ease-in-out ${
+          selectedSection === "الملخص" ? "text-[#ab1c1c]" : "text-[#333333]"
+        } hover:text-[#ab1c1c]`}
+        onClick={() => setSelectedSection("الملخص")}
+      >
+        الملخص
+        <span
+          className={`absolute left-0 right-0 bottom-0 h-0.5 bg-[#ab1c1c] transition-all duration-200 ease-in-out ${
+            selectedSection === "الملخص" ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      </li>
+      <li
+        className={`font-bold text-xl cursor-pointer relative p-3 transition duration-200 ease-in-out ${
+          selectedSection === "المسعفين" ? "text-[#ab1c1c]" : "text-[#333333]"
+        } hover:text-[#ab1c1c]`}
+        onClick={() => setSelectedSection("المسعفين")}
+      >
+        المسعفين
+        <span
+          className={`absolute left-0 right-0 bottom-0 h-0.5 bg-[#ab1c1c] transition-all duration-200 ease-in-out ${
+            selectedSection === "المسعفين" ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      </li>
+      <li
+        className={`font-bold text-xl cursor-pointer relative p-3 transition duration-200 ease-in-out ${
+          selectedSection === "تسجيل خروج" ? "text-[#ab1c1c]" : "text-[#333333]"
+        } hover:text-[#ab1c1c]`}
+        onClick={handleLogout}
+      >
+        تسجيل خروج
+        <span
+          className={`absolute left-0 right-0 bottom-0 h-0.5 bg-[#ab1c1c] transition-all duration-200 ease-in-out ${
+            selectedSection === "تسجيل خروج" ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      </li>
+    </ul>
+  </nav>
+</aside>
+
+
+
 
 <main className="w-full lg:w-3/4 p-4 sm:p-10 h-screen">{renderContent()}</main>
     </div>
