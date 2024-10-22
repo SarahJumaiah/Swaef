@@ -11,7 +11,7 @@ function Login() {
 
           <div className="text-center">
             <h3 className="text-2xl font-bold text-[#ab1c1c] mb-2">تسجيل الدخول</h3>
-            <p className="text-gray-600 text-sm leading-relaxed mb-10">
+            <p className="text-gray-600 text-sm leading-relaxed lg:mb-10">
               استمر في مسيرتك مع مجتمع المتطوعين. دورك مهم في إحداث تغيير إيجابي، قال تعالى:
               <span className="font-bold text-[#ab1c1c]">
                 ﴿وَجَعَلْنَاهُمْ أَئِمَّةً يَهْدُونَ بِأَمْرِنَا وَأَوْحَيْنَا إِلَيْهِمْ فِعْلَ الْخَيْرَاتِ وَإِقَامَ الصَّلَاةِ وَإِيتَاء الزَّكَاةِ وَكَانُوا لَنَا عَابِدِينَ﴾
