@@ -208,7 +208,7 @@ const Home = () => {
             نداء استغاثه
           </button>
           {isModalOpen && (
-{isModalOpen && (
+{(
   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-100">
     <div className="bg-white p-10 rounded-lg max-w-md w-full relative shadow-lg">
       <button
@@ -360,7 +360,6 @@ const Home = () => {
             {responderInfo?.phone || "غير متوفر"}
           </p>
         </div>
-      )}
     </div>
   </div>
 )}
