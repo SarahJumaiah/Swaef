@@ -21,72 +21,45 @@ const Home = () => {
     phone: "",
     status: "",
   });
-  const [responderInfo, setResponderInfo] = useState(null);
-  const [isAccepted, setIsAccepted] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [rating, setRating] = useState(null);
-  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [acceptedCase, setAcceptedCase] = useState(null); // لتخزين الحالة المقبولة
+  const [isAccepted, setIsAccepted] = useState(false); // حالة القبول
+  const [location, setLocation] = useState(null); // لتخزين الموقع
   const [loading, setLoading] = useState(false); // لإظهار حالة التحميل عند الإرسال
-  const [timer, setTimer] = useState(180); // مؤقت العد التنازلي (3 دقائق)
-  const [isCancelled, setIsCancelled] = useState(false); // حالة إلغاء الطلب
-  const [caseId, setCaseId] = useState(null); // لتخزين معرف الحالة
 
   const statuses = ["كسور", "حروق", "اغماء", "اختناق"];
 
-  // تغيير الحالة
+  // تحديد الموقع باستخدام متصفح المستخدم
+  const handleLocation = () => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation({ latitude, longitude });
+        },
+        (error) => {
+          console.error("Error getting location", error);
+          alert("لم نتمكن من تحديد موقعك. تأكد من تفعيل خدمات الموقع.");
+        }
+      );
+    } else {
+      alert("خدمات تحديد الموقع غير مدعومة في هذا المتصفح.");
+    }
+  };
+
+  // تغيير الحالة المختارة
   const handleStatusChange = (status) => {
     setFormData((prevData) => ({ ...prevData, status }));
   };
 
-  // عند تغيير البيانات المدخلة
+  // تغيير المدخلات
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // دالة لبدء العد التنازلي
-  useEffect(() => {
-    let countdown;
-    if (isOrderSent && !isAccepted && !isCancelled) {
-      countdown = setInterval(() => {
-        setTimer((prevTime) => {
-          if (prevTime <= 1) {
-            clearInterval(countdown);
-            setIsCancelled(true); // إلغاء الطلب
-            updateCaseStatusToCancelled(); // تحديث الحالة إلى "ملغي"
-          }
-          return prevTime - 1;
-        });
-      }, 1000); // عد تنازلي كل ثانية
-    }
-    return () => clearInterval(countdown);
-  }, [isOrderSent, isAccepted, isCancelled]);
-
-  // تحديث الحالة إلى "ملغي" عند انتهاء الوقت
-  const updateCaseStatusToCancelled = async () => {
-    if (caseId) {
-      try {
-        await axios.put(
-          `https://67073bf9a0e04071d2298046.mockapi.io/users/${caseId}`,
-          {
-            status: "ملغي",
-          }
-        );
-      } catch (error) {
-        console.error("Error updating case status to cancelled:", error);
-      }
-    }
-  };
-
-  // عند إرسال الطلب
+  // إرسال الحالة
   const handleSend = async () => {
-    const newErrors = {
-      name: !formData.name,
-      phone: !formData.phone,
-      status: !formData.status,
-    };
-
-    if (newErrors.name || newErrors.phone || newErrors.status) {
+    if (!formData.name || !formData.phone || !formData.status) {
       Swal.fire({
         icon: "error",
         title: "خطأ",
@@ -94,59 +67,41 @@ const Home = () => {
         confirmButtonText: "حسنًا",
         confirmButtonColor: "#ab1c1c",
       });
-      return; // توقف في حال وجود أخطاء
+      return;
     }
 
-    setLoading(true); // إظهار حالة التحميل أثناء الإرسال
+    if (!location) {
+      Swal.fire({
+        icon: "error",
+        title: "خطأ",
+        text: "يرجى تحديد موقعك أولاً.",
+        confirmButtonText: "حسنًا",
+        confirmButtonColor: "#ab1c1c",
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    const newCase = {
+      case_id: Date.now(),
+      case_type: formData.status,
+      location: location,
+      assigned_responder: null,
+      status: "الحالة معلقة حتى يتم قبولها",
+      patient: {
+        name: formData.name,
+        phone: formData.phone,
+      },
+      is_accepted: false,
+    };
 
     try {
-      // إرسال بيانات الحالة إلى الخادم
-      const caseData = {
-        case_id: uuidv4(),
-        case_type: formData.status,
-        location: null, // لم يتم تحديد الموقع بعد
-        assigned_responder: null,
-        status: "الحالة معلقة حتى يتم قبولها",
-        patient: {
-          name: formData.name,
-          phone: formData.phone,
-        },
-        is_accepted: false,
-      };
-
-      const postResponse = await axios.post(
-        "https://67073bf9a0e04071d2298046.mockapi.io/users",
-        caseData
-      );
+      // إرسال الحالة إلى الـ MockAPI
+      await axios.post("https://67073bf9a0e04071d2298046.mockapi.io/users", newCase);
       setIsOrderSent(true);
-      setTimer(180); // إعادة ضبط المؤقت إلى 3 دقائق
-      setCaseId(caseData.case_id); // تخزين معرف الحالة للاستخدام لاحقًا
-
-      // تحقق من حالة الطلب بشكل دوري كل 5 ثوانٍ
-      const interval = setInterval(async () => {
-        const updatedResponse = await axios.get(
-          `https://67073bf9a0e04071d2298046.mockapi.io/users/${caseData.case_id}`
-        );
-        const updatedData = updatedResponse.data;
-
-        if (updatedData.is_accepted && updatedData.assigned_responder) {
-          setResponderInfo(updatedData.assigned_responder);
-          setIsAccepted(true);
-
-          // بعد قبول المسعف، الحصول على الموقع
-          getLocationAndUpdateCase(caseData.case_id);
-
-          clearInterval(interval); // إيقاف التحقق عند قبول الحالة
-        }
-
-        if (updatedData.status === "مكتملة") {
-          setIsCompleted(true);
-          clearInterval(interval); // إيقاف التحقق بعد اكتمال الحالة
-        }
-      }, 5000); // تحديث كل 5 ثوانٍ
     } catch (error) {
-      console.error("Error sending data:", error);
-
+      console.error("Error sending case:", error);
       Swal.fire({
         icon: "error",
         title: "خطأ",
@@ -155,72 +110,30 @@ const Home = () => {
         confirmButtonColor: "#ab1c1c",
       });
     } finally {
-      setLoading(false); // إخفاء حالة التحميل بعد الإرسال
+      setLoading(false);
     }
   };
 
-  // الحصول على الموقع وتحديث الحالة
-  const getLocationAndUpdateCase = async (caseId) => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords;
-
-          try {
-            // استخدام Mapbox API للحصول على العنوان من الإحداثيات
-            const response = await axios.get(
-              `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=pk.eyJ1IjoienlhZDIyIiwiYSI6ImNtMmhyZjYwbjBlNzUycXF2eW5ucjdrNTIifQ.gl1phZ7zs3yRryUmKgrKMQ`,
-              { timeout: 10000 } // 10 ثوانٍ مهلة زمنية
-            );
-
-            const address =
-              response.data.features[0]?.place_name || "العنوان غير متاح";
-
-            // تحديث الحالة بالموقع
-            await axios.put(
-              `https://67073bf9a0e04071d2298046.mockapi.io/users/${caseId}`,
-              {
-                location: {
-                  latitude,
-                  longitude,
-                  address,
-                },
-              }
-            );
-          } catch (error) {
-            console.error("Error fetching location:", error);
-          }
-        },
-        (error) => {
-          console.error("Error getting location", error);
-
-          Swal.fire({
-            icon: "error",
-            title: "خطأ في تحديد الموقع",
-            text: "فشل في تحديد الموقع. يرجى التأكد من تفعيل خدمات الموقع.",
-            confirmButtonText: "حسنًا",
-            confirmButtonColor: "#ab1c1c",
-          });
+  // جلب الحالة بشكل دوري
+  useEffect(() => {
+    const fetchCaseStatus = async () => {
+      try {
+        const response = await axios.get("https://67073bf9a0e04071d2298046.mockapi.io/users");
+        const lastCase = response.data[response.data.length - 1];
+        setAcceptedCase(lastCase); // تخزين آخر حالة
+        if (lastCase.is_accepted) {
+          setIsAccepted(true);
         }
-      );
+      } catch (error) {
+        console.error("Error fetching cases:", error);
+      }
+    };
+
+    if (isOrderSent) {
+      const intervalId = setInterval(fetchCaseStatus, 5000); // التحقق كل 5 ثوانٍ
+      return () => clearInterval(intervalId); // تنظيف عند تدمير المكون
     }
-  };
-
-  // إرسال التقييم
-  const handleFeedbackSubmit = async () => {
-    setFeedbackSubmitted(true);
-    setIsModalOpen(false);
-    setIsOrderSent(false); // السماح ببدء طلب جديد
-    setFormData({ name: "", phone: "", status: "" }); // تصفية البيانات القديمة
-    setRating(null); // إعادة ضبط التقييم
-  };
-
-  // إعادة إرسال الطلب بعد انتهاء الوقت
-  const handleRetry = () => {
-    setIsOrderSent(false);
-    setIsCancelled(false);
-    setTimer(10); // إعادة ضبط المؤقت إلى 3 دقائق
-  };
+  }, [isOrderSent]);
 
   const scrollToSection = (section) => {
     let sectionRef;
@@ -237,20 +150,20 @@ const Home = () => {
       case "contact":
         sectionRef = contactRef;
         break;
-      case "home": 
+      case "home":
         window.scrollTo({ top: 0, behavior: "smooth" });
-        return; 
+        return;
       default:
         sectionRef = null;
     }
-  
+
     if (sectionRef && sectionRef.current) {
       const topOffset =
         sectionRef.current.getBoundingClientRect().top + window.scrollY - 100;
       window.scrollTo({ top: topOffset, behavior: "smooth" });
     }
   };
-  
+
   useEffect(() => {
     const observerOptions = {
       threshold: 0.3,
