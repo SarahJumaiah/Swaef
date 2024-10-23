@@ -1,12 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "./pages/Home";
+import Sign from "./components/Sign";
 import MedicPage from "./pages/MedicPage";
 import Admin from "./pages/Admin";
-import Sign from "./components/Sign";
 import NotFoundPage from "./pages/NotFoundPage";
-import Login from './components/Login'
-import WaitingPage from "./pages/WaitingPage";
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -14,6 +11,14 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
+    path:"/sign",
+    element : <Sign/>
+
+  },
+
+  {
+
+
     path: "/MedicPage",
 
     element: <MedicPage />,
@@ -21,25 +26,10 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: <Admin />,
-
-  },
-  {
-    path:"/WaitingPage/:id",
-    element : <WaitingPage/>
-
-  },
-  {
-    path:"/sign",
-    element : <Sign/>
-
-  },
-  {
-    path:"/login",
-    element : <Login/>
-
   },
   {
     path: "*",
+
     element: <NotFoundPage />,
   }
 ]);
