@@ -17,18 +17,18 @@ const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOrderSent, setIsOrderSent] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    status: "",
+    name: '',
+    phone: '',
+    status: '',
   });
-  const [acceptedCase, setAcceptedCase] = useState(null); // لتخزين الحالة المقبولة
-  const [isAccepted, setIsAccepted] = useState(false); // حالة القبول
-  const [location, setLocation] = useState(null); // لتخزين الموقع
-  const [loading, setLoading] = useState(false); // لإظهار حالة التحميل عند الإرسال
+  const [loading, setLoading] = useState(false);
+  const [acceptedCase, setAcceptedCase] = useState(null);
+  const [location, setLocation] = useState(null);
+  const [isAccepted, setIsAccepted] = useState(false);
 
-  const statuses = ["كسور", "حروق", "اغماء", "اختناق"];
+  const statuses = ['كسور', 'حروق', 'اغماء', 'اختناق'];
 
-  // تحديد الموقع باستخدام متصفح المستخدم
+  // تحديد الموقع باستخدام المتصفح
   const handleLocation = () => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -38,15 +38,27 @@ const Home = () => {
         },
         (error) => {
           console.error("Error getting location", error);
-          alert("لم نتمكن من تحديد موقعك. تأكد من تفعيل خدمات الموقع.");
+          Swal.fire({
+            icon: "error",
+            title: "خطأ",
+            text: "لم نتمكن من تحديد موقعك. تأكد من تفعيل خدمات الموقع.",
+            confirmButtonText: "حسنًا",
+            confirmButtonColor: "#ab1c1c",
+          });
         }
       );
     } else {
-      alert("خدمات تحديد الموقع غير مدعومة في هذا المتصفح.");
+      Swal.fire({
+        icon: "error",
+        title: "خطأ",
+        text: "خدمات تحديد الموقع غير مدعومة في هذا المتصفح.",
+        confirmButtonText: "حسنًا",
+        confirmButtonColor: "#ab1c1c",
+      });
     }
   };
 
-  // تغيير الحالة المختارة
+  // تغيير حالة الحالة المختارة
   const handleStatusChange = (status) => {
     setFormData((prevData) => ({ ...prevData, status }));
   };
@@ -88,7 +100,7 @@ const Home = () => {
       case_type: formData.status,
       location: location,
       assigned_responder: null,
-      status: "الحالة معلقة حتى يتم قبولها",
+      status: 'الحالة معلقة حتى يتم قبولها',
       patient: {
         name: formData.name,
         phone: formData.phone,
@@ -97,18 +109,10 @@ const Home = () => {
     };
 
     try {
-      // إرسال الحالة إلى الـ MockAPI
-      await axios.post("https://67073bf9a0e04071d2298046.mockapi.io/users", newCase);
+      await axios.post('https://67073bf9a0e04071d2298046.mockapi.io/users', newCase);
       setIsOrderSent(true);
     } catch (error) {
       console.error("Error sending case:", error);
-      Swal.fire({
-        icon: "error",
-        title: "خطأ",
-        text: "حدث خطأ أثناء إرسال البيانات. يرجى المحاولة مرة أخرى لاحقًا.",
-        confirmButtonText: "حسنًا",
-        confirmButtonColor: "#ab1c1c",
-      });
     } finally {
       setLoading(false);
     }
@@ -118,9 +122,9 @@ const Home = () => {
   useEffect(() => {
     const fetchCaseStatus = async () => {
       try {
-        const response = await axios.get("https://67073bf9a0e04071d2298046.mockapi.io/users");
+        const response = await axios.get('https://67073bf9a0e04071d2298046.mockapi.io/users');
         const lastCase = response.data[response.data.length - 1];
-        setAcceptedCase(lastCase); // تخزين آخر حالة
+        setAcceptedCase(lastCase);
         if (lastCase.is_accepted) {
           setIsAccepted(true);
         }
@@ -130,8 +134,8 @@ const Home = () => {
     };
 
     if (isOrderSent) {
-      const intervalId = setInterval(fetchCaseStatus, 5000); // التحقق كل 5 ثوانٍ
-      return () => clearInterval(intervalId); // تنظيف عند تدمير المكون
+      const intervalId = setInterval(fetchCaseStatus, 3000);
+      return () => clearInterval(intervalId);
     }
   }, [isOrderSent]);
 
@@ -150,9 +154,9 @@ const Home = () => {
       case "contact":
         sectionRef = contactRef;
         break;
-      case "home":
+      case "home": 
         window.scrollTo({ top: 0, behavior: "smooth" });
-        return;
+        return; 
       default:
         sectionRef = null;
     }
@@ -163,6 +167,7 @@ const Home = () => {
       window.scrollTo({ top: topOffset, behavior: "smooth" });
     }
   };
+
 
   useEffect(() => {
     const observerOptions = {
@@ -194,179 +199,105 @@ const Home = () => {
 
   return (
     <div>
-<header className="h-[79vh] relative p-8 text-center bg-white text-gray-800 shadow-lg flex flex-col justify-center items-center overflow-hidden header">
-  <div className="relative z-10 mx-auto">
-    <h1 className="text-4xl mb-16 leading-tight drop-shadow-lg headertxt">
-      نحن هنا لمساعدتك في حالات
-      <span className="text-red-600 font-extrabold"> الطوارئ</span>
-      <br />
-    </h1>
-    <button
-      onClick={() => setIsModalOpen(!isModalOpen)}
-      className="relative text-3xl mx-auto bg-red-600 text-white font-bold w-44 h-44 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-2xl focus:outline-none wave-button"
-    >
-      نداء استغاثه
-    </button>
-
-    {isModalOpen && (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-100">
-        <div className="bg-white p-10 rounded-lg max-w-md w-full relative shadow-lg">
+     <header className="h-[79vh] relative p-8 text-center bg-white text-gray-800 shadow-lg flex flex-col justify-center items-center overflow-hidden header">
+        <div className="relative z-10 mx-auto">
+          <h1 className="text-4xl mb-16 leading-tight drop-shadow-lg headertxt">
+            هل انت في حالة <span className="text-red-600 mx-2 font-extrabold">طوارئ؟</span>
+          </h1>
           <button
-            onClick={() => setIsModalOpen(false)}
-            className="absolute top-2 left-2 text-xl text-gray-600 hover:text-[#ab1c1c]"
+             onClick={() => {
+              setIsModalOpen(!isModalOpen);
+              handleLocation(); // Get the location when the modal opens
+            }}
+            className="relative text-3xl mx-auto bg-red-600 text-white font-bold w-44 h-44 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-2xl focus:outline-none wave-button"
           >
-            ✖
+            نداء استغاثه
           </button>
-
-          {loading ? (
-            <div className="flex flex-col items-center justify-center h-full">
-              <div
-                className="animate-spin w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full"
-                role="status"
-              ></div>
-              <p className="mt-4 text-lg text-gray-600">
-                جاري البحث عن مسعف...
-              </p>
-            </div>
-          ) : !isOrderSent ? (
-            <>
-              <div className="mb-4 flex items-center border-b-2 border-[#ab1c1c]">
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="أدخل اسمك"
-                  className="p-2 w-full bg-transparent focus:outline-none"
-                />
-              </div>
-              <div className="mb-4 flex items-center border-b-2 gap-2 border-[#ab1c1c]">
-                <input
-                  type="text"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  maxLength={10}
-                  placeholder="أدخل رقم هاتفك"
-                  className="p-2 w-full bg-transparent focus:outline-none"
-                />
-                <span className="mr-2 text-[#ab1c1c]">966+</span>
-              </div>
-
-              <div className="mb-4">
-                <p className="block mb-1 text-right text-gray-500">اختر الحالة</p>
-                <div className="flex flex-wrap gap-2">
-                  {statuses.map((statusOption) => (
-                    <button
-                      key={statusOption}
-                      onClick={() => handleStatusChange(statusOption)}
-                      className={`flex-1 p-2 border rounded-full transition duration-300 ease-in-out ${
-                        formData.status === statusOption
-                          ? "bg-[#ab1c1c] text-white"
-                          : "border-[#ab1c1c] text-[#ab1c1c] hover:bg-[#ab1c1c] hover:text-white"
-                      }`}
-                    >
-                      {statusOption}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <button
-                onClick={handleSend}
-                className="py-2 px-4 w-full bg-[#ab1c1c] text-white font-bold rounded-full"
-              >
-                إرسال
-              </button>
-            </>
-          ) : isCancelled ? (
-            <div className="text-center">
-              <p className="text-red-600 mb-4">
-                عذرًا، لم يتوفر مسعف في الوقت المحدد. نقدر صبرك ونسأل الله
-                لك السلامة.
-              </p>
-              <div className="flex flex-col items-center gap-4">
-                <button
-                  onClick={handleRetry}
-                  className="py-2 px-4 bg-[#ab1c1c] text-white rounded-full transition duration-300 hover:bg-[#9b1b1b]"
-                >
-                  إعادة المحاولة
-                </button>
-                <button
-                  onClick={() => (window.location.href = "tel:998")}
-                  className="py-2 px-4 bg-[#ab1c1c] text-white rounded-full transition duration-300 hover:bg-[#9b1b1b]"
-                >
-                  الاتصال بالهلال الأحمر (998)
-                </button>
-              </div>
-            </div>
-          ) : !isAccepted ? (
-            <div className="flex flex-col items-center">
-              <div
-                className="animate-spin inline-block w-8 h-8 border-4 border-t-transparent border-red-500 rounded-full"
-                role="status"
-              ></div>
-              <p className="mt-4 text-gray-600">
-                جاري البحث عن مسعف... ({timer} ثواني متبقية)
-              </p>
-            </div>
-          ) : isCompleted ? (
-            <>
-              <div className="text-center text-[#ab1c1c]">
-                <p className="text-2xl">الحمدلله على سلامتك.</p>
-                <p className="text-lg mb-4">
-                  تم التعامل مع الحالة بنجاح. ممتنين لمساعدتك، نتمنى لك
-                  الشفاء العاجل!
-                </p>
-
-                <p className="mb-4">يرجى تقييم المسعف:</p>
-
-                <div className="flex justify-center gap-2 mb-4">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      onClick={() => setRating(star)}
-                      className={`text-2xl ${
-                        rating >= star ? "text-[#ab1c1c]" : "text-gray-400"
-                      }`}
-                    >
-                      ★
-                    </button>
-                  ))}
-                </div>
-
-                <button
-                  onClick={handleFeedbackSubmit}
-                  className="mt-4 py-2 px-4 bg-[#ab1c1c] text-white rounded-full"
-                >
-                  إرسال التقييم
-                </button>
-              </div>
-            </>
-          ) : (
-            <div className="text-center">
-              <p className="text-lg mb-4 text-[#ab1c1c]">
-                تم استلام طلب الاستغاثة الخاص بك، وأقرب مسعف في طريقه إليك
-                الآن. نحن هنا لمساعدتك.
-              </p>
-
-              <p className="mb-4">
-                <strong>المسعف:</strong>{" "}
-                {responderInfo?.name || "غير متوفر"}
-                <br />
-                <strong>رقم الهاتف:</strong>{" "}
-                {responderInfo?.phone || "غير متوفر"}
-              </p>
-            </div>
-          )}
         </div>
-      </div>
-    )}
-  </div>
-</header>
+      </header>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[1000]">
+          <div className="bg-white p-10 rounded-lg max-w-md w-full relative shadow-lg z-[1010]">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-2 left-2 text-xl text-gray-600 hover:text-[#ab1c1c]"
+            >
+              ✖
+            </button>
+
+            {loading ? (
+              <div className="flex flex-col items-center">
+                <div className="animate-spin w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full" role="status"></div>
+                <p className="mt-4 text-lg text-gray-600">جاري البحث عن مسعف...</p>
+              </div>
+            ) : !isOrderSent ? (
+              <>
+                <div className="mb-4 flex items-center border-b-2 border-[#ab1c1c]">
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    placeholder="أدخل اسمك"
+                    className="p-2 w-full bg-transparent focus:outline-none"
+                  />
+                </div>
+                <div className="mb-4 flex items-center border-b-2 gap-2 border-[#ab1c1c]">
+                  <input
+                    type="text"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    maxLength={10}
+                    placeholder="أدخل رقم هاتفك"
+                    className="p-2 w-full bg-transparent focus:outline-none"
+                  />
+                  <span className="mr-2 text-[#ab1c1c]">966+</span>
+                </div>
+
+                <div className="mb-4">
+                  <p className="block mb-1 text-right text-gray-500">اختر الحالة</p>
+                  <div className="flex flex-wrap gap-2">
+                    {statuses.map((statusOption) => (
+                      <button
+                        key={statusOption}
+                        onClick={() => handleStatusChange(statusOption)}
+                        className={`flex-1 p-2 border rounded-full transition duration-300 ease-in-out ${
+                          formData.status === statusOption
+                            ? "bg-[#ab1c1c] text-white"
+                            : "border-[#ab1c1c] text-[#ab1c1c] hover:bg-[#ab1c1c] hover:text-white"
+                        }`}
+                      >
+                        {statusOption}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleSend}
+                  className="py-2 px-4 w-full bg-[#ab1c1c] text-white font-bold rounded-full"
+                >
+                  إرسال
+                </button>
+              </>
+            ) : (
+              <div>
+                <h3 className="text-xl font-bold mb-2">حالة الحالة:</h3>
+                <p><strong>نوع الحالة:</strong> {acceptedCase?.case_type}</p>
+                <p><strong>اسم المريض:</strong> {acceptedCase?.patient?.name}</p>
+                <p><strong>رقم الهاتف:</strong> {isAccepted ? acceptedCase?.patient?.phone : 'سيظهر بعد قبول الحالة'}</p>
+                <p><strong>حالة القبول:</strong> {isAccepted ? "تم قبول الحالة" : "الحالة معلقة حتى يتم قبولها"}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {<Navbar scrollToSection={scrollToSection} />}
 
 
-      <Navbar scrollToSection={scrollToSection} />
 
       {/* من نحن */}
       <section
