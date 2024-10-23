@@ -217,83 +217,97 @@ const Home = () => {
       </header>
 
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[1000]">
-          <div className="bg-white p-10 rounded-lg max-w-md w-full relative shadow-lg z-[1010]">
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-2 left-2 text-xl text-gray-600 hover:text-[#ab1c1c]"
-            >
-              ✖
-            </button>
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[1000]">
+    <div className="bg-white p-10 rounded-lg max-w-md w-full relative shadow-lg z-[1010]">
+      <button
+        onClick={() => setIsModalOpen(false)}
+        className="absolute top-2 left-2 text-xl text-gray-600 hover:text-[#ab1c1c]"
+      >
+        ✖
+      </button>
 
-            {loading ? (
-              <div className="flex flex-col items-center">
-                <div className="animate-spin w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full" role="status"></div>
-                <p className="mt-4 text-lg text-gray-600">جاري البحث عن مسعف...</p>
-              </div>
-            ) : !isOrderSent ? (
-              <>
-                <div className="mb-4 flex items-center border-b-2 border-[#ab1c1c]">
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    placeholder="أدخل اسمك"
-                    className="p-2 w-full bg-transparent focus:outline-none"
-                  />
-                </div>
-                <div className="mb-4 flex items-center border-b-2 gap-2 border-[#ab1c1c]">
-                  <input
-                    type="text"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    maxLength={10}
-                    placeholder="أدخل رقم هاتفك"
-                    className="p-2 w-full bg-transparent focus:outline-none"
-                  />
-                  <span className="mr-2 text-[#ab1c1c]">966+</span>
-                </div>
+      {loading ? (
+        <div className="flex flex-col items-center text-center">
+          <div className="animate-spin w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full" role="status"></div>
+          <p className="mt-4 text-lg text-gray-600">جاري البحث عن مسعف...</p>
+        </div>
+      ) : !isOrderSent ? (
+        <>
+          <div className="mb-4 flex items-center border-b-2 border-[#ab1c1c]">
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              placeholder="أدخل اسمك"
+              className="p-2 w-full bg-transparent focus:outline-none"
+            />
+          </div>
+          <div className="mb-4 flex items-center border-b-2 gap-2 border-[#ab1c1c]">
+            <input
+              type="text"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              maxLength={10}
+              placeholder="أدخل رقم هاتفك"
+              className="p-2 w-full bg-transparent focus:outline-none"
+            />
+            <span className="mr-2 text-[#ab1c1c]">966+</span>
+          </div>
 
-                <div className="mb-4">
-                  <p className="block mb-1 text-right text-gray-500">اختر الحالة</p>
-                  <div className="flex flex-wrap gap-2">
-                    {statuses.map((statusOption) => (
-                      <button
-                        key={statusOption}
-                        onClick={() => handleStatusChange(statusOption)}
-                        className={`flex-1 p-2 border rounded-full transition duration-300 ease-in-out ${
-                          formData.status === statusOption
-                            ? "bg-[#ab1c1c] text-white"
-                            : "border-[#ab1c1c] text-[#ab1c1c] hover:bg-[#ab1c1c] hover:text-white"
-                        }`}
-                      >
-                        {statusOption}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
+          <div className="mb-4">
+            <p className="block mb-1 text-right text-gray-500">اختر الحالة</p>
+            <div className="flex flex-wrap gap-2">
+              {statuses.map((statusOption) => (
                 <button
-                  onClick={handleSend}
-                  className="py-2 px-4 w-full bg-[#ab1c1c] text-white font-bold rounded-full"
+                  key={statusOption}
+                  onClick={() => handleStatusChange(statusOption)}
+                  className={`flex-1 p-2 border rounded-full transition duration-300 ease-in-out ${
+                    formData.status === statusOption
+                      ? "bg-[#ab1c1c] text-white"
+                      : "border-[#ab1c1c] text-[#ab1c1c] hover:bg-[#ab1c1c] hover:text-white"
+                  }`}
                 >
-                  إرسال
+                  {statusOption}
                 </button>
-              </>
-            ) : (
-              <div>
-                <h3 className="text-xl font-bold mb-2">حالة الحالة:</h3>
-                <p><strong>نوع الحالة:</strong> {acceptedCase?.case_type}</p>
-                <p><strong>اسم المريض:</strong> {acceptedCase?.patient?.name}</p>
-                <p><strong>رقم الهاتف:</strong> {isAccepted ? acceptedCase?.patient?.phone : 'سيظهر بعد قبول الحالة'}</p>
-                <p><strong>حالة القبول:</strong> {isAccepted ? "تم قبول الحالة" : "الحالة معلقة حتى يتم قبولها"}</p>
-              </div>
-            )}
+              ))}
+            </div>
+          </div>
+
+          <button
+            onClick={handleSend}
+            className="py-2 px-4 w-full bg-[#ab1c1c] text-white font-bold rounded-full"
+          >
+            إرسال
+          </button>
+        </>
+      ) : (
+        <div className="flex flex-col items-center">
+          <h3 className="text-xl font-bold mb-2 text-[#ab1c1c]">حالة الحالة</h3>
+          <div className="flex flex-col w-full mb-4">
+            <div className="border-b-2 border-[#ab1c1c] mb-2 p-2">
+              <strong className="block mb-1 text-right">نوع الحالة:</strong> 
+              <span>{acceptedCase?.case_type}</span>
+            </div>
+            <div className="border-b-2 border-[#ab1c1c] mb-2 p-2">
+              <strong className="block mb-1 text-right">اسم المريض:</strong> 
+              <span>{acceptedCase?.patient?.name}</span>
+            </div>
+            <div className="border-b-2 border-[#ab1c1c] mb-2 p-2">
+              <strong className="block mb-1 text-right">رقم الهاتف:</strong> 
+              <span>{isAccepted ? acceptedCase?.patient?.phone : 'سيظهر بعد قبول الحالة'}</span>
+            </div>
+            <div className="border-b-2 border-[#ab1c1c] p-2">
+              <strong className="block mb-1 text-right">حالة القبول:</strong> 
+              <span>{isAccepted ? "تم قبول الحالة" : "الحالة معلقة حتى يتم قبولها"}</span>
+            </div>
           </div>
         </div>
       )}
+    </div>
+  </div>
+)}
 
       {<Navbar scrollToSection={scrollToSection} />}
 
