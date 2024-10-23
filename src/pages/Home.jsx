@@ -25,35 +25,41 @@ const Home = () => {
 
   const statuses = ['كسور', 'حروق', 'اغماء', 'اختناق'];
 
-  // تحديد الموقع باستخدام المتصفح
-  const handleLocation = () => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setLocation({ latitude, longitude });
-        },
-        (error) => {
-          console.error("Error getting location", error);
-          Swal.fire({
-            icon: "error",
-            title: "خطأ",
-            text: "لم نتمكن من تحديد موقعك. تأكد من تفعيل خدمات الموقع.",
-            confirmButtonText: "حسنًا",
-            confirmButtonColor: "#ab1c1c",
-          });
-        }
-      );
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: "خطأ",
-        text: "خدمات تحديد الموقع غير مدعومة في هذا المتصفح.",
-        confirmButtonText: "حسنًا",
-        confirmButtonColor: "#ab1c1c",
-      });
-    }
-  };
+  useEffect(() => {
+    const handleLocation = () => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setLocation({ latitude, longitude });
+            console.log("Location obtained:", latitude, longitude);
+          },
+          (error) => {
+            console.error("Error getting location", error);
+            Swal.fire({
+              icon: "error",
+              title: "خطأ",
+              text: "لم نتمكن من تحديد موقعك. تأكد من تفعيل خدمات الموقع.",
+              confirmButtonText: "حسنًا",
+              confirmButtonColor: "#ab1c1c",
+            });
+          }
+        );
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "خطأ",
+          text: "خدمات تحديد الموقع غير مدعومة في هذا المتصفح.",
+          confirmButtonText: "حسنًا",
+          confirmButtonColor: "#ab1c1c",
+        });
+      }
+    };
+  
+    // طلب الوصول إلى الموقع عند فتح الصفحة
+    handleLocation();
+  }, []);
+  
 
   // تغيير حالة الحالة المختارة
   const handleStatusChange = (status) => {
@@ -66,7 +72,6 @@ const Home = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // إرسال الحالة
   const handleSend = async () => {
     if (!formData.name || !formData.phone || !formData.status) {
       Swal.fire({
@@ -78,24 +83,24 @@ const Home = () => {
       });
       return;
     }
-
+  
     if (!location) {
       Swal.fire({
         icon: "error",
         title: "خطأ",
-        text: "يرجى تحديد موقعك أولاً.",
+        text: "لم نتمكن من الحصول على موقعك. يرجى التأكد من تفعيل خدمات الموقع.",
         confirmButtonText: "حسنًا",
         confirmButtonColor: "#ab1c1c",
       });
       return;
     }
-
+  
     setLoading(true);
-
+  
     const newCase = {
       case_id: Date.now(),
       case_type: formData.status,
-      location: location,
+      location: location || { latitude: 24.7136, longitude: 46.6753 }, // استخدام قيم افتراضية إذا كانت الإحداثيات غير متاحة
       assigned_responder: null,
       status: 'الحالة معلقة حتى يتم قبولها',
       patient: {
@@ -104,7 +109,7 @@ const Home = () => {
       },
       is_accepted: false,
     };
-
+  
     try {
       await axios.post('https://67073bf9a0e04071d2298046.mockapi.io/users', newCase);
       setIsOrderSent(true);
@@ -114,7 +119,7 @@ const Home = () => {
       setLoading(false);
     }
   };
-
+  
   // جلب الحالة بشكل دوري
   useEffect(() => {
     const fetchCaseStatus = async () => {

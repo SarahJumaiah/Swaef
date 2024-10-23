@@ -66,7 +66,7 @@ function Sign() {
 
     console.log("Sending data:", submissionData);  // تحقق من القيم
 
-    axios.post('https://67073bf9a0e04071d2298046.mockapi.io/tasks', submissionData)
+    axios.post('https://67073bf9a0e04071d2298046.mockapi.io/Medic', submissionData)
       .then((response) => {
         if (response.status === 201) {
           navigate('/login');

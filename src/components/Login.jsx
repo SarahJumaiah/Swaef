@@ -1,12 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import logo from '../assets/logo.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Login() {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // بيانات الإدمن 
+  const adminCredentials = {
+    email: 'admin@Swaef.com', 
+    password: 'admin1234', 
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  
+    if (formData.email === adminCredentials.email && formData.password === adminCredentials.password) {
+      navigate('/admin');
+    } else {
+      axios.get('https://6717e676b910c6a6e02a7fd0.mockapi.io/log')
+        .then((response) => {
+          const users = response.data;
+          const user = users.find((user) => user.email === formData.email && user.password === formData.password);
+  
+          if (user) {
+            // تخزين معرف المسعف في localStorage بعد تسجيل الدخول
+            localStorage.setItem('medicId', user.id);
+  
+            // الانتقال إلى صفحة المسعف
+            navigate(`/MedicPage/${user.id}`);
+          } else {
+            setErrorMessage('البريد الإلكتروني أو كلمة المرور غير صحيحة.');
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching users:', error);
+          setErrorMessage('حدث خطأ أثناء محاولة تسجيل الدخول.');
+        });
+    }
+  };
+  
+  
   return (
     <div className="flex items-center justify-center w-full min-h-screen bg-gray-100">
-      <div className="p-8 max-w-4xl w-full flex flex-col md:flex-row gap-8"> 
-        <div className="md:w-1/2 flex flex-col items-center justify-center  mb-8 md:mb-0">
+      <div className="p-8 max-w-4xl w-full flex flex-col md:flex-row gap-8">
+        <div className="md:w-1/2 flex flex-col items-center justify-center mb-8 md:mb-0">
           <img src={logo} alt="Logo" className="w-32 h-auto mb-2" />
 
           <div className="text-center">
@@ -16,7 +66,6 @@ function Login() {
               <span className="font-bold text-[#ab1c1c]">
                 ﴿وَجَعَلْنَاهُمْ أَئِمَّةً يَهْدُونَ بِأَمْرِنَا وَأَوْحَيْنَا إِلَيْهِمْ فِعْلَ الْخَيْرَاتِ وَإِقَامَ الصَّلَاةِ وَإِيتَاء الزَّكَاةِ وَكَانُوا لَنَا عَابِدِينَ﴾
               </span>
-
               <span className='text-xs'>
                  (73) سورة الأنبياء.
               </span>      
@@ -24,14 +73,18 @@ function Login() {
           </div>
         </div>
 
-
-        <div className="md:w-1/2 bg-white shadow-lg rounded-lg p-8 space-y-6 h-96 flex flex-col justify-center"> {/* Added flex properties */}
-          <form className="rtl space-y-4">
+        <div className="md:w-1/2 bg-white shadow-lg rounded-lg p-8 space-y-6 h-96 flex flex-col justify-center">
+          {errorMessage && (
+            <div className="text-red-500 text-center">{errorMessage}</div>
+          )}
+          <form className="rtl space-y-4" onSubmit={handleSubmit}>
             <div className="border-b-2 border-[#ab1c1c]">
               <input
                 type="email"
                 id="email"
                 name="email"
+                value={formData.email}
+                onChange={handleChange}
                 className="w-full p-3 text-gray-700 bg-transparent focus:outline-none"
                 placeholder="أدخل البريد الإلكتروني"
                 required
@@ -43,6 +96,8 @@ function Login() {
                 type="password"
                 id="password"
                 name="password"
+                value={formData.password}
+                onChange={handleChange}
                 className="w-full p-3 text-gray-700 bg-transparent focus:outline-none"
                 placeholder="أدخل كلمة المرور"
                 required
@@ -58,7 +113,6 @@ function Login() {
               </button>
             </div>
           </form>
-
 
           <div className="mt-4 text-sm text-center">
             <p className="text-gray-600">ليس لديك حساب؟
