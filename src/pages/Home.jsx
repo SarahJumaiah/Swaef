@@ -21,45 +21,72 @@ const Home = () => {
     phone: "",
     status: "",
   });
-  const [acceptedCase, setAcceptedCase] = useState(null); // لتخزين الحالة المقبولة
-  const [isAccepted, setIsAccepted] = useState(false); // حالة القبول
-  const [location, setLocation] = useState(null); // لتخزين الموقع
+  const [responderInfo, setResponderInfo] = useState(null);
+  const [isAccepted, setIsAccepted] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [rating, setRating] = useState(null);
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [loading, setLoading] = useState(false); // لإظهار حالة التحميل عند الإرسال
+  const [timer, setTimer] = useState(180); // مؤقت العد التنازلي (3 دقائق)
+  const [isCancelled, setIsCancelled] = useState(false); // حالة إلغاء الطلب
+  const [caseId, setCaseId] = useState(null); // لتخزين معرف الحالة
 
   const statuses = ["كسور", "حروق", "اغماء", "اختناق"];
 
-  // تحديد الموقع باستخدام متصفح المستخدم
-  const handleLocation = () => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setLocation({ latitude, longitude });
-        },
-        (error) => {
-          console.error("Error getting location", error);
-          alert("لم نتمكن من تحديد موقعك. تأكد من تفعيل خدمات الموقع.");
-        }
-      );
-    } else {
-      alert("خدمات تحديد الموقع غير مدعومة في هذا المتصفح.");
-    }
-  };
-
-  // تغيير الحالة المختارة
+  // تغيير الحالة
   const handleStatusChange = (status) => {
     setFormData((prevData) => ({ ...prevData, status }));
   };
 
-  // تغيير المدخلات
+  // عند تغيير البيانات المدخلة
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // إرسال الحالة
+  // دالة لبدء العد التنازلي
+  useEffect(() => {
+    let countdown;
+    if (isOrderSent && !isAccepted && !isCancelled) {
+      countdown = setInterval(() => {
+        setTimer((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(countdown);
+            setIsCancelled(true); // إلغاء الطلب
+            updateCaseStatusToCancelled(); // تحديث الحالة إلى "ملغي"
+          }
+          return prevTime - 1;
+        });
+      }, 1000); // عد تنازلي كل ثانية
+    }
+    return () => clearInterval(countdown);
+  }, [isOrderSent, isAccepted, isCancelled]);
+
+  // تحديث الحالة إلى "ملغي" عند انتهاء الوقت
+  const updateCaseStatusToCancelled = async () => {
+    if (caseId) {
+      try {
+        await axios.put(
+          `https://67073bf9a0e04071d2298046.mockapi.io/users/${caseId}`,
+          {
+            status: "ملغي",
+          }
+        );
+      } catch (error) {
+        console.error("Error updating case status to cancelled:", error);
+      }
+    }
+  };
+
+  // عند إرسال الطلب
   const handleSend = async () => {
-    if (!formData.name || !formData.phone || !formData.status) {
+    const newErrors = {
+      name: !formData.name,
+      phone: !formData.phone,
+      status: !formData.status,
+    };
+
+    if (newErrors.name || newErrors.phone || newErrors.status) {
       Swal.fire({
         icon: "error",
         title: "خطأ",
@@ -67,41 +94,59 @@ const Home = () => {
         confirmButtonText: "حسنًا",
         confirmButtonColor: "#ab1c1c",
       });
-      return;
+      return; // توقف في حال وجود أخطاء
     }
 
-    if (!location) {
-      Swal.fire({
-        icon: "error",
-        title: "خطأ",
-        text: "يرجى تحديد موقعك أولاً.",
-        confirmButtonText: "حسنًا",
-        confirmButtonColor: "#ab1c1c",
-      });
-      return;
-    }
-
-    setLoading(true);
-
-    const newCase = {
-      case_id: Date.now(),
-      case_type: formData.status,
-      location: location,
-      assigned_responder: null,
-      status: "الحالة معلقة حتى يتم قبولها",
-      patient: {
-        name: formData.name,
-        phone: formData.phone,
-      },
-      is_accepted: false,
-    };
+    setLoading(true); // إظهار حالة التحميل أثناء الإرسال
 
     try {
-      // إرسال الحالة إلى الـ MockAPI
-      await axios.post("https://67073bf9a0e04071d2298046.mockapi.io/users", newCase);
+      // إرسال بيانات الحالة إلى الخادم
+      const caseData = {
+        case_id: uuidv4(),
+        case_type: formData.status,
+        location: null, // لم يتم تحديد الموقع بعد
+        assigned_responder: null,
+        status: "الحالة معلقة حتى يتم قبولها",
+        patient: {
+          name: formData.name,
+          phone: formData.phone,
+        },
+        is_accepted: false,
+      };
+
+      const postResponse = await axios.post(
+        "https://67073bf9a0e04071d2298046.mockapi.io/users",
+        caseData
+      );
       setIsOrderSent(true);
+      setTimer(180); // إعادة ضبط المؤقت إلى 3 دقائق
+      setCaseId(caseData.case_id); // تخزين معرف الحالة للاستخدام لاحقًا
+
+      // تحقق من حالة الطلب بشكل دوري كل 5 ثوانٍ
+      const interval = setInterval(async () => {
+        const updatedResponse = await axios.get(
+          `https://67073bf9a0e04071d2298046.mockapi.io/users/${caseData.case_id}`
+        );
+        const updatedData = updatedResponse.data;
+
+        if (updatedData.is_accepted && updatedData.assigned_responder) {
+          setResponderInfo(updatedData.assigned_responder);
+          setIsAccepted(true);
+
+          // بعد قبول المسعف، الحصول على الموقع
+          getLocationAndUpdateCase(caseData.case_id);
+
+          clearInterval(interval); // إيقاف التحقق عند قبول الحالة
+        }
+
+        if (updatedData.status === "مكتملة") {
+          setIsCompleted(true);
+          clearInterval(interval); // إيقاف التحقق بعد اكتمال الحالة
+        }
+      }, 5000); // تحديث كل 5 ثوانٍ
     } catch (error) {
-      console.error("Error sending case:", error);
+      console.error("Error sending data:", error);
+
       Swal.fire({
         icon: "error",
         title: "خطأ",
@@ -110,30 +155,72 @@ const Home = () => {
         confirmButtonColor: "#ab1c1c",
       });
     } finally {
-      setLoading(false);
+      setLoading(false); // إخفاء حالة التحميل بعد الإرسال
     }
   };
 
-  // جلب الحالة بشكل دوري
-  useEffect(() => {
-    const fetchCaseStatus = async () => {
-      try {
-        const response = await axios.get("https://67073bf9a0e04071d2298046.mockapi.io/users");
-        const lastCase = response.data[response.data.length - 1];
-        setAcceptedCase(lastCase); // تخزين آخر حالة
-        if (lastCase.is_accepted) {
-          setIsAccepted(true);
-        }
-      } catch (error) {
-        console.error("Error fetching cases:", error);
-      }
-    };
+  // الحصول على الموقع وتحديث الحالة
+  const getLocationAndUpdateCase = async (caseId) => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
 
-    if (isOrderSent) {
-      const intervalId = setInterval(fetchCaseStatus, 5000); // التحقق كل 5 ثوانٍ
-      return () => clearInterval(intervalId); // تنظيف عند تدمير المكون
+          try {
+            // استخدام Mapbox API للحصول على العنوان من الإحداثيات
+            const response = await axios.get(
+              `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=pk.eyJ1IjoienlhZDIyIiwiYSI6ImNtMmhyZjYwbjBlNzUycXF2eW5ucjdrNTIifQ.gl1phZ7zs3yRryUmKgrKMQ`,
+              { timeout: 10000 } // 10 ثوانٍ مهلة زمنية
+            );
+
+            const address =
+              response.data.features[0]?.place_name || "العنوان غير متاح";
+
+            // تحديث الحالة بالموقع
+            await axios.put(
+              `https://67073bf9a0e04071d2298046.mockapi.io/users/${caseId}`,
+              {
+                location: {
+                  latitude,
+                  longitude,
+                  address,
+                },
+              }
+            );
+          } catch (error) {
+            console.error("Error fetching location:", error);
+          }
+        },
+        (error) => {
+          console.error("Error getting location", error);
+
+          Swal.fire({
+            icon: "error",
+            title: "خطأ في تحديد الموقع",
+            text: "فشل في تحديد الموقع. يرجى التأكد من تفعيل خدمات الموقع.",
+            confirmButtonText: "حسنًا",
+            confirmButtonColor: "#ab1c1c",
+          });
+        }
+      );
     }
-  }, [isOrderSent]);
+  };
+
+  // إرسال التقييم
+  const handleFeedbackSubmit = async () => {
+    setFeedbackSubmitted(true);
+    setIsModalOpen(false);
+    setIsOrderSent(false); // السماح ببدء طلب جديد
+    setFormData({ name: "", phone: "", status: "" }); // تصفية البيانات القديمة
+    setRating(null); // إعادة ضبط التقييم
+  };
+
+  // إعادة إرسال الطلب بعد انتهاء الوقت
+  const handleRetry = () => {
+    setIsOrderSent(false);
+    setIsCancelled(false);
+    setTimer(10); // إعادة ضبط المؤقت إلى 3 دقائق
+  };
 
   const scrollToSection = (section) => {
     let sectionRef;
@@ -150,20 +237,20 @@ const Home = () => {
       case "contact":
         sectionRef = contactRef;
         break;
-      case "home":
+      case "home": 
         window.scrollTo({ top: 0, behavior: "smooth" });
-        return;
+        return; 
       default:
         sectionRef = null;
     }
-
+  
     if (sectionRef && sectionRef.current) {
       const topOffset =
         sectionRef.current.getBoundingClientRect().top + window.scrollY - 100;
       window.scrollTo({ top: topOffset, behavior: "smooth" });
     }
   };
-
+  
   useEffect(() => {
     const observerOptions = {
       threshold: 0.3,
@@ -208,161 +295,160 @@ const Home = () => {
             نداء استغاثه
           </button>
           {isModalOpen && (
-{(
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-100">
-    <div className="bg-white p-10 rounded-lg max-w-md w-full relative shadow-lg">
-      <button
-        onClick={() => setIsModalOpen(false)}
-        className="absolute top-2 left-2 text-xl text-gray-600 hover:text-[#ab1c1c]"
-      >
-        ✖
-      </button>
-
-      {loading ? (
-        <div className="flex flex-col items-center justify-center h-full">
-          <div
-            className="animate-spin w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full"
-            role="status"
-          ></div>
-          <p className="mt-4 text-lg text-gray-600">
-            جاري البحث عن مسعف...
-          </p>
-        </div>
-      ) : !isOrderSent ? (
-        <>
-          <div className="mb-4 flex items-center border-b-2 border-[#ab1c1c]">
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              placeholder="أدخل اسمك"
-              className="p-2 w-full bg-transparent focus:outline-none"
-            />
-          </div>
-          <div className="mb-4 flex items-center border-b-2 gap-2 border-[#ab1c1c]">
-            <input
-              type="text"
-              name="phone"
-              value={formData.phone}
-              onChange={handleInputChange}
-              maxLength={10}
-              placeholder="أدخل رقم هاتفك"
-              className="p-2 w-full bg-transparent focus:outline-none"
-            />
-            <span className="mr-2 text-[#ab1c1c]">966+</span>
-          </div>
-
-          <div className="mb-4">
-            <p className="block mb-1 text-right text-gray-500">
-              اختر الحالة
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {statuses.map((statusOption) => (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-100">
+              <div className="bg-white p-10 rounded-lg max-w-md w-full relative shadow-lg">
                 <button
-                  key={statusOption}
-                  onClick={() => handleStatusChange(statusOption)}
-                  className={`flex-1 p-2 border rounded-full transition duration-300 ease-in-out ${
-                    formData.status === statusOption
-                      ? "bg-[#ab1c1c] text-white"
-                      : "border-[#ab1c1c] text-[#ab1c1c] hover:bg-[#ab1c1c] hover:text-white"
-                  }`}
+                  onClick={() => setIsModalOpen(false)}
+                  className="absolute top-2 left-2 text-xl text-gray-600 hover:text-[#ab1c1c]"
                 >
-                  {statusOption}
+                  ✖
                 </button>
-              ))}
-            </div>
-          </div>
 
-          <button
-            onClick={handleSend}
-            className="py-2 px-4 w-full bg-[#ab1c1c] text-white font-bold rounded-full"
-          >
-            إرسال
-          </button>
-        </>
-      ) : isCancelled ? (
-        <div className="text-center">
-          <p className="text-red-600 mb-4">
-            عذرًا، لم يتوفر مسعف في الوقت المحدد. نقدر صبرك ونسأل الله
-            لك السلامة.
-          </p>
-          <div className="flex flex-col items-center gap-4">
-            <button
-              onClick={handleRetry}
-              className="py-2 px-4 bg-[#ab1c1c] text-white rounded-full transition duration-300 hover:bg-[#9b1b1b]"
-            >
-              إعادة المحاولة
-            </button>
-            <button
-              onClick={() => (window.location.href = "tel:998")}
-              className="py-2 px-4 bg-[#ab1c1c] text-white rounded-full transition duration-300 hover:bg-[#9b1b1b]"
-            >
-              الاتصال بالهلال الأحمر (998)
-            </button>
-          </div>
-        </div>
-      ) : !isAccepted ? (
-        <div className="flex flex-col items-center">
-          <div
-            className="animate-spin inline-block w-8 h-8 border-4 border-t-transparent border-red-500 rounded-full"
-            role="status"
-          ></div>
-          <p className="mt-4 text-gray-600">
-            جاري البحث عن مسعف... ({timer} ثواني متبقية)
-          </p>
-        </div>
-      ) : isCompleted ? (
-        <>
-          <div className="text-center text-[#ab1c1c]">
-            <p className="text-2xl">الحمدلله على سلامتك.</p>
-            <p className="text-lg mb-4">
-              تم التعامل مع الحالة بنجاح. ممتنين لمساعدتك، نتمنى لك
-              الشفاء العاجل!
-            </p>
+                {loading ? (
+                  <div className="flex flex-col items-center justify-center h-full">
+                    <div
+                      className="animate-spin w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full"
+                      role="status"
+                    ></div>
+                    <p className="mt-4 text-lg text-gray-600">
+                      جاري البحث عن مسعف...
+                    </p>
+                  </div>
+                ) : !isOrderSent ? (
+                  <>
+                    <div className="mb-4 flex items-center border-b-2 border-[#ab1c1c]">
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        placeholder="أدخل اسمك"
+                        className="p-2 w-full bg-transparent focus:outline-none"
+                      />
+                    </div>
+                    <div className="mb-4 flex items-center border-b-2 gap-2 border-[#ab1c1c]">
+                      <input
+                        type="text"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        maxLength={10}
+                        placeholder="أدخل رقم هاتفك"
+                        className="p-2 w-full bg-transparent focus:outline-none"
+                      />
+                      <span className="mr-2 text-[#ab1c1c]">966+</span>
+                    </div>
 
-            <p className="mb-4">يرجى تقييم المسعف:</p>
+                    <div className="mb-4">
+                      <p className="block mb-1 text-right text-gray-500">
+                        اختر الحالة
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {statuses.map((statusOption) => (
+                          <button
+                            key={statusOption}
+                            onClick={() => handleStatusChange(statusOption)}
+                            className={`flex-1 p-2 border rounded-full transition duration-300 ease-in-out ${
+                              formData.status === statusOption
+                                ? "bg-[#ab1c1c] text-white"
+                                : "border-[#ab1c1c] text-[#ab1c1c] hover:bg-[#ab1c1c] hover:text-white"
+                            }`}
+                          >
+                            {statusOption}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
 
-            <div className="flex justify-center gap-2 mb-4">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <button
-                  key={star}
-                  onClick={() => setRating(star)}
-                  className={`text-2xl ${
-                    rating >= star ? "text-[#ab1c1c]" : "text-gray-400"
-                  }`}
-                >
-                  ★
-                </button>
-              ))}
-            </div>
+                    <button
+                      onClick={handleSend}
+                      className="py-2 px-4 w-full bg-[#ab1c1c] text-white font-bold rounded-full"
+                    >
+                      إرسال
+                    </button>
+                  </>
+                ) : isCancelled ? (
+                  <div className="text-center">
+                    <p className="text-red-600 mb-4">
+                      عذرًا، لم يتوفر مسعف في الوقت المحدد. نقدر صبرك ونسأل الله
+                      لك السلامة.
+                    </p>
+                    <div className="flex flex-col items-center gap-4">
+                      <button
+                        onClick={handleRetry}
+                        className="py-2 px-4 bg-[#ab1c1c] text-white rounded-full transition duration-300 hover:bg-[#9b1b1b]"
+                      >
+                        إعادة المحاولة
+                      </button>
+                      <button
+                        onClick={() => (window.location.href = "tel:998")}
+                        className="py-2 px-4 bg-[#ab1c1c] text-white rounded-full transition duration-300 hover:bg-[#9b1b1b]"
+                      >
+                        الاتصال بالهلال الأحمر (998)
+                      </button>
+                    </div>
+                  </div>
+                ) : !isAccepted ? (
+                  <div className="flex flex-col items-center">
+                    <div
+                      className="animate-spin inline-block w-8 h-8 border-4 border-t-transparent border-red-500 rounded-full"
+                      role="status"
+                    ></div>
+                    <p className="mt-4 text-gray-600">
+                      جاري البحث عن مسعف... ({timer} ثواني متبقية)
+                    </p>
+                  </div>
+                ) : isCompleted ? (
+                  <>
+                    <div className="text-center text-[#ab1c1c]">
+                      <p className="text-2xl">الحمدلله على سلامتك.</p>
+                      <p className="text-lg mb-4">
+                        تم التعامل مع الحالة بنجاح. ممتنين لمساعدتك، نتمنى لك
+                        الشفاء العاجل!
+                      </p>
 
-            <button
-              onClick={handleFeedbackSubmit}
-              className="mt-4 py-2 px-4 bg-[#ab1c1c] text-white rounded-full"
-            >
-              إرسال التقييم
-            </button>
-          </div>
-        </>
-      ) : (
-        <div className="text-center">
-          <p className="text-lg mb-4 text-[#ab1c1c]">
-            تم استلام طلب الاستغاثة الخاص بك، وأقرب مسعف في طريقه إليك
-            الآن. نحن هنا لمساعدتك.
-          </p>
+                      <p className="mb-4">يرجى تقييم المسعف:</p>
 
-          <p className="mb-4">
-            <strong>المسعف:</strong>{" "}
-            {responderInfo?.name || "غير متوفر"}
-            <br />
-            <strong>رقم الهاتف:</strong>{" "}
-            {responderInfo?.phone || "غير متوفر"}
-          </p>
-        </div>
-    </div>
-  </div>
-)}
+                      <div className="flex justify-center gap-2 mb-4">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            onClick={() => setRating(star)}
+                            className={`text-2xl ${
+                              rating >= star
+                                ? "text-[#ab1c1c]"
+                                : "text-gray-400"
+                            }`}
+                          >
+                            ★
+                          </button>
+                        ))}
+                      </div>
+
+                      <button
+                        onClick={handleFeedbackSubmit}
+                        className="mt-4 py-2 px-4 bg-[#ab1c1c] text-white rounded-full"
+                      >
+                        إرسال التقييم
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center">
+                    <p className="text-lg mb-4 text-[#ab1c1c]">
+                      تم استلام طلب الاستغاثة الخاص بك، وأقرب مسعف في طريقه إليك
+                      الآن. نحن هنا لمساعدتك.
+                    </p>
+
+                    <p className="mb-4">
+                      <strong>المسعف:</strong>{" "}
+                      {responderInfo?.name || "غير متوفر"}
+                      <br />
+                      <strong>رقم الهاتف:</strong>{" "}
+                      {responderInfo?.phone || "غير متوفر"}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           )}
