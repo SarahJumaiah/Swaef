@@ -194,181 +194,177 @@ const Home = () => {
 
   return (
     <div>
-      <header className="h-[79vh] relative p-8 text-center bg-white text-gray-800 shadow-lg flex flex-col justify-center items-center overflow-hidden header">
-        <div className="relative z-10 mx-auto">
-        <h1 className="text-4xl mb-16 leading-tight drop-shadow-lg headertxt">
- نحن هنا لمساعدتك في حالات
-            <span className="text-red-600 font-extrabold"> الطوارئ</span>
-            <br />
-          </h1>
+<header className="h-[79vh] relative p-8 text-center bg-white text-gray-800 shadow-lg flex flex-col justify-center items-center overflow-hidden header">
+  <div className="relative z-10 mx-auto">
+    <h1 className="text-4xl mb-16 leading-tight drop-shadow-lg headertxt">
+      نحن هنا لمساعدتك في حالات
+      <span className="text-red-600 font-extrabold"> الطوارئ</span>
+      <br />
+    </h1>
+    <button
+      onClick={() => setIsModalOpen(!isModalOpen)}
+      className="relative text-3xl mx-auto bg-red-600 text-white font-bold w-44 h-44 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-2xl focus:outline-none wave-button"
+    >
+      نداء استغاثه
+    </button>
+
+    {isModalOpen && (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-100">
+        <div className="bg-white p-10 rounded-lg max-w-md w-full relative shadow-lg">
           <button
-            onClick={() => setIsModalOpen(!isModalOpen)}
-            className="relative text-3xl mx-auto bg-red-600 text-white font-bold w-44 h-44 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-2xl focus:outline-none wave-button"
+            onClick={() => setIsModalOpen(false)}
+            className="absolute top-2 left-2 text-xl text-gray-600 hover:text-[#ab1c1c]"
           >
-            نداء استغاثه
+            ✖
           </button>
-          {isModalOpen && (
-{isModalOpen && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-100">
-    <div className="bg-white p-10 rounded-lg max-w-md w-full relative shadow-lg">
-      <button
-        onClick={() => setIsModalOpen(false)}
-        className="absolute top-2 left-2 text-xl text-gray-600 hover:text-[#ab1c1c]"
-      >
-        ✖
-      </button>
 
-      {loading ? (
-        <div className="flex flex-col items-center justify-center h-full">
-          <div
-            className="animate-spin w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full"
-            role="status"
-          ></div>
-          <p className="mt-4 text-lg text-gray-600">
-            جاري البحث عن مسعف...
-          </p>
-        </div>
-      ) : !isOrderSent ? (
-        <>
-          <div className="mb-4 flex items-center border-b-2 border-[#ab1c1c]">
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              placeholder="أدخل اسمك"
-              className="p-2 w-full bg-transparent focus:outline-none"
-            />
-          </div>
-          <div className="mb-4 flex items-center border-b-2 gap-2 border-[#ab1c1c]">
-            <input
-              type="text"
-              name="phone"
-              value={formData.phone}
-              onChange={handleInputChange}
-              maxLength={10}
-              placeholder="أدخل رقم هاتفك"
-              className="p-2 w-full bg-transparent focus:outline-none"
-            />
-            <span className="mr-2 text-[#ab1c1c]">966+</span>
-          </div>
-
-          <div className="mb-4">
-            <p className="block mb-1 text-right text-gray-500">
-              اختر الحالة
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {statuses.map((statusOption) => (
-                <button
-                  key={statusOption}
-                  onClick={() => handleStatusChange(statusOption)}
-                  className={`flex-1 p-2 border rounded-full transition duration-300 ease-in-out ${
-                    formData.status === statusOption
-                      ? "bg-[#ab1c1c] text-white"
-                      : "border-[#ab1c1c] text-[#ab1c1c] hover:bg-[#ab1c1c] hover:text-white"
-                  }`}
-                >
-                  {statusOption}
-                </button>
-              ))}
+          {loading ? (
+            <div className="flex flex-col items-center justify-center h-full">
+              <div
+                className="animate-spin w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full"
+                role="status"
+              ></div>
+              <p className="mt-4 text-lg text-gray-600">
+                جاري البحث عن مسعف...
+              </p>
             </div>
-          </div>
-
-          <button
-            onClick={handleSend}
-            className="py-2 px-4 w-full bg-[#ab1c1c] text-white font-bold rounded-full"
-          >
-            إرسال
-          </button>
-        </>
-      ) : isCancelled ? (
-        <div className="text-center">
-          <p className="text-red-600 mb-4">
-            عذرًا، لم يتوفر مسعف في الوقت المحدد. نقدر صبرك ونسأل الله
-            لك السلامة.
-          </p>
-          <div className="flex flex-col items-center gap-4">
-            <button
-              onClick={handleRetry}
-              className="py-2 px-4 bg-[#ab1c1c] text-white rounded-full transition duration-300 hover:bg-[#9b1b1b]"
-            >
-              إعادة المحاولة
-            </button>
-            <button
-              onClick={() => (window.location.href = "tel:998")}
-              className="py-2 px-4 bg-[#ab1c1c] text-white rounded-full transition duration-300 hover:bg-[#9b1b1b]"
-            >
-              الاتصال بالهلال الأحمر (998)
-            </button>
-          </div>
-        </div>
-      ) : !isAccepted ? (
-        <div className="flex flex-col items-center">
-          <div
-            className="animate-spin inline-block w-8 h-8 border-4 border-t-transparent border-red-500 rounded-full"
-            role="status"
-          ></div>
-          <p className="mt-4 text-gray-600">
-            جاري البحث عن مسعف... ({timer} ثواني متبقية)
-          </p>
-        </div>
-      ) : isCompleted ? (
-        <>
-          <div className="text-center text-[#ab1c1c]">
-            <p className="text-2xl">الحمدلله على سلامتك.</p>
-            <p className="text-lg mb-4">
-              تم التعامل مع الحالة بنجاح. ممتنين لمساعدتك، نتمنى لك
-              الشفاء العاجل!
-            </p>
-
-            <p className="mb-4">يرجى تقييم المسعف:</p>
-
-            <div className="flex justify-center gap-2 mb-4">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <button
-                  key={star}
-                  onClick={() => setRating(star)}
-                  className={`text-2xl ${
-                    rating >= star ? "text-[#ab1c1c]" : "text-gray-400"
-                  }`}
-                >
-                  ★
-                </button>
-              ))}
-            </div>
-
-            <button
-              onClick={handleFeedbackSubmit}
-              className="mt-4 py-2 px-4 bg-[#ab1c1c] text-white rounded-full"
-            >
-              إرسال التقييم
-            </button>
-          </div>
-        </>
-      ) : (
-        <div className="text-center">
-          <p className="text-lg mb-4 text-[#ab1c1c]">
-            تم استلام طلب الاستغاثة الخاص بك، وأقرب مسعف في طريقه إليك
-            الآن. نحن هنا لمساعدتك.
-          </p>
-
-          <p className="mb-4">
-            <strong>المسعف:</strong>{" "}
-            {responderInfo?.name || "غير متوفر"}
-            <br />
-            <strong>رقم الهاتف:</strong>{" "}
-            {responderInfo?.phone || "غير متوفر"}
-          </p>
-        </div>
-      )}
-    </div>
-  </div>
-)}
+          ) : !isOrderSent ? (
+            <>
+              <div className="mb-4 flex items-center border-b-2 border-[#ab1c1c]">
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="أدخل اسمك"
+                  className="p-2 w-full bg-transparent focus:outline-none"
+                />
               </div>
+              <div className="mb-4 flex items-center border-b-2 gap-2 border-[#ab1c1c]">
+                <input
+                  type="text"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  maxLength={10}
+                  placeholder="أدخل رقم هاتفك"
+                  className="p-2 w-full bg-transparent focus:outline-none"
+                />
+                <span className="mr-2 text-[#ab1c1c]">966+</span>
+              </div>
+
+              <div className="mb-4">
+                <p className="block mb-1 text-right text-gray-500">اختر الحالة</p>
+                <div className="flex flex-wrap gap-2">
+                  {statuses.map((statusOption) => (
+                    <button
+                      key={statusOption}
+                      onClick={() => handleStatusChange(statusOption)}
+                      className={`flex-1 p-2 border rounded-full transition duration-300 ease-in-out ${
+                        formData.status === statusOption
+                          ? "bg-[#ab1c1c] text-white"
+                          : "border-[#ab1c1c] text-[#ab1c1c] hover:bg-[#ab1c1c] hover:text-white"
+                      }`}
+                    >
+                      {statusOption}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <button
+                onClick={handleSend}
+                className="py-2 px-4 w-full bg-[#ab1c1c] text-white font-bold rounded-full"
+              >
+                إرسال
+              </button>
+            </>
+          ) : isCancelled ? (
+            <div className="text-center">
+              <p className="text-red-600 mb-4">
+                عذرًا، لم يتوفر مسعف في الوقت المحدد. نقدر صبرك ونسأل الله
+                لك السلامة.
+              </p>
+              <div className="flex flex-col items-center gap-4">
+                <button
+                  onClick={handleRetry}
+                  className="py-2 px-4 bg-[#ab1c1c] text-white rounded-full transition duration-300 hover:bg-[#9b1b1b]"
+                >
+                  إعادة المحاولة
+                </button>
+                <button
+                  onClick={() => (window.location.href = "tel:998")}
+                  className="py-2 px-4 bg-[#ab1c1c] text-white rounded-full transition duration-300 hover:bg-[#9b1b1b]"
+                >
+                  الاتصال بالهلال الأحمر (998)
+                </button>
+              </div>
+            </div>
+          ) : !isAccepted ? (
+            <div className="flex flex-col items-center">
+              <div
+                className="animate-spin inline-block w-8 h-8 border-4 border-t-transparent border-red-500 rounded-full"
+                role="status"
+              ></div>
+              <p className="mt-4 text-gray-600">
+                جاري البحث عن مسعف... ({timer} ثواني متبقية)
+              </p>
+            </div>
+          ) : isCompleted ? (
+            <>
+              <div className="text-center text-[#ab1c1c]">
+                <p className="text-2xl">الحمدلله على سلامتك.</p>
+                <p className="text-lg mb-4">
+                  تم التعامل مع الحالة بنجاح. ممتنين لمساعدتك، نتمنى لك
+                  الشفاء العاجل!
+                </p>
+
+                <p className="mb-4">يرجى تقييم المسعف:</p>
+
+                <div className="flex justify-center gap-2 mb-4">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      onClick={() => setRating(star)}
+                      className={`text-2xl ${
+                        rating >= star ? "text-[#ab1c1c]" : "text-gray-400"
+                      }`}
+                    >
+                      ★
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  onClick={handleFeedbackSubmit}
+                  className="mt-4 py-2 px-4 bg-[#ab1c1c] text-white rounded-full"
+                >
+                  إرسال التقييم
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="text-center">
+              <p className="text-lg mb-4 text-[#ab1c1c]">
+                تم استلام طلب الاستغاثة الخاص بك، وأقرب مسعف في طريقه إليك
+                الآن. نحن هنا لمساعدتك.
+              </p>
+
+              <p className="mb-4">
+                <strong>المسعف:</strong>{" "}
+                {responderInfo?.name || "غير متوفر"}
+                <br />
+                <strong>رقم الهاتف:</strong>{" "}
+                {responderInfo?.phone || "غير متوفر"}
+              </p>
             </div>
           )}
         </div>
-      </header>
+      </div>
+    )}
+  </div>
+</header>
+
 
       <Navbar scrollToSection={scrollToSection} />
 
