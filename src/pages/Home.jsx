@@ -7,6 +7,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import Swal from "sweetalert2";
+import { FaGithub, FaLinkedin } from 'react-icons/fa'
 
 
 const Home = () => {
@@ -230,7 +231,7 @@ const Home = () => {
              setIsModalOpen(!isModalOpen);
              handleLocation(); // Get the location when the modal opens
            }}
-           className="relative text-3xl mx-auto bg-red-600 text-white font-bold w-44 h-44 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-2xl focus:outline-none wave-button"
+           className="relative text-3xl p-3 mx-auto bg-red-600 text-white font-bold w-44 h-44 rounded-full shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 hover:shadow-2xl focus:outline-none wave-button"
          >
            نداء استغاثه
          </button>
@@ -490,82 +491,67 @@ const Home = () => {
     </p>
   </div>
 
-  {/* إضافة قسم فريق التطوير داخل نفس السكشن */}
-    <h3 className="text-xl text-[#ab1c1c] font-bold mb-4 ">
-      فريق الدعم
-    </h3>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+  <h3 className="text-xl text-[#ab1c1c] font-bold mb-4 ">
+    فريق الدعم
+  </h3>
+  
+  <div className="flex flex-wrap justify-center gap-8 p-6 bg-gray-100">
 
-      <div className="text-center">
-        <h4 className="text-lg font-bold mb-2">فهد القحطاني </h4>
-        <button
-          className="text-[#ab1c1c] mt-2 block mx-auto"
-          onClick={() => window.location.href = 'https://github.com/fl71-1'}
-        >
-          GitHub
-        </button>
-        <button
-          className="text-[#ab1c1c] mt-2 block mx-auto"
-          onClick={() => window.location.href = 'https://www.linkedin.com/in/fahd-alghtani246/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app'} 
-        >
-          LinkedIn
-        </button>
-      </div>
-
-
-      <div className="text-center">
-        <h4 className="text-lg font-bold mb-2">ساره الجميعه</h4>
-        <button
-          className="text-[#ab1c1c] mt-2 block mx-auto"
-          onClick={() => window.location.href = 'https://github.com/SarahJumaiah'}
-        >
-          GitHub
-        </button>
-        <button
-          className="text-[#ab1c1c] mt-2 block mx-auto"
-          onClick={() => window.location.href = 'https://www.linkedin.com/in/sarah-aljumaiah-a6989b234/'}
-        >
-          LinkedIn
-        </button>
-      </div>
-
-
-      <div className="text-center">
-        <h4 className="text-lg font-bold mb-2">زياد المغربي</h4>
-        <button
-          className="text-[#ab1c1c] mt-2 block mx-auto"
-          onClick={() => window.location.href = 'https://github.com/zyad87'}
-        >
-          GitHub
-        </button>
-        <button
-          className="text-[#ab1c1c] mt-2 block mx-auto"
-          onClick={() => window.location.href = 'https://www.linkedin.com/in/zyad-al-maghrabi-55928a304/'}
-        >
-          LinkedIn
-        </button>
-      </div>
-
-      <div className="text-center">
-        <h4 className="text-lg font-bold mb-2">حسناء الصقر</h4>
-        <button
-          className="text-[#ab1c1c] mt-2 block mx-auto"
-          onClick={() => window.location.href = 'https://github.com/ha20s'}
-        >
-          GitHub
-        </button>
-        <button
-          className="text-[#ab1c1c] mt-2 block mx-auto"
-          onClick={() => window.location.href = 'https://www.linkedin.com/in/ha20s/'}
-        >
-          LinkedIn
-        </button>
-      </div>
-
-
-   
+  <div className="text-center bg-white p-4 shadow-lg rounded-lg transform transition duration-300 hover:scale-105 flex flex-col items-center w-[250px]">
+    <h4 className="text-lg font-bold mb-4 text-gray-800">فهد القحطاني</h4>
+    <div className="flex justify-around w-full">
+      <a href="https://github.com/fl71-1" target="_blank" rel="noopener noreferrer">
+        <FaGithub className="text-5xl text-[#ab1c1c] hover:text-black transition duration-300" />
+      </a>
+      <a href="https://www.linkedin.com/in/fahd-alghtani246" target="_blank" rel="noopener noreferrer">
+        <FaLinkedin className="text-5xl text-[#ab1c1c] hover:text-blue-700 transition duration-300" />
+      </a>
     </div>
+  </div>
+
+  <div className="text-center bg-white p-4 shadow-lg rounded-lg transform transition duration-300 hover:scale-105 flex flex-col items-center w-[250px]">
+    <h4 className="text-lg font-bold mb-4 text-gray-800">ساره الجميعه</h4>
+    <div className="flex justify-around w-full">
+      <a href="https://github.com/SarahJumaiah" target="_blank" rel="noopener noreferrer">
+        <FaGithub className="text-5xl text-[#ab1c1c] hover:text-black transition duration-300" />
+      </a>
+      <a href="https://www.linkedin.com/in/sarah-aljumaiah-a6989b234" target="_blank" rel="noopener noreferrer">
+        <FaLinkedin className="text-5xl text-[#ab1c1c] hover:text-blue-700 transition duration-300" />
+      </a>
+    </div>
+  </div>
+
+  <div className="text-center bg-white p-4 shadow-lg rounded-lg transform transition duration-300 hover:scale-105 flex flex-col items-center w-[250px]">
+    <h4 className="text-lg font-bold mb-4 text-gray-800">زياد المغربي</h4>
+    <div className="flex justify-around w-full">
+      <a href="https://github.com/zyad87" target="_blank" rel="noopener noreferrer">
+        <FaGithub className="text-5xl text-[#ab1c1c] hover:text-black transition duration-300" />
+      </a>
+      <a href="https://www.linkedin.com/in/zyad-al-maghrabi-55928a304" target="_blank" rel="noopener noreferrer">
+        <FaLinkedin className="text-5xl text-[#ab1c1c] hover:text-blue-700 transition duration-300" />
+      </a>
+    </div>
+  </div>
+
+  <div className="text-center bg-white p-4 shadow-lg rounded-lg transform transition duration-300 hover:scale-105 flex flex-col items-center w-[250px]">
+    <h4 className="text-lg font-bold mb-4 text-gray-800">حسناء الصقر</h4>
+    <div className="flex justify-around w-full">
+      <a href="https://github.com/ha20s" target="_blank" rel="noopener noreferrer">
+        <FaGithub className="text-5xl text-[#ab1c1c] hover:text-black transition duration-300" />
+      </a>
+      <a href="https://www.linkedin.com/in/ha20s" target="_blank" rel="noopener noreferrer">
+        <FaLinkedin className="text-5xl text-[#ab1c1c] hover:text-blue-700 transition duration-300" />
+      </a>
+    </div>
+
+
+</div>
+
+
+  </div>
 </section>
+
+
 
 
 
