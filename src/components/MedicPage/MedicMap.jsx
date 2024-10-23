@@ -2,14 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
-import io from 'socket.io-client';
 import './Loader.css'; // استيراد ملف CSS للودر الرادار
+import axios from 'axios';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoienlhZDIyIiwiYSI6ImNtMmhyZjYwbjBlNzUycXF2eW5ucjdrNTIifQ.gl1phZ7zs3yRryUmKgrKMQ'; // Access Token الخاص بك
 
-const socket = io('http://localhost:3000'); // الاتصال بالخادم
-
-const MedicMap = () => {
+const MedicMap = ({ caseId }) => {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null); // تخزين الخريطة دون إعادة تحميلها
   const directionsRef = useRef(null); // لتخزين عنصر الـ Directions
@@ -19,6 +17,29 @@ const MedicMap = () => {
   const [caseLocation, setCaseLocation] = useState(null); // سيتم جلب موقع الحالة من API
   const [estimatedTime, setEstimatedTime] = useState(''); // لتخزين المدة الزمنية المقدرة
   const [isLoading, setIsLoading] = useState(true); // حالة البحث (جاري البحث)
+
+  // جلب موقع الحالة من الـ MockAPI
+  useEffect(() => {
+    const fetchCaseLocation = async () => {
+      try {
+        const response = await axios.get(`https://67073bf9a0e04071d2298046.mockapi.io/users/${caseId}`);
+        const caseData = response.data;
+
+        if (caseData.location) {
+          const { latitude, longitude } = caseData.location;
+          setCaseLocation([longitude, latitude]); // تحديد موقع الحالة
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error('Error fetching case location:', error);
+        setIsLoading(true);
+      }
+    };
+
+    if (caseId) {
+      fetchCaseLocation();
+    }
+  }, [caseId]);
 
   // تتبع موقع المسعف باستخدام Geolocation API
   useEffect(() => {
@@ -37,33 +58,9 @@ const MedicMap = () => {
     }
   }, []);
 
-  // استماع لتحديثات الموقع من الخادم عبر Socket.IO
-  useEffect(() => {
-    const fetchCase = () => {
-      socket.on('locationUpdate', (updatedLocation) => {
-        if (updatedLocation) {
-          setCaseLocation([updatedLocation.longitude, updatedLocation.latitude]); // تحديث موقع الحالة من الخادم
-          setIsLoading(false); // إنهاء حالة البحث
-        } else {
-          setIsLoading(true); // إذا لم توجد حالة
-        }
-      });
-    };
-
-    fetchCase();
-
-    // إعادة البحث عن حالات جديدة كل 10 ثوانٍ
-    const intervalId = setInterval(fetchCase, 60000);
-
-    return () => {
-      socket.off('locationUpdate');
-      clearInterval(intervalId);
-    };
-  }, []);
-
   // إنشاء الخريطة مرة واحدة فقط
   useEffect(() => {
-    if (mapRef.current || !caseLocation) return;
+    if (mapRef.current || !caseLocation || !medicLocation) return;
 
     const mapInstance = new mapboxgl.Map({
       container: mapContainerRef.current,
@@ -83,17 +80,17 @@ const MedicMap = () => {
     directions.setDestination(caseLocation);
 
     mapInstance.on('style.load', () => {
-      // إنشاء Marker المسعف كنقطة صغيرة
+      // Marker المسعف
       const medicDiv = document.createElement('div');
       medicDiv.style.width = '20px';
       medicDiv.style.height = '20px';
       medicDiv.style.borderRadius = '50%';
-      medicDiv.style.backgroundColor = 'blue'; // لون النقطة
-      medicDiv.style.border = '2px solid white'; // إضافة حد ليجعل النقطة بارزة
+      medicDiv.style.backgroundColor = 'blue';
+      medicDiv.style.border = '2px solid white';
 
       const medicMarker = new mapboxgl.Marker(medicDiv).setLngLat(medicLocation).addTo(mapInstance);
 
-      // إنشاء Marker لصاحب الحالة مع أيقونة مخصصة
+      // Marker الحالة
       const el = document.createElement('div');
       el.className = 'emergency-icon';
       el.style.backgroundImage = 'url(https://png.pngtree.com/png-clipart/20230409/original/pngtree-emergency-icon-png-image_9037948.png)';
@@ -120,34 +117,25 @@ const MedicMap = () => {
     });
   }, [caseLocation, medicLocation]);
 
-  // تحديث المواقع والـ Markers والمسار دون إعادة تحميل الخريطة
+  // تحديث المواقع والـ Markers
   useEffect(() => {
     if (mapRef.current && directionsRef.current && medicMarkerRef.current && caseMarkerRef.current) {
       medicMarkerRef.current.setLngLat(medicLocation); // تحديث Marker المسعف
       caseMarkerRef.current.setLngLat(caseLocation); // تحديث Marker الحالة
 
-      directionsRef.current.setOrigin(medicLocation); // تحديث الموقع الحالي للمسعف
-      directionsRef.current.setDestination(caseLocation); // تحديث الموقع الحالي للحالة
+      directionsRef.current.setOrigin(medicLocation); // تحديث موقع المسعف
+      directionsRef.current.setDestination(caseLocation); // تحديث موقع الحالة
     }
   }, [medicLocation, caseLocation]);
 
   return (
-    <div>
-      {/* عرض لودر الرادار أثناء البحث */}
-      {isLoading && (
-        <div className="radar-loader-container">
-          <div className="radar-loader mb-5"></div>
-          <p>جاري البحث عن حالة طارئة...</p>
-        </div>
-      )}
-
-      {/* عرض الخريطة مع تغبيش أثناء البحث */}
+    <div className="relative">
+      {/* عرض الخريطة */}
       <div
         ref={mapContainerRef}
         className={`map-container ${isLoading ? 'blur-map' : ''}`}
         style={{ width: '100%', height: '500px' }}
       />
-
       <div className="absolute top-10 left-24 bg-white p-3 rounded-badge shadow-md">
         <h3>الوقت المتوقع: {estimatedTime}</h3>
       </div>
