@@ -476,46 +476,98 @@ const Home = () => {
      </section>
 
 
-     {/* تواصل معنا */}
      <section
-       ref={contactRef}
-       className="contact-us w-[80%] mx-auto mt-12 p-8 flex flex-col items-center justify-between my-24 opacity-0 transition-opacity duration-700"
-     >
-       <div className="text-center w-full mb-8">
-         <h2 className="text-3xl text-[#ab1c1c] font-extrabold mb-4">
-           تواصل معنا
-         </h2>
-         <p className="text-gray-800 text-lg leading-relaxed mb-4">
-           نحن هنا لمساعدتك! لا تتردد في التواصل معنا للحصول على أي استفسار أو
-           مساعدة.
-         </p>
-         <p className="text-gray-800 text-lg leading-relaxed mb-6">
-           فريقنا جاهز لخدمتك على مدار الساعة. نقدر ملاحظاتك وسنرد عليك في أقرب
-           وقت.
-         </p>
-       </div>
+  ref={contactRef}
+  className="contact-us w-[80%] mx-auto mt-12 p-8 flex flex-col items-center justify-between my-24 opacity-0 transition-opacity duration-700"
+>
+  <div className="text-center w-full mb-8">
+    <h2 className="text-3xl text-[#ab1c1c] font-extrabold mb-4">
+      تواصل معنا
+    </h2>
+    <p className="text-gray-800 text-lg leading-relaxed mb-4 w-[65%] mx-auto">
+      نحن هنا لمساعدتك! لا تتردد في التواصل معنا للحصول على أي استفسار أو مساعدة
+      فريقنا جاهز لخدمتك على مدار الساعة. نقدر ملاحظاتك وسنرد عليك في أقرب وقت.
+    </p>
+  </div>
+
+  {/* إضافة قسم فريق التطوير داخل نفس السكشن */}
+    <h3 className="text-xl text-[#ab1c1c] font-bold mb-4 ">
+      فريق الدعم
+    </h3>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+      <div className="text-center">
+        <h4 className="text-lg font-bold mb-2">فهد القحطاني </h4>
+        <button
+          className="text-[#ab1c1c] mt-2 block mx-auto"
+          onClick={() => window.location.href = 'https://github.com/fl71-1'}
+        >
+          GitHub
+        </button>
+        <button
+          className="text-[#ab1c1c] mt-2 block mx-auto"
+          onClick={() => window.location.href = 'https://www.linkedin.com/in/fahd-alghtani246/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app'} 
+        >
+          LinkedIn
+        </button>
+      </div>
 
 
-       <div className="w-full flex flex-col items-center">
-         <h3 className="text-xl text-[#ab1c1c] font-bold mb-4">
-           معلومات الاتصال
-         </h3>
-         <div className="flex items-center mb-4 gap-6">
-           <i className="fas fa-phone-alt text-[#ab1c1c] text-2xl"></i>
-           <span className="text-gray-600 ml-5 ">96650875987+</span>
-         </div>
-         <div className="flex items-center mb-4 gap-6">
-           <i className="fas fa-envelope text-[#ab1c1c] text-2xl"></i>
-           <span className="text-gray-600">info@swa3ef.com</span>
-         </div>
-         <div className="flex items-center gap-6">
-           <i className="fas fa-map-marker-alt text-[#ab1c1c] text-2xl"></i>
-           <span className="text-gray-600 -ml-12">
-             الرياض، المملكة العربية السعودية
-           </span>
-         </div>
-       </div>
-     </section>
+      <div className="text-center">
+        <h4 className="text-lg font-bold mb-2">ساره الجميعه</h4>
+        <button
+          className="text-[#ab1c1c] mt-2 block mx-auto"
+          onClick={() => window.location.href = 'https://github.com/SarahJumaiah'}
+        >
+          GitHub
+        </button>
+        <button
+          className="text-[#ab1c1c] mt-2 block mx-auto"
+          onClick={() => window.location.href = 'https://www.linkedin.com/in/sarah-aljumaiah-a6989b234/'}
+        >
+          LinkedIn
+        </button>
+      </div>
+
+
+      <div className="text-center">
+        <h4 className="text-lg font-bold mb-2">زياد المغربي</h4>
+        <button
+          className="text-[#ab1c1c] mt-2 block mx-auto"
+          onClick={() => window.location.href = 'https://github.com/zyad87'}
+        >
+          GitHub
+        </button>
+        <button
+          className="text-[#ab1c1c] mt-2 block mx-auto"
+          onClick={() => window.location.href = 'https://www.linkedin.com/in/zyad-al-maghrabi-55928a304/'}
+        >
+          LinkedIn
+        </button>
+      </div>
+
+      <div className="text-center">
+        <h4 className="text-lg font-bold mb-2">حسناء الصقر</h4>
+        <button
+          className="text-[#ab1c1c] mt-2 block mx-auto"
+          onClick={() => window.location.href = 'https://github.com/ha20s'}
+        >
+          GitHub
+        </button>
+        <button
+          className="text-[#ab1c1c] mt-2 block mx-auto"
+          onClick={() => window.location.href = 'https://www.linkedin.com/in/ha20s/'}
+        >
+          LinkedIn
+        </button>
+      </div>
+
+
+   
+    </div>
+</section>
+
+
 
 
      <Footer />
