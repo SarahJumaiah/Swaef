@@ -244,6 +244,28 @@ function Sign() {
                 required
               />
             </div>
+            <div>
+         <label
+                htmlFor="file-upload"
+                className="w-full cursor-pointer p-3 border-b-2 border-[#ab1c1c] bg-transparent text-gray-700 flex justify-between items-center"
+              >
+                <span id="file-label" className="text-gray-400">ارفع شهادتك الصحية</span>
+                <span className="bg-[#ab1c1c] text-white px-4 py-2 rounded-full hover:bg-opacity-90 transition duration-300">
+                  اختر ملف
+                </span>
+              </label>
+              <input
+                type="file"
+                id="file-upload"
+                name="file-upload"
+                className="hidden"
+                onChange={(e) => {
+                  const fileLabel = document.getElementById('file-label');
+                  const fileName = e.target.files.length > 0 ? e.target.files[0].name : 'ارفع شهادتك الصحية';
+                  fileLabel.textContent = fileName;
+                }}
+              />
+            </div>
 
             <div className="mt-6">
               <button
