@@ -17,6 +17,7 @@ const Home = () => {
   const aboutRef = useRef(null);
   const whySwa3efRef = useRef(null);
   const joinRef = useRef(null);
+  const vision = useRef(null);
   const contactRef = useRef(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -179,6 +180,9 @@ const Home = () => {
       case "join":
         sectionRef = joinRef;
         break;
+        case "visioj":
+          sectionRef = vision;
+          break;
       case "contact":
         sectionRef = contactRef;
         break;
@@ -214,12 +218,14 @@ const Home = () => {
     if (aboutRef.current) observer.observe(aboutRef.current);
     if (whySwa3efRef.current) observer.observe(whySwa3efRef.current);
     if (joinRef.current) observer.observe(joinRef.current);
+    if (vision.current) observer.observe(vision.current);
     if (contactRef.current) observer.observe(contactRef.current);
 
     return () => {
       if (aboutRef.current) observer.unobserve(aboutRef.current);
       if (whySwa3efRef.current) observer.unobserve(whySwa3efRef.current);
       if (joinRef.current) observer.unobserve(joinRef.current);
+      if (vision.current) observer.observe(vision.current);
       if (contactRef.current) observer.unobserve(contactRef.current);
     };
   }, []);
@@ -528,11 +534,14 @@ const Home = () => {
       </section>
 
       {/* رؤيتن */}
-      <section className="whyswa3ef p-8 w-[70%] mx-auto my-24 opacity-0 transition-opacity duration-700 flex flex-col md:flex-row justify-between items-center gap-10">
+      <section 
+              ref={vision}
+
+      className="vision p-8 w-[70%] mx-auto my-24 opacity-0 transition-opacity duration-700 flex flex-col md:flex-row justify-between items-center gap-10">
         <div className="our-vision flex flex-col items-center md:w-1/2 text-center md:text-right">
           <div className="our-vision-title w-full">
             <div className="vision-title text-2xl text-[#ab1c1c] font-bold mb-4 flex items-center justify-center md:justify-start">
-              <i className="fas fa-lightbulb text-3xl mr-2"></i> رؤيتنا
+              <i className="fas fa-lightbulb text-3xl ml-2"></i> رؤيتنا
             </div>
             <div className="sub-vision-title text-gray-800 text-lg leading-relaxed">
               <p>
@@ -545,7 +554,7 @@ const Home = () => {
         <div className="our-mission flex flex-col items-center md:w-1/2 text-center md:text-right">
           <div className="our-mission-title w-full">
             <div className="mission-title text-2xl text-[#ab1c1c] font-bold mb-4 flex items-center justify-center md:justify-start">
-              <i className="fas fa-bullseye text-3xl mr-2"></i> رسالتنا
+              <i className="fas fa-bullseye text-3xl ml-2"></i> رسالتنا
             </div>
             <div className="sub-mission-title text-gray-800 text-lg leading-relaxed">
               <p>
