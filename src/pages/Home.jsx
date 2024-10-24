@@ -248,12 +248,13 @@ const Home = () => {
              ✖
            </button>
 
-
+     {/* {edit the pop fahd} */}
            {loading ? (
-             <div className="flex flex-col items-center">
-               <div className="animate-spin w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full" role="status"></div>
-               <p className="mt-4 text-lg text-gray-600">جاري البحث عن مسعف...</p>
-             </div>
+           <div className="flex flex-col items-center p-4 border-2 border-[#ab1c1c] rounded-lg w-full min-h-[246px]">
+           <div className="animate-spin w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full" role="status"></div>
+           <p className="mt-4 text-lg text-gray-600">جاري البحث عن مسعف...</p>
+         </div>
+         
            ) : !isOrderSent ? (
              <>
                <div className="mb-4 flex items-center border-b-2 border-[#ab1c1c]">
@@ -308,17 +309,28 @@ const Home = () => {
                </button>
              </>
            ) : (
-             <div>
-               <h3 className="text-xl font-bold mb-2">حالة الحالة:</h3>
-               <p><strong>نوع الحالة:</strong> {acceptedCase?.case_type}</p>
-               <p><strong>اسم المريض:</strong> {acceptedCase?.patient?.name}</p>
-               <p><strong>رقم الهاتف:</strong> {isAccepted ? acceptedCase?.patient?.phone : 'سيظهر بعد قبول الحالة'}</p>
-               <p><strong>حالة القبول:</strong> {isAccepted ? "تم قبول الحالة" : "الحالة معلقة حتى يتم قبولها"}</p>
-             </div>
+            <div className="flex flex-col p-4 border-2 border-[#ab1c1c] rounded-lg w-full">
+            <h3 className="text-xl font-bold mb-4 text-[#ab1c1c]">ملخص الحالة:</h3>
+            <p className="mb-2 text-lg text-gray-600">
+              <strong>نوع الحالة:</strong> {acceptedCase?.case_type}
+            </p>
+            <p className="mb-2 text-lg text-gray-600">
+              <strong>صاحب البلاغ :</strong> {acceptedCase?.patient?.name}
+            </p>
+            <p className="mb-2 text-lg text-gray-600">
+              <strong>رقم الهاتف:</strong> {isAccepted ? acceptedCase?.patient?.phone : 'سيظهر بعد قبول الحالة'}
+            </p>
+            <p className="text-lg text-gray-600 text-center">
+              <strong className="text-sm">حالة القبول:</strong><br /> {isAccepted ? " المسعف في الطريق اليك حالا !" : " جاري البحث عن اقرب مسعف لك، تطمن !" }
+            </p>
+          </div>
+          
+
            )}
          </div>
        </div>
      )}
+     {/* { end edit the pop fahd} */}
 
 
      {<Navbar scrollToSection={scrollToSection} />}
