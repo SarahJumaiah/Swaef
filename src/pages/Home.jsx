@@ -314,20 +314,25 @@ const Home = () => {
            ) : (
 <div className="flex flex-col p-4 border-2 border-[#ab1c1c] rounded-lg w-full">
   <h3 className="text-xl font-bold mb-4 text-[#ab1c1c]">ملخص الحالة:</h3>
-  
-  <p className="mb-2 text-lg text-gray-600">
-    <strong>نوع الحالة:</strong> {acceptedCase?.case_type}
-  </p>
-  
-  <p className="mb-2 text-lg text-gray-600">
-    <strong>صاحب البلاغ :</strong> {acceptedCase?.patient?.name}
-  </p>
-  
-  <p className="mb-2 text-lg text-gray-600">
-    <strong>رقم الهاتف:</strong> {isAccepted ? acceptedCase?.patient?.phone : 'سيظهر بعد قبول الحالة'}
-  </p>
 
-  {acceptedCase?.assigned_responder ? (
+  {/* عرض نوع الحالة وصاحب البلاغ فقط إذا لم يتم قبول المسعف بعد */}
+  {!isAccepted && (
+    <>
+      <p className="mb-2 text-lg text-gray-600">
+        <strong>نوع الحالة:</strong> {acceptedCase?.case_type}
+      </p>
+      
+      <p className="mb-2 text-lg text-gray-600">
+        <strong>صاحب البلاغ :</strong> {acceptedCase?.patient?.name}
+      </p>
+      <p className="mb-2 text-lg text-gray-600">
+        <strong>صاحب البلاغ :</strong> {acceptedCase?.patient?.phone}
+      </p>
+    </>
+  )}
+
+  {/* معلومات المسعف تظهر فقط في حال القبول */}
+  {isAccepted && acceptedCase?.assigned_responder ? (
     <>
       <p className="mb-2 text-lg text-gray-600">
         <strong>اسم المسعف:</strong> {acceptedCase.assigned_responder.name}
@@ -335,16 +340,20 @@ const Home = () => {
       <p className="mb-2 text-lg text-gray-600">
         <strong>رقم الهاتف:</strong> {acceptedCase.assigned_responder.phone}
       </p>
+      <p className="text-lg text-gray-600 text-center">
+        <strong className="text-sm">حالة القبول:</strong><br /> 
+        "المسعف في الطريق اليك حالا!"
+      </p>
     </>
   ) : (
-    <p className="text-lg text-gray-600">لم يتم تعيين مسعف بعد.</p>
+    <p className="text-lg text-gray-600 text-center">
+      <strong className="text-sm">حالة القبول:</strong><br /> 
+      "جاري البحث عن أقرب مسعف لك، تطمن!"
+    </p>
   )}
-
-  <p className="text-lg text-gray-600 text-center">
-    <strong className="text-sm">حالة القبول:</strong><br /> 
-    {isAccepted ? "المسعف في الطريق اليك حالا!" : "جاري البحث عن أقرب مسعف لك، تطمن!"}
-  </p>
 </div>
+
+
 
           
 
