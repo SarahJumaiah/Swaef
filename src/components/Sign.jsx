@@ -125,7 +125,6 @@ function Sign() {
   const [errorMessage, setErrorMessage] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
 
-  // Handle form field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -134,11 +133,9 @@ function Sign() {
     });
   };
 
-  // Validate form using useEffect whenever formData changes
   useEffect(() => {
     const { name, email, password ,phone} = formData;
 
-    // Basic validation logic
     const nameValid = name.split(' ').length >= 3;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const emailValid = emailRegex.test(email);
@@ -146,7 +143,6 @@ function Sign() {
     const phoneValid = phone.length >= 10; 
 
 
-    // Set validation state
     if (nameValid && emailValid && passwordValid) {
       setIsFormValid(true);
       setErrorMessage('');
@@ -167,22 +163,20 @@ function Sign() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Check if form is valid before sending the data
     if (!isFormValid) {
       return;
     }
 
-    // Create an object with the form data to send it as JSON
     const submissionData = {
       name: formData.name,
       email: formData.email,
       password: formData.password,
-      phone: formData.phone, // أضفنا الهاتف
+      phone: formData.phone, 
+      isApproved: false
 
     };
 
-    console.log("Sending data:", submissionData);  // تحقق من القيم
-
+    console.log("Sending data:", submissionData); 
     axios.post('https://6717e676b910c6a6e02a7fd0.mockapi.io/log', submissionData)
       .then((response) => {
         if (response.status === 201) {
