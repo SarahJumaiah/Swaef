@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import logo from "../assets/logo.png";
 
 // دالة لحساب المسافة باستخدام صيغة Haversine
@@ -10,7 +11,7 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
 
   const R = 6371; // نصف قطر الأرض بالكيلومترات
   const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lat2 - lon1);
+  const dLon = toRad(lon2 - lon1);
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(toRad(lat1)) *
@@ -73,38 +74,42 @@ const MedicPage = () => {
   }, []);
 
   const handleCaseAccept = async (caseItem) => {
-    // جلب بيانات المسعف من التخزين المحلي
-    const medicName = localStorage.getItem('medicName');
-    const medicPhone = localStorage.getItem('medicPhone');
-  
-    // Check if there's any case already accepted
+    const medicName = localStorage.getItem("medicName");
+    const medicPhone = localStorage.getItem("medicPhone");
+
     const activeCase = cases.find((c) => c.is_accepted);
     if (activeCase) {
-      alert('لا يمكنك قبول حالة جديدة حتى تنهي الحالة الحالية.');
+      Swal.fire({
+        title: "لا يمكنك قبول حالة جديدة حتى تنهي الحالة الحالية.",
+        icon: "error",
+        confirmButtonColor: "#ab1c1c",
+      });
       return;
     }
-  
-    // Accept the case
+
     const updatedCase = {
       ...caseItem,
       is_accepted: true,
-      status: 'تم قبول الحالة',
+      status: "تم قبول الحالة",
       assigned_responder: {
-        name: medicName, // اسم المسعف من التخزين المحلي
-        phone: medicPhone // رقم الهاتف من التخزين المحلي
-      }
+        name: medicName,
+        phone: medicPhone,
+      },
     };
-  
+
     try {
-      await axios.put(`https://67073bf9a0e04071d2298046.mockapi.io/users/${caseItem.id}`, updatedCase);
-      setCases((prevCases) => prevCases.map((c) => (c.id === caseItem.id ? updatedCase : c)));
-      // توجيه المستخدم لصفحة تفاصيل الحالة بعد قبولها
+      await axios.put(
+        `https://67073bf9a0e04071d2298046.mockapi.io/users/${caseItem.id}`,
+        updatedCase
+      );
+      setCases((prevCases) =>
+        prevCases.map((c) => (c.id === caseItem.id ? updatedCase : c))
+      );
       navigate(`/CaseDetailsPage/${caseItem.id}`);
     } catch (error) {
       console.error("Error accepting case:", error);
     }
   };
-  
 
   const handleCaseReject = async (caseItem) => {
     Swal.fire({
@@ -124,7 +129,9 @@ const MedicPage = () => {
             assigned_responder: null,
           }
         );
-        setCases((prevCases) => prevCases.filter((c) => c.id !== caseItem.id));
+        setCases((prevCases) =>
+          prevCases.filter((c) => c.id !== caseItem.id)
+        );
         Swal.fire({
           title: "تم رفض الحالة!",
           icon: "success",
@@ -179,50 +186,54 @@ const MedicPage = () => {
                     return (
                       <div
                         key={caseItem.case_id}
-                        className="p-6 rounded-lg border border-[#892222] transition duration-300 ease-in-out transform hover:scale-105"
+                        className="bg-white p-6 rounded-lg border border-[#d8c1c1cc] shadow-md transition duration-300 ease-in-out transform hover:scale-105 relative flex flex-col flex-grow"
                       >
-                        <h3 className="font-bold text-lg text-gray-800 mb-2">
-                          نوع الحالة: {caseItem.case_type}
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          المريض: {caseItem.patient.name}
-                        </p>
-                        {caseItem.is_accepted && (
-                          <p className="text-sm text-gray-600">
-                            الهاتف: {caseItem.patient.phone}
-                          </p>
-                        )}
-                        <p className="text-sm text-gray-600">
-                          الحالة: {caseItem.status}
-                        </p>
-
+                        {/* المسافه */}
                         {distance && (
-                          <p className="text-sm text-gray-600">
-                            المسافة: {distance.toFixed(2)} كم
+                          <p className="absolute top-2 left-2 text-xs text-gray-600 mr-auto">
+                            {distance.toFixed(2)} كم
                           </p>
                         )}
 
-                        <div className="flex mt-4 gap-3">
+                        <div className="flex justify-between items-start">
+                          <h3 className="font-bold text-lg text-gray-800">
+                            نوع الحالة: {caseItem.case_type}
+                          </h3>
+                        </div>
+                        <div className="mb-4 flex-grow">
+                          <p className="text-sm text-gray-600">
+                            المريض: {caseItem.patient.name}
+                          </p>
+                          <p className="text-sm">الحالة: {caseItem.status}</p>
+                          {caseItem.is_accepted && (
+                            <p className="text-sm text-gray-600">
+                              الهاتف: {caseItem.patient.phone}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* الأزرار */}
+                        <div className="flex justify-between gap-3">
                           {!caseItem.is_accepted && (
                             <>
                               <button
                                 onClick={() => handleCaseAccept(caseItem)}
-                                className="bg-[#ffffff] border-2 border-[#cccc] text-black font-bold px-4 py-2 rounded-lg hover:bg-[#eaeaea] transition"
+                                className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium w-1/2 py-2 rounded-lg hover:bg-[#f1f0f0b9] transition flex justify-center items-center"
                               >
-                                قبول
+                                <FaCheckCircle className="text-green-500 text-xl" />
                               </button>
                               <button
                                 onClick={() => handleCaseReject(caseItem)}
-                                className="bg-[#b02e2e] text-white px-4 py-2 rounded-lg hover:bg-[#c43a3a] transition"
+                                className="bg-[#b02e2e] text-white w-1/2 py-2 rounded-lg hover:bg-[#c43a3a] transition flex justify-center items-center"
                               >
-                                رفض
+                                <FaTimesCircle className="text-white text-xl" />
                               </button>
                             </>
                           )}
                           {caseItem.is_accepted && (
                             <button
                               onClick={() => handleCaseComplete(caseItem)}
-                              className="bg-[#70a07d] text-white px-4 py-2 rounded-lg transition"
+                              className="bg-[#ffffffb9] text-black font-medium border border-gray-400 w-full py-2 rounded-lg transition"
                             >
                               مكتمل
                             </button>
@@ -258,7 +269,6 @@ const MedicPage = () => {
       className="relative flex flex-col lg:flex-row h-full bg-gray-100"
       dir="rtl"
     >
-      {/* Sidebar */}
       <button
         className="absolute top-4 left-4 lg:hidden bg-[#892222] text-white px-4 py-2 rounded"
         onClick={toggleSidebar}

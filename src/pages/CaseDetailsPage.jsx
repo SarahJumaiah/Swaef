@@ -84,7 +84,7 @@ const CaseDetailsPage = () => {
               </div>
               <div className="flex justify-between mb-4">
                 <span className="text-gray-700 text-lg">حالة الطلب:</span>
-                <span className={`text-lg font-semibold ml-auto mr-3 mt-1 ${caseInfo.status === 'تم إكمال الحالة' ? 'text-green-500' : 'text-red-500'}`}>{caseInfo.status}</span>
+                <span className={`text-lg font-semibold ml-auto mr-3 mt-1 ${caseInfo.status === 'تم إكمال الحالة' ? 'text-green-500' : 'text-green-500'}`}>{caseInfo.status}</span>
               </div>
             </div>
 
