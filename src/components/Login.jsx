@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import logo from '../assets/logo.png';
+import { IoArrowBack } from 'react-icons/io5';
 import { Link, useNavigate } from 'react-router-dom';
 
 function Login() {
@@ -15,6 +16,10 @@ function Login() {
   const adminCredentials = {
     email: 'admin@Swaef.com', 
     password: 'admin1234', 
+  };
+
+  const goBack = () => {
+    navigate('/'); 
   };
 
   const handleChange = (e) => {
@@ -64,6 +69,10 @@ function Login() {
 
   return (
     <div className="flex items-center justify-center w-full min-h-screen bg-gray-100">
+      <button onClick={goBack} className="absolute top-4 left-4 flex items-center text-[#ab1c1c] text-xl ">
+        عودة <IoArrowBack className="mr-1" /> 
+
+      </button>
       <div className="p-8 max-w-4xl w-full flex flex-col md:flex-row gap-8">
         <div className="md:w-1/2 flex flex-col items-center justify-center mb-8 md:mb-0">
           <img src={logo} alt="Logo" className="w-32 h-auto mb-2" />

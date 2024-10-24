@@ -31,6 +31,15 @@ const MedicPage = () => {
   const [medicLocation, setMedicLocation] = useState(null);
   const navigate = useNavigate();
 
+  const [medicName, setMedicName] = useState("");
+
+  useEffect(() => {
+    const storedMedicName = localStorage.getItem("medicName");
+    if (storedMedicName) {
+      setMedicName(storedMedicName);
+    }
+  }, []);
+
   useEffect(() => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -129,9 +138,7 @@ const MedicPage = () => {
             assigned_responder: null,
           }
         );
-        setCases((prevCases) =>
-          prevCases.filter((c) => c.id !== caseItem.id)
-        );
+        setCases((prevCases) => prevCases.filter((c) => c.id !== caseItem.id));
         Swal.fire({
           title: "تم رفض الحالة!",
           icon: "success",
@@ -281,8 +288,13 @@ const MedicPage = () => {
           isSidebarOpen ? "translate-x-0" : "translate-x-full"
         } transition-transform lg:relative lg:w-1/4 lg:translate-x-0 z-50 shadow-xl`}
       >
-        <div className="mb-8 text-center">
-          <img src={logo} alt="Logo" className="w-16" />
+        <div className="mb-8 flex items-center justify-center lg:justify-start">
+          <img src={logo} alt="Logo" className="w-16 ml-1" />
+          {medicName && (
+            <div className="text-lg font-bold text-[#ab1c1c] ml-4">
+              مرحبًا بالمسعف، {medicName}
+            </div>
+          )}
         </div>
         <nav>
           <ul className="space-y-6">

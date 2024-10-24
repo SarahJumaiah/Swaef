@@ -39,7 +39,7 @@ const Navbar = ({ scrollToSection }) => {
       >
         {!isSticky && (
           <div className="flex items-center justify-between w-full px-40 flex-col lg:flex-row">
-            <ul className="flex flex-row space-x-2 lg:space-x-8 text-center text-black mb-4 lg:mb-0 mr-24">
+            <ul className="flex flex-row space-x-2 lg:space-x-8 text-center text-black mb-4 lg:mb-0 mr-32">
               <li
                 onClick={() => scrollToSection("home")}
                 className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer"
@@ -63,7 +63,7 @@ const Navbar = ({ scrollToSection }) => {
                 className={`${
                   isSticky
                     ? "h-8 w-8"
-                    : "h-24 w-40 md:h-24 md:w-24 lg:h-32 lg:w-32 lg:mt-10 ml-2"
+                    : "h-24 w-40 md:h-24 md:w-24 lg:h-32 lg:w-32 lg:mt-10 "
                 } transition-all duration-500 transform ${
                   isSticky ? "" : "rotate-[360deg]"
                 }`}
@@ -71,6 +71,12 @@ const Navbar = ({ scrollToSection }) => {
             </div>
 
             <ul className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-8 text-center text-black">
+            <li
+                onClick={() => scrollToSection("join")}
+                className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer pl-14 mt-6"
+              >
+                الانضمام كمسعف
+              </li>
               <li
                 onClick={() => scrollToSection("contact")}
                 className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer"
@@ -78,12 +84,7 @@ const Navbar = ({ scrollToSection }) => {
               >
                 تواصل معنا
               </li>
-              <li
-                onClick={() => scrollToSection("join")}
-                className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer"
-              >
-                الانضمام كمسعف
-              </li>
+           
             </ul>
           </div>
         )}
@@ -128,16 +129,16 @@ const Navbar = ({ scrollToSection }) => {
                 من نحن
               </li>
               <li
-                onClick={() => scrollToSection("contact")}
-                className="hover:text-red-500 font-bold cursor-pointer"
-              >
-                تواصل معنا
-              </li>
-              <li
                 onClick={() => scrollToSection("join")}
                 className="hover:text-red-500 font-bold cursor-pointer"
               >
                 الانضمام كمسعف
+              </li>
+              <li
+                onClick={() => scrollToSection("contact")}
+                className="hover:text-red-500 font-bold cursor-pointer"
+              >
+                تواصل معنا
               </li>
             </ul>
 
