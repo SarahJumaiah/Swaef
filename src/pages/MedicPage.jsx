@@ -179,7 +179,7 @@ const MedicPage = () => {
                     return (
                       <div
                         key={caseItem.case_id}
-                        className="p-6 rounded-lg bg-[#be828233] border-4 border-[#892222] transition duration-300 ease-in-out transform hover:scale-105"
+                        className="p-6 rounded-lg border border-[#892222] transition duration-300 ease-in-out transform hover:scale-105"
                       >
                         <h3 className="font-bold text-lg text-gray-800 mb-2">
                           نوع الحالة: {caseItem.case_type}
@@ -207,7 +207,7 @@ const MedicPage = () => {
                             <>
                               <button
                                 onClick={() => handleCaseAccept(caseItem)}
-                                className="bg-[#6c1111] text-white px-4 py-2 rounded-lg hover:bg-[#8a1a1a] transition"
+                                className="bg-[#ffffff] border-2 border-[#cccc] text-black font-bold px-4 py-2 rounded-lg hover:bg-[#eaeaea] transition"
                               >
                                 قبول
                               </button>
@@ -222,7 +222,7 @@ const MedicPage = () => {
                           {caseItem.is_accepted && (
                             <button
                               onClick={() => handleCaseComplete(caseItem)}
-                              className="bg-[#6c1111] text-white px-4 py-2 rounded-lg transition"
+                              className="bg-[#70a07d] text-white px-4 py-2 rounded-lg transition"
                             >
                               مكتمل
                             </button>
