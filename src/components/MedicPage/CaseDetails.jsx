@@ -1,33 +1,122 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
+import MedicMap from '../components/MedicPage/MedicMap';
+import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
-const CaseDetails = ({ caseInfo }) => {
+const CaseDetailsPage = () => {
+  const { caseId } = useParams(); // الحصول على caseId من المسار
+  const [caseInfo, setCaseInfo] = useState(null);
+  const [loading, setLoading] = useState(false); // لتتبع حالة الإكمال
+  const navigate = useNavigate(); // للتوجيه إلى MedicPage بعد الإكمال
+
+  useEffect(() => {
+    const fetchCaseDetails = async () => {
+      try {
+        const response = await axios.get(`https://67073bf9a0e04071d2298046.mockapi.io/users/${caseId}`);
+        setCaseInfo(response.data);
+      } catch (error) {
+        console.error("Error fetching case details:", error);
+      }
+    };
+
+    if (caseId) {
+      fetchCaseDetails();
+    }
+  }, [caseId]);
+
+  // دالة إكمال الحالة
+  const handleCompleteCase = async () => {
+    try {
+      setLoading(true); // بدء حالة التحميل
+      const updatedCase = { ...caseInfo, status: 'تم إكمال الحالة', is_accepted: false };
+
+      // تحديث الحالة في الـ API
+      await axios.put(`https://67073bf9a0e04071d2298046.mockapi.io/users/${caseId}`, updatedCase);
+      
+      // عرض رسالة إكمال وتحويل المستخدم إلى صفحة المسعف باستخدام SweetAlert2
+      Swal.fire({
+        title: 'تم إكمال الحالة بنجاح!',
+        icon: 'success',
+        confirmButtonColor: '#892222',
+        confirmButtonText: 'موافق'
+      }).then(() => {
+        const medicId = localStorage.getItem('medicId');
+        navigate(`/MedicPage/${medicId}`);
+      });
+    } catch (error) {
+      console.error("Error completing case:", error);
+      Swal.fire({
+        title: 'حدث خطأ!',
+        text: 'يرجى المحاولة مرة أخرى.',
+        icon: 'error',
+        confirmButtonColor: '#892222',
+      });
+    } finally {
+      setLoading(false); // إنهاء حالة التحميل
+    }
+  };
+
   return (
-    <div className="p-6 rounded-lg mb-4 border-2 border-[#ab1c1c] bg-[#be828233]">
-      <h2 className="text-2xl font-bold mb-6 text-[#ab1c1c]">معلومات الحالة الطارئة</h2>
-      {caseInfo ? (
-        <div className="space-y-6">
-          <div className="flex flex-col">
-            <strong className="text-gray-700 mb-1">اسم المريض:</strong>
-            <p className="text-lg text-gray-800">{caseInfo.patient.name}</p>
+    <div className="flex flex-col lg:flex-row h-auto min-h-screen bg-gray-50 p-8" dir="rtl">
+      {/* يمين */}
+      <div className="w-full lg:w-1/2 p-8 bg-white mb-8 lg:mb-0 lg:mr-6">
+        <h2 className="text-3xl font-bold text-[#892222] mb-8">تفاصيل الحالة</h2>
+        {caseInfo ? (
+          <div className="space-y-6">
+            <div className="p-6 bg-gray-50 rounded-lg border border-gray-300">
+              <h3 className="text-2xl font-semibold text-gray-800 mb-4">معلومات المريض</h3>
+              <div className="flex justify-between mb-4">
+                <span className="text-gray-700 text-lg">اسم المريض:</span>
+                <span className="text-gray-900 font-semibold ml-auto mr-3 mt-1">{caseInfo.patient.name}</span>
+              </div>
+              <div className="flex justify-between mb-4">
+                <span className="text-gray-700 text-lg">رقم الهاتف:</span>
+                <span className="text-gray-900 font-semibold ml-auto mr-3 mt-1">{caseInfo.patient.phone}</span>
+              </div>
+            </div>
+
+            <div className="p-6 bg-gray-50 rounded-lg border border-gray-300">
+              <h3 className="text-2xl font-semibold text-gray-800 mb-4">تفاصيل الحالة</h3>
+              <div className="flex justify-between mb-4">
+                <span className="text-gray-700 text-lg">نوع الحالة:</span>
+                <span className="text-gray-900 font-semibold ml-auto mr-3 mt-1">{caseInfo.case_type}</span>
+              </div>
+              <div className="flex justify-between mb-4">
+                <span className="text-gray-700 text-lg">حالة الطلب:</span>
+                <span className={`text-lg font-semibold ml-auto mr-3 mt-1 ${caseInfo.status === 'تم إكمال الحالة' ? 'text-green-500' : 'text-red-500'}`}>{caseInfo.status}</span>
+              </div>
+            </div>
+
+            {/* زر إكمال الحالة يظهر فقط إذا لم تكتمل الحالة بعد */}
+            {caseInfo.status !== 'تم إكمال الحالة' && (
+              <button
+                onClick={handleCompleteCase}
+                className="mt-6 bg-[#892222] text-white w-full py-3 rounded-full text-lg font-bold hover:bg-[#7b1e1e] transition"
+                disabled={loading} // تعطيل الزر أثناء التحميل
+              >
+                {loading ? 'جاري الإكمال...' : 'إكمال الحالة'}
+              </button>
+            )}
           </div>
-          <div className="flex flex-col">
-            <strong className="text-gray-700 mb-1">رقم الهاتف:</strong>
-            <p className="text-lg text-gray-800">{caseInfo.patient.phone}</p>
+        ) : (
+          <p className="text-gray-600">جاري تحميل التفاصيل...</p>
+        )}
+      </div>
+
+      {/* يسار  */}
+      <div className="w-full lg:w-1/2 p-8 bg-white">
+        <h3 className="text-3xl font-semibold text-[#892222] mb-6">موقع الحالة</h3>
+        {caseInfo ? (
+          <div className="rounded-lg overflow-hidden shadow-md">
+            <MedicMap caseId={caseId} />
           </div>
-          <div className="flex flex-col">
-            <strong className="text-gray-700 mb-1">نوع الحالة:</strong>
-            <p className="text-lg text-gray-800">{caseInfo.case_type}</p>
-          </div>
-          <div className="flex flex-col">
-            <strong className="text-gray-700 mb-1">العنوان:</strong>
-            <p className="text-lg text-gray-800">{caseInfo.location.address !== 'العنوان غير متاح' ? caseInfo.location.address : 'العنوان غير متاح'}</p>
-          </div>
-        </div>
-      ) : (
-        <p className="text-gray-500">لم يتم العثور على تفاصيل الحالة بعد.</p>
-      )}
+        ) : (
+          <p className="text-gray-600">جاري تحميل الموقع...</p>
+        )}
+      </div>
     </div>
   );
 };
 
-export default CaseDetails;
+export default CaseDetailsPage;

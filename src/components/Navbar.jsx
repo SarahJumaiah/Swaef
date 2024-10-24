@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { FiMenu, FiX } from "react-icons/fi"; 
 
+
+
 const Navbar = ({ scrollToSection }) => {
   const [isSticky, setIsSticky] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
