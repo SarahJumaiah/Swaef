@@ -24,9 +24,11 @@ function Login() {
       [name]: value,
     });
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
+    // تحقق من بيانات الإدمن
     if (formData.email === adminCredentials.email && formData.password === adminCredentials.password) {
       navigate('/admin');
     } else {
@@ -34,16 +36,22 @@ function Login() {
         .then((response) => {
           const users = response.data;
           const user = users.find((user) => user.email === formData.email && user.password === formData.password);
-  
+
           if (user) {
-            // تخزين معرف المسعف وبياناته في localStorage
-            localStorage.setItem('medicId', user.id);
-            localStorage.setItem('medicName', user.name);
-            localStorage.setItem('medicPhone', user.phone);
-  
-            // الانتقال إلى صفحة المسعف
-            navigate(`/MedicPage/${user.id}`);
+            if (user.isApproved) {  // التحقق من اعتماد المستخدم
+              // تخزين معرف المسعف وبياناته في localStorage
+              localStorage.setItem('medicId', user.id);
+              localStorage.setItem('medicName', user.name);
+              localStorage.setItem('medicPhone', user.phone);
+
+              // الانتقال إلى صفحة المسعف
+              navigate(`/MedicPage/${user.id}`);
+            } else {
+              // المستخدم لم يعتمد بعد
+              setErrorMessage('حسابك قيد المراجعة. انتظر حتى يتم اعتمادك من قبل الأدمن.');
+            }
           } else {
+            // المستخدم غير موجود أو البيانات غير صحيحة
             setErrorMessage('البريد الإلكتروني أو كلمة المرور غير صحيحة.');
           }
         })
@@ -53,9 +61,7 @@ function Login() {
         });
     }
   };
-  
-  
-  
+
   return (
     <div className="flex items-center justify-center w-full min-h-screen bg-gray-100">
       <div className="p-8 max-w-4xl w-full flex flex-col md:flex-row gap-8">
@@ -65,13 +71,7 @@ function Login() {
           <div className="text-center">
             <h3 className="text-2xl font-bold text-[#ab1c1c] mb-2">تسجيل الدخول</h3>
             <p className="text-gray-600 text-sm leading-relaxed lg:mb-10">
-              استمر في مسيرتك مع مجتمع المتطوعين. دورك مهم في إحداث تغيير إيجابي، قال تعالى:
-              <span className="font-bold text-[#ab1c1c]">
-                ﴿وَجَعَلْنَاهُمْ أَئِمَّةً يَهْدُونَ بِأَمْرِنَا وَأَوْحَيْنَا إِلَيْهِمْ فِعْلَ الْخَيْرَاتِ وَإِقَامَ الصَّلَاةِ وَإِيتَاء الزَّكَاةِ وَكَانُوا لَنَا عَابِدِينَ﴾
-              </span>
-              <span className='text-xs'>
-                 (73) سورة الأنبياء.
-              </span>      
+              استمر في مسيرتك مع مجتمع المتطوعين. دورك مهم في إحداث تغيير إيجابي.
             </p>
           </div>
         </div>
