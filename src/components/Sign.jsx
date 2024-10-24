@@ -127,12 +127,12 @@ function Sign() {
     name: '',
     email: '',
     password: '',
+    phone: '',
   });
 
   const [errorMessage, setErrorMessage] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
 
-  // Handle form field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -141,17 +141,16 @@ function Sign() {
     });
   };
 
-  // Validate form using useEffect whenever formData changes
   useEffect(() => {
-    const { name, email, password } = formData;
+    const { name, email, password ,phone} = formData;
 
-    // Basic validation logic
     const nameValid = name.split(' ').length >= 3;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const emailValid = emailRegex.test(email);
     const passwordValid = password.length >= 6;
+    const phoneValid = phone.length >= 10; 
 
-    // Set validation state
+
     if (nameValid && emailValid && passwordValid) {
       setIsFormValid(true);
       setErrorMessage('');
@@ -163,6 +162,8 @@ function Sign() {
         setErrorMessage('يرجى إدخال بريد إلكتروني صالح.');
       } else if (!passwordValid) {
         setErrorMessage('يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل.');
+      } else if (!phoneValid) {
+        setErrorMessage('يرجى إدخال رقم جوال صحيح.');
       }
     }
   }, [formData]);
@@ -170,20 +171,20 @@ function Sign() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Check if form is valid before sending the data
     if (!isFormValid) {
       return;
     }
 
-    // Create an object with the form data to send it as JSON
     const submissionData = {
       name: formData.name,
       email: formData.email,
-      password: formData.password
+      password: formData.password,
+      phone: formData.phone, 
+      isApproved: false
+
     };
 
-    console.log("Sending data:", submissionData);  // تحقق من القيم
-
+    console.log("Sending data:", submissionData); 
     axios.post('https://6717e676b910c6a6e02a7fd0.mockapi.io/log', submissionData)
       .then((response) => {
         if (response.status === 201) {
@@ -256,6 +257,40 @@ function Sign() {
                 className="w-full p-3 text-gray-700 bg-transparent focus:outline-none"
                 placeholder="أدخل كلمة المرور"
                 required
+              />
+            </div>
+            <div className="border-b-2 border-[#ab1c1c]">
+  <input
+    type="tel"
+    id="phone"
+    name="phone"
+    value={formData.phone}
+    onChange={handleChange}
+    className="w-full p-3 text-gray-700 bg-transparent focus:outline-none"
+    placeholder="أدخل رقم الهاتف"
+    required
+  />
+</div>
+            <div>
+         <label
+                htmlFor="file-upload"
+                className="w-full cursor-pointer p-3 border-b-2 border-[#ab1c1c] bg-transparent text-gray-700 flex justify-between items-center"
+              >
+                <span id="file-label" className="text-gray-400">ارفع شهادتك الصحية</span>
+                <span className="bg-[#ab1c1c] text-white px-4 py-2 rounded-full hover:bg-opacity-90 transition duration-300">
+                  اختر ملف
+                </span>
+              </label>
+              <input
+                type="file"
+                id="file-upload"
+                name="file-upload"
+                className="hidden"
+                onChange={(e) => {
+                  const fileLabel = document.getElementById('file-label');
+                  const fileName = e.target.files.length > 0 ? e.target.files[0].name : 'ارفع شهادتك الصحية';
+                  fileLabel.textContent = fileName;
+                }}
               />
             </div>
 
