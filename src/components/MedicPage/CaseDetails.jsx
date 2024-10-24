@@ -69,11 +69,11 @@ const CaseDetailsPage = () => {
               <h3 className="text-2xl font-semibold text-gray-800 mb-4">معلومات المريض</h3>
               <div className="flex justify-between mb-4">
                 <span className="text-gray-700 text-lg">اسم المريض:</span>
-                <span className="text-gray-900 font-semibold ml-auto mr-3 mt-1">{caseInfo.patient.name}</span>
+                <span className="text-gray-900 font-semibold ml-auto mr-3 ">{caseInfo.patient.name}</span>
               </div>
               <div className="flex justify-between mb-4">
                 <span className="text-gray-700 text-lg">رقم الهاتف:</span>
-                <span className="text-gray-900 font-semibold ml-auto mr-3 mt-1">{caseInfo.patient.phone}</span>
+                <span className="text-gray-900 font-semibold ml-auto mr-3 ">{caseInfo.patient.phone}</span>
               </div>
             </div>
 
@@ -81,11 +81,11 @@ const CaseDetailsPage = () => {
               <h3 className="text-2xl font-semibold text-gray-800 mb-4">تفاصيل الحالة</h3>
               <div className="flex justify-between mb-4">
                 <span className="text-gray-700 text-lg">نوع الحالة:</span>
-                <span className="text-gray-900 font-semibold ml-auto mr-3 mt-1">{caseInfo.case_type}</span>
+                <span className="text-gray-900 font-semibold ml-auto mr-3 ">{caseInfo.case_type}</span>
               </div>
               <div className="flex justify-between mb-4">
                 <span className="text-gray-700 text-lg">حالة الطلب:</span>
-                <span className={`text-lg font-semibold ml-auto mr-3 mt-1 ${caseInfo.status === 'تم إكمال الحالة' ? 'text-green-500' : 'text-red-500'}`}>{caseInfo.status}</span>
+                <span className="text-lg font-semibold ml-auto mr-3"> {caseInfo.status} </span>
               </div>
             </div>
 
