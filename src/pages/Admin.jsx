@@ -11,7 +11,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import logo from '../assets/logo.png';
+import { FaCheckCircle, FaTimesCircle, FaInfoCircle } from "react-icons/fa"; // Added new icons
+import logo from "../assets/logo.png";
 
 ChartJS.register(CategoryScale, LinearScale, ArcElement, Tooltip, Legend);
 
@@ -27,9 +28,9 @@ const Admin = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  // جلب بيانات المسعفين من API
   useEffect(() => {
-    axios.get("https://6717e676b910c6a6e02a7fd0.mockapi.io/log")
+    axios
+      .get("https://6717e676b910c6a6e02a7fd0.mockapi.io/log")
       .then((response) => {
         setParamedics(response.data);
       })
@@ -82,22 +83,26 @@ const Admin = () => {
       confirmButtonText: "نعم",
       cancelButtonText: "إلغاء",
       icon: "question",
-      confirmButtonColor: "#892222",
+      confirmButtonColor: "#28a745", // Changed the color to match the acceptance button color
       cancelButtonColor: "#CACACA",
     }).then((result) => {
       if (result.isConfirmed) {
-        // تحديث حالة المسعف في قاعدة البيانات إلى "مقبول"
-        axios.put(`https://6717e676b910c6a6e02a7fd0.mockapi.io/log/${id}`, { isApproved: true })
+        axios
+          .put(`https://6717e676b910c6a6e02a7fd0.mockapi.io/log/${id}`, {
+            isApproved: true,
+          })
           .then(() => {
             setParamedics((prev) =>
               prev.map((paramedic) =>
-                paramedic.id === id ? { ...paramedic, isApproved: true } : paramedic
+                paramedic.id === id
+                  ? { ...paramedic, isApproved: true }
+                  : paramedic
               )
             );
             Swal.fire({
               title: "تم القبول",
               icon: "success",
-              confirmButtonColor: "#892222",
+              confirmButtonColor: "#28a745", // Matched the color
             });
           })
           .catch((error) => {
@@ -114,18 +119,20 @@ const Admin = () => {
       confirmButtonText: "نعم",
       cancelButtonText: "إلغاء",
       icon: "warning",
-      confirmButtonColor: "#892222",
+      confirmButtonColor: "#dc3545", 
       cancelButtonColor: "#CACACA",
     }).then((result) => {
       if (result.isConfirmed) {
-        // حذف المسعف من قاعدة البيانات
-        axios.delete(`https://6717e676b910c6a6e02a7fd0.mockapi.io/log/${id}`)
+        axios
+          .delete(`https://6717e676b910c6a6e02a7fd0.mockapi.io/log/${id}`)
           .then(() => {
-            setParamedics((prev) => prev.filter((paramedic) => paramedic.id !== id));
+            setParamedics((prev) =>
+              prev.filter((paramedic) => paramedic.id !== id)
+            );
             Swal.fire({
               title: "تم الرفض",
               icon: "error",
-              confirmButtonColor: "#892222",
+              confirmButtonColor: "#dc3545",
             });
           })
           .catch((error) => {
@@ -147,22 +154,18 @@ const Admin = () => {
 
   const renderSummaryCards = () => (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-      <div className="p-6 rounded-lg text-center bg-[#be828233] border-4 border-[#892222]">
-        <h3 className="text-lg font-extrabold text-[#892222]">
-          إجمالي المسعفين
-        </h3>
+      <div className="p-6 rounded-lg text-center bg-white shadow-md border border-gray-300 transition duration-300 ease-in-out hover:scale-105">
+        <h3 className="text-lg font-bold text-[#892222]">إجمالي المسعفين</h3>
         <p className="text-4xl font-bold text-[#892222]">{totalParamedics}</p>
       </div>
-      <div className="p-6 rounded-lg text-center bg-[#be828233] border-4 border-[#892222]">
-        <h3 className="text-lg font-extrabold text-[#892222]">
-          المسعفين المقبولين
-        </h3>
+      <div className="p-6 rounded-lg text-center bg-white shadow-md border border-gray-300 transition duration-300 ease-in-out hover:scale-105">
+        <h3 className="text-lg font-bold text-[#892222]">المسعفين المقبولين</h3>
         <p className="text-4xl font-bold text-[#892222]">
           {acceptedParamedics}
         </p>
       </div>
-      <div className="p-6 rounded-lg text-center bg-[#be828233] border-4 border-[#892222]">
-        <h3 className="text-lg font-extrabold text-[#892222]">
+      <div className="p-6 rounded-lg text-center bg-white shadow-md border border-gray-300 transition duration-300 ease-in-out hover:scale-105">
+        <h3 className="text-lg font-bold text-[#892222]">
           المسعفين في الانتظار
         </h3>
         <p className="text-4xl font-bold text-[#892222]">{pendingParamedics}</p>
@@ -172,14 +175,14 @@ const Admin = () => {
 
   const renderParamedicsList = () => (
     <section className="bg-gray-100 p-6 lg:p-10 h-[50vh]">
-      <h2 className="text-2xl font-semibold text-[#ab1c1c] mb-4">
+      <h2 className="text-2xl font-semibold text-[#892222] mb-4">
         طلبات المسعفين
       </h2>
       <ul>
         {paramedics.map((paramedic) => (
           <li
             key={paramedic.id}
-            className="p-4 mb-4 bg-[#be828233] border-2 border-[#892222] rounded-lg flex flex-col lg:flex-row justify-between items-start lg:items-center"
+            className="p-6 mb-4 bg-white shadow-md border border-gray-300 rounded-lg transition duration-300 ease-in-out hover:scale-105 flex flex-col lg:flex-row justify-between items-start lg:items-center"
           >
             <div className="mb-4 lg:mb-0">
               <p>
@@ -193,22 +196,22 @@ const Admin = () => {
             <div className="flex gap-4">
               <button
                 onClick={() => handleOpenModal(paramedic)}
-                className="bg-[#892222] text-white px-4 py-2 rounded"
+                className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium px-4 py-2 rounded-lg hover:bg-[#f1f0f0b9] transition flex justify-center items-center"
               >
-                التفاصيل
+                <span className="ml-1">التفاصيل</span> <FaInfoCircle/> 
               </button>
               <button
                 onClick={() => handleAccept(paramedic.id)}
-                className="bg-[#892222] text-white px-4 py-2 rounded"
+                className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium w-[7vw] py-2 rounded-lg hover:bg-[#f1f0f0b9] transition flex justify-center items-center"
                 disabled={paramedic.isApproved}
               >
-                قبول
+                <FaCheckCircle className="text-green-500 text-xl" />
               </button>
               <button
                 onClick={() => handleReject(paramedic.id)}
-                className="bg-[#892222] text-white px-4 py-2 rounded"
+                className="bg-[#b02e2e] text-white py-2 rounded-lg hover:bg-[#c43a3a] transition w-[7vw] flex justify-center items-center"
               >
-                رفض
+                <FaTimesCircle className="text-white text-xl" />
               </button>
             </div>
           </li>
@@ -223,7 +226,7 @@ const Admin = () => {
     return (
       <div className="fixed inset-0 flex items-center justify-center z-50">
         <div className="bg-white p-6 rounded-lg shadow-lg w-full sm:w-2/3 lg:w-1/3 z-50">
-          <h2 className="text-2xl font-semibold text-[#ab1c1c] mb-4">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
             تفاصيل المسعف
           </h2>
           <p>
@@ -233,11 +236,12 @@ const Admin = () => {
             <strong>الايميل الشخصي:</strong> {selectedParamedic.email}
           </p>
           <p>
-            <strong>رقم الجوال:</strong> {selectedParamedic.phone || "غير متوفر"}
+            <strong>رقم الجوال:</strong>{" "}
+            {selectedParamedic.phone || "غير متوفر"}
           </p>
           <button
             onClick={handleCloseModal}
-            className="bg-[#892222] text-white px-4 py-2 rounded mt-4"
+            className="bg-[#892222] text-white px-4 py-2 rounded-lg mt-4"
           >
             إغلاق
           </button>
@@ -256,7 +260,7 @@ const Admin = () => {
         return (
           <>
             <header className="mb-8">
-              <h1 className="text-3xl font-bold text-[#ab1c1c]">الملخص</h1>
+              <h1 className="text-3xl font-bold text-[#892222]">الملخص</h1>
             </header>
             {renderSummaryCards()}
             <section className="bg-gray-100 p-6 overflow-hidden">
@@ -272,7 +276,7 @@ const Admin = () => {
         return (
           <>
             <header className="mb-8">
-              <h1 className="text-3xl font-bold text-[#ab1c1c]">المسعفين</h1>
+              <h1 className="text-3xl font-bold text-[#892222]">المسعفين</h1>
             </header>
             {renderParamedicsList()}
             {renderParamedicModal()}
@@ -292,7 +296,7 @@ const Admin = () => {
       dir="rtl"
     >
       <button
-        className="absolute top-4 left-4 lg:hidden bg-[#892222] text-white px-4 py-2 rounded"
+        className="absolute top-4 left-4 lg:hidden bg-[#892222] text-white px-4 py-2 rounded-lg"
         onClick={toggleSidebar}
       >
         {isSidebarOpen ? "✖" : "☰"}{" "}
@@ -310,7 +314,9 @@ const Admin = () => {
           <ul className="space-y-6">
             <li
               className={`font-bold text-xl cursor-pointer relative p-3 transition duration-200 ease-in-out ${
-                selectedSection === "الملخص" ? "text-[#ab1c1c]" : "text-[#333333]"
+                selectedSection === "الملخص"
+                  ? "text-[#ab1c1c]"
+                  : "text-[#333333]"
               } hover:text-[#ab1c1c]`}
               onClick={() => setSelectedSection("الملخص")}
             >
@@ -323,7 +329,9 @@ const Admin = () => {
             </li>
             <li
               className={`font-bold text-xl cursor-pointer relative p-3 transition duration-200 ease-in-out ${
-                selectedSection === "المسعفين" ? "text-[#ab1c1c]" : "text-[#333333]"
+                selectedSection === "المسعفين"
+                  ? "text-[#ab1c1c]"
+                  : "text-[#333333]"
               } hover:text-[#ab1c1c]`}
               onClick={() => setSelectedSection("المسعفين")}
             >
@@ -336,7 +344,9 @@ const Admin = () => {
             </li>
             <li
               className={`font-bold text-xl cursor-pointer relative p-3 transition duration-200 ease-in-out ${
-                selectedSection === "تسجيل خروج" ? "text-[#ab1c1c]" : "text-[#333333]"
+                selectedSection === "تسجيل خروج"
+                  ? "text-[#ab1c1c]"
+                  : "text-[#333333]"
               } hover:text-[#ab1c1c]`}
               onClick={handleLogout}
             >
@@ -351,7 +361,9 @@ const Admin = () => {
         </nav>
       </aside>
 
-      <main className="w-full lg:w-3/4 p-4 sm:p-10 h-screen">{renderContent()}</main>
+      <main className="w-full lg:w-3/4 p-4 sm:p-10 h-screen">
+        {renderContent()}
+      </main>
     </div>
   );
 };
