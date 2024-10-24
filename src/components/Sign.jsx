@@ -119,6 +119,7 @@ function Sign() {
     name: '',
     email: '',
     password: '',
+    phone: '',
   });
 
   const [errorMessage, setErrorMessage] = useState('');
@@ -135,13 +136,15 @@ function Sign() {
 
   // Validate form using useEffect whenever formData changes
   useEffect(() => {
-    const { name, email, password } = formData;
+    const { name, email, password ,phone} = formData;
 
     // Basic validation logic
     const nameValid = name.split(' ').length >= 3;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const emailValid = emailRegex.test(email);
     const passwordValid = password.length >= 6;
+    const phoneValid = phone.length >= 10; 
+
 
     // Set validation state
     if (nameValid && emailValid && passwordValid) {
@@ -155,6 +158,8 @@ function Sign() {
         setErrorMessage('يرجى إدخال بريد إلكتروني صالح.');
       } else if (!passwordValid) {
         setErrorMessage('يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل.');
+      } else if (!phoneValid) {
+        setErrorMessage('يرجى إدخال رقم جوال صحيح.');
       }
     }
   }, [formData]);
@@ -171,7 +176,9 @@ function Sign() {
     const submissionData = {
       name: formData.name,
       email: formData.email,
-      password: formData.password
+      password: formData.password,
+      phone: formData.phone, // أضفنا الهاتف
+
     };
 
     console.log("Sending data:", submissionData);  // تحقق من القيم
@@ -244,6 +251,18 @@ function Sign() {
                 required
               />
             </div>
+            <div className="border-b-2 border-[#ab1c1c]">
+  <input
+    type="tel"
+    id="phone"
+    name="phone"
+    value={formData.phone}
+    onChange={handleChange}
+    className="w-full p-3 text-gray-700 bg-transparent focus:outline-none"
+    placeholder="أدخل رقم الهاتف"
+    required
+  />
+</div>
             <div>
          <label
                 htmlFor="file-upload"
