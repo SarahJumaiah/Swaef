@@ -234,7 +234,7 @@ const MedicPage = () => {
                           {caseItem.is_accepted && (
                             <button
                               onClick={() => handleCaseComplete(caseItem)}
-                              className="bg-[#6c1111] text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                              className="bg-[#6c1111] text-white px-4 py-2 rounded-lg transition"
                             >
                               مكتمل
                             </button>
