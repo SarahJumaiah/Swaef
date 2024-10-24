@@ -393,8 +393,9 @@ const Home = () => {
         ref={aboutRef}
         className="about my-24 opacity-0 transition-opacity duration-700 w-[90%] md:w-[100%] mx-auto"
       >
-        <h2 className="text-[#ab1c1c] text-3xl md:text-4xl font-bold mb-20 text-center md:text-right">
-          من نحن
+             <h2 className="text-center md:text-right text-3xl sm:text-4xl text-[#ab1c1c] font-bold mb-6 mt-14 w-[90%] sm:w-[70%] mx-auto">
+
+        من نحن
         </h2>
 
         <div className="p-4 sm:p-8">
