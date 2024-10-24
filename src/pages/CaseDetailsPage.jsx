@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import MedicMap from '../components/MedicPage/MedicMap';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom'; // إضافة useNavigate للتوجيه
+import { useParams, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const CaseDetailsPage = () => {
   const { caseId } = useParams(); // الحصول على caseId من المسار
@@ -33,33 +34,65 @@ const CaseDetailsPage = () => {
       // تحديث الحالة في الـ API
       await axios.put(`https://67073bf9a0e04071d2298046.mockapi.io/users/${caseId}`, updatedCase);
       
-      // عرض رسالة إكمال وتحويل المستخدم إلى صفحة المسعف
-      alert('تم إكمال الحالة بنجاح!');
-      const medicId = localStorage.getItem('medicId');
-      navigate(`/MedicPage/${medicId}`);
+      // عرض رسالة إكمال وتحويل المستخدم إلى صفحة المسعف باستخدام SweetAlert2
+      Swal.fire({
+        title: 'تم إكمال الحالة بنجاح!',
+        icon: 'success',
+        confirmButtonColor: '#892222',
+        confirmButtonText: 'موافق'
+      }).then(() => {
+        const medicId = localStorage.getItem('medicId');
+        navigate(`/MedicPage/${medicId}`);
+      });
     } catch (error) {
       console.error("Error completing case:", error);
+      Swal.fire({
+        title: 'حدث خطأ!',
+        text: 'يرجى المحاولة مرة أخرى.',
+        icon: 'error',
+        confirmButtonColor: '#892222',
+      });
     } finally {
       setLoading(false); // إنهاء حالة التحميل
     }
   };
 
   return (
-    <div className="flex flex-col lg:flex-row h-full bg-gray-100 p-6" dir="rtl">
-      <div className="w-full lg:w-1/2 p-4">
-        <h2 className="text-2xl font-bold mb-6">تفاصيل الحالة</h2>
+    <div className="flex flex-col lg:flex-row h-auto min-h-screen bg-gray-50 p-8" dir="rtl">
+      {/* يمين */}
+      <div className="w-full lg:w-1/2 p-8 bg-white mb-8 lg:mb-0 lg:mr-6">
+        <h2 className="text-3xl font-bold text-[#892222] mb-8">تفاصيل الحالة</h2>
         {caseInfo ? (
-          <div>
-            <h3>اسم المريض: {caseInfo.patient.name}</h3>
-            <p>رقم الهاتف: {caseInfo.patient.phone}</p>
-            <p>نوع الحالة: {caseInfo.case_type}</p>
-            <p>حالة الطلب: {caseInfo.status}</p>
+          <div className="space-y-6">
+            <div className="p-6 bg-gray-50 rounded-lg border border-gray-300">
+              <h3 className="text-2xl font-semibold text-gray-800 mb-4">معلومات المريض</h3>
+              <div className="flex justify-between mb-4">
+                <span className="text-gray-700 text-lg">اسم المريض:</span>
+                <span className="text-gray-900 font-semibold ml-auto mr-3 mt-1">{caseInfo.patient.name}</span>
+              </div>
+              <div className="flex justify-between mb-4">
+                <span className="text-gray-700 text-lg">رقم الهاتف:</span>
+                <span className="text-gray-900 font-semibold ml-auto mr-3 mt-1">{caseInfo.patient.phone}</span>
+              </div>
+            </div>
+
+            <div className="p-6 bg-gray-50 rounded-lg border border-gray-300">
+              <h3 className="text-2xl font-semibold text-gray-800 mb-4">تفاصيل الحالة</h3>
+              <div className="flex justify-between mb-4">
+                <span className="text-gray-700 text-lg">نوع الحالة:</span>
+                <span className="text-gray-900 font-semibold ml-auto mr-3 mt-1">{caseInfo.case_type}</span>
+              </div>
+              <div className="flex justify-between mb-4">
+                <span className="text-gray-700 text-lg">حالة الطلب:</span>
+                <span className={`text-lg font-semibold ml-auto mr-3 mt-1 ${caseInfo.status === 'تم إكمال الحالة' ? 'text-green-500' : 'text-red-500'}`}>{caseInfo.status}</span>
+              </div>
+            </div>
 
             {/* زر إكمال الحالة يظهر فقط إذا لم تكتمل الحالة بعد */}
             {caseInfo.status !== 'تم إكمال الحالة' && (
               <button
                 onClick={handleCompleteCase}
-                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                className="mt-6 bg-[#892222] text-white w-full py-3 rounded-full text-lg font-bold hover:bg-[#7b1e1e] transition"
                 disabled={loading} // تعطيل الزر أثناء التحميل
               >
                 {loading ? 'جاري الإكمال...' : 'إكمال الحالة'}
@@ -67,13 +100,20 @@ const CaseDetailsPage = () => {
             )}
           </div>
         ) : (
-          <p>جاري تحميل التفاصيل...</p>
+          <p className="text-gray-600">جاري تحميل التفاصيل...</p>
         )}
       </div>
 
-      <div className="w-full lg:w-1/2 p-4">
-        <h3 className="text-xl font-semibold mb-4">موقع الحالة</h3>
-        {caseInfo && <MedicMap caseId={caseId} />}
+      {/* يسار  */}
+      <div className="w-full lg:w-1/2 p-8 bg-white">
+        <h3 className="text-3xl font-semibold text-[#892222] mb-6">موقع الحالة</h3>
+        {caseInfo ? (
+          <div className="rounded-lg overflow-hidden shadow-md">
+            <MedicMap caseId={caseId} />
+          </div>
+        ) : (
+          <p className="text-gray-600">جاري تحميل الموقع...</p>
+        )}
       </div>
     </div>
   );

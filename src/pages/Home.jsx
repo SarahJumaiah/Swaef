@@ -1,6 +1,10 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import logo from "../assets/logo.png";
+import img1 from "../assets/rb_63409.png";
+import img2 from "../assets/rb_63411.png";
+import img3 from "../assets/rb.png";
+
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -314,20 +318,25 @@ const Home = () => {
            ) : (
 <div className="flex flex-col p-4 border-2 border-[#ab1c1c] rounded-lg w-full">
   <h3 className="text-xl font-bold mb-4 text-[#ab1c1c]">ملخص الحالة:</h3>
-  
-  <p className="mb-2 text-lg text-gray-600">
-    <strong>نوع الحالة:</strong> {acceptedCase?.case_type}
-  </p>
-  
-  <p className="mb-2 text-lg text-gray-600">
-    <strong>صاحب البلاغ :</strong> {acceptedCase?.patient?.name}
-  </p>
-  
-  <p className="mb-2 text-lg text-gray-600">
-    <strong>رقم الهاتف:</strong> {isAccepted ? acceptedCase?.patient?.phone : 'سيظهر بعد قبول الحالة'}
-  </p>
 
-  {acceptedCase?.assigned_responder ? (
+  {/* عرض نوع الحالة وصاحب البلاغ فقط إذا لم يتم قبول المسعف بعد */}
+  {!isAccepted && (
+    <>
+      <p className="mb-2 text-lg text-gray-600">
+        <strong>نوع الحالة:</strong> {acceptedCase?.case_type}
+      </p>
+      
+      <p className="mb-2 text-lg text-gray-600">
+        <strong>صاحب البلاغ :</strong> {acceptedCase?.patient?.name}
+      </p>
+      <p className="mb-2 text-lg text-gray-600">
+        <strong>صاحب البلاغ :</strong> {acceptedCase?.patient?.phone}
+      </p>
+    </>
+  )}
+
+  {/* معلومات المسعف تظهر فقط في حال القبول */}
+  {isAccepted && acceptedCase?.assigned_responder ? (
     <>
       <p className="mb-2 text-lg text-gray-600">
         <strong>اسم المسعف:</strong> {acceptedCase.assigned_responder.name}
@@ -335,16 +344,20 @@ const Home = () => {
       <p className="mb-2 text-lg text-gray-600">
         <strong>رقم الهاتف:</strong> {acceptedCase.assigned_responder.phone}
       </p>
+      <p className="text-lg text-gray-600 text-center">
+        <strong className="text-sm">حالة القبول:</strong><br /> 
+        "المسعف في الطريق اليك حالا!"
+      </p>
     </>
   ) : (
-    <p className="text-lg text-gray-600">لم يتم تعيين مسعف بعد.</p>
+    <p className="text-lg text-gray-600 text-center">
+      <strong className="text-sm">حالة القبول:</strong><br /> 
+      "جاري البحث عن أقرب مسعف لك، تطمن!"
+    </p>
   )}
-
-  <p className="text-lg text-gray-600 text-center">
-    <strong className="text-sm">حالة القبول:</strong><br /> 
-    {isAccepted ? "المسعف في الطريق اليك حالا!" : "جاري البحث عن أقرب مسعف لك، تطمن!"}
-  </p>
 </div>
+
+
 
           
 
@@ -365,15 +378,15 @@ const Home = () => {
      {/* من نحن */}
      <section
        ref={aboutRef}
-       className="about my-24 opacity-0 transition-opacity duration-700 w-[90%] md:w-[70%] mx-auto"
+       className="about my-24 opacity-0 transition-opacity duration-700 w-[90%] md:w-[90%] mx-auto"
      >
-       <h2 className="text-right text-4xl text-[#ab1c1c] font-bold mb-6 mt-14">
+       <h2 className="text-right text-4xl text-[#ab1c1c] font-bold mb-6 mt-14 w-[70%] mx-auto">
          من نحن
        </h2>
 
 
        <div className="p-8">
-         <p className="text-right leading-relaxed text-gray-900 font-medium mb-6">
+         <p className="text-right leading-relaxed text-gray-900 font-medium mb-6 w-[70%] mx-auto">
            منصة{" "}
            <span className="text-[#ab1c1c] text-2xl font-bold">سواعف</span> هي
            الحل الأمثل للحالات الطبية الطارئة، حيث تتيح للمستخدمين المسجلين طلب
@@ -389,21 +402,24 @@ const Home = () => {
          </p>
 
 
-         <div className="flex flex-wrap md:flex-row justify-around gap-6 mt-8 lg:mx-32">
+         <div className="flex flex-wrap md:flex-row justify-around gap-1 mt-8 lg:mx-32">
            <img
-             src="https://images.unsplash.com/photo-1642438113516-982b9f57b01a?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            //  src="https://images.unsplash.com/photo-1642438113516-982b9f57b01a?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src={img1}
              alt="Image 1"
-             className="h-60 w-48 object-cover rounded-lg shadow-md transform transition-transform hover:scale-105"
+             className="h-60 w-auto transform transition-transform hover:scale-105"
            />
            <img
-             src="https://images.unsplash.com/photo-1624638764471-cffef5035746?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-             alt=""
-             className="h-60 w-48 object-cover rounded-lg shadow-md transform transition-transform hover:scale-105"
+            //  src="https://images.unsplash.com/photo-1624638764471-cffef5035746?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src={img3}
+             alt="image 2"
+             className="h-60 w-auto transform transition-transform hover:scale-105"
            />
            <img
-             src="https://images.unsplash.com/photo-1649260257620-3fd04e1952e5?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-             alt="Image 2"
-             className="h-60 w-48 object-cover rounded-lg shadow-md transform transition-transform hover:scale-105"
+            //  src="https://images.unsplash.com/photo-1649260257620-3fd04e1952e5?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            src={img2}
+             alt="image 3"
+             className="h-60 w-auto ransform transition-transform hover:scale-105"
            />
          </div>
        </div>
