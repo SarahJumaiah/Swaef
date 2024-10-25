@@ -109,6 +109,33 @@
 
 // export default Sign;
 
+
+// useEffect(() => {
+//   const { name, email, password, phone } = formData;
+
+//   const nameValid = name.split(' ').length >= 3;
+//   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//   const emailValid = emailRegex.test(email);
+//   const passwordValid = password.length >= 6;
+//   const phoneValid = phone.length >= 10;
+
+//   if (nameValid && emailValid && passwordValid && phoneValid) {
+//     setIsFormValid(true);
+//     setErrorMessage('');
+//   } else {
+//     setIsFormValid(false);
+//     if (!nameValid) {
+//       setErrorMessage('يرجى إدخال الاسم الثلاثي.');
+//     } else if (!emailValid) {
+//       setErrorMessage('يرجى إدخال بريد إلكتروني صالح.');
+//     } else if (!passwordValid) {
+//       setErrorMessage('يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل.');
+//     } else if (!phoneValid) {
+//       setErrorMessage('يرجى إدخال رقم جوال صحيح.');
+//     }
+//   }
+// }, [formData]);
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import logo from '../assets/logo.png';
@@ -140,45 +167,39 @@ function Sign() {
     });
   };
 
-  useEffect(() => {
-    const { name, email, password, phone } = formData;
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
+    // Validation checks
+    const { name, email, password, phone } = formData;
     const nameValid = name.split(' ').length >= 3;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const emailValid = emailRegex.test(email);
     const passwordValid = password.length >= 6;
     const phoneValid = phone.length >= 10;
 
-    if (nameValid && emailValid && passwordValid && phoneValid) {
-      setIsFormValid(true);
-      setErrorMessage('');
-    } else {
-      setIsFormValid(false);
-      if (!nameValid) {
-        setErrorMessage('يرجى إدخال الاسم الثلاثي.');
-      } else if (!emailValid) {
-        setErrorMessage('يرجى إدخال بريد إلكتروني صالح.');
-      } else if (!passwordValid) {
-        setErrorMessage('يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل.');
-      } else if (!phoneValid) {
-        setErrorMessage('يرجى إدخال رقم جوال صحيح.');
-      }
-    }
-  }, [formData]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!isFormValid) {
+    if (!nameValid) {
+      setErrorMessage('يرجى إدخال الاسم الثلاثي.');
+      return;
+    } else if (!emailValid) {
+      setErrorMessage('يرجى إدخال بريد إلكتروني صالح.');
+      return;
+    } else if (!passwordValid) {
+      setErrorMessage('يجب أن تكون كلمة المرور مكونة من 6 أحرف على الأقل.');
+      return;
+    } else if (!phoneValid) {
+      setErrorMessage('يرجى إدخال رقم جوال صحيح.');
       return;
     }
+
+    setErrorMessage(''); // Clear error message if all validations pass
 
     const submissionData = {
       name: formData.name,
       email: formData.email,
       password: formData.password,
       phone: formData.phone,
-      isApproved: false
+      isApproved: false,
     };
 
     axios
@@ -216,105 +237,102 @@ function Sign() {
             </p>
           </div>
         </div>
-
         <div className="md:w-1/2 bg-white shadow-lg rounded-xl p-6 space-y-6">
-          <form className="rtl space-y-4" onSubmit={handleSubmit}>
-            <div className="border-b-2 border-[#ab1c1c]">
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full p-3 text-gray-700 bg-transparent focus:outline-none"
-                placeholder="أدخل اسمك الثلاثي"
-                required
-              />
-            </div>
+      <form className="rtl space-y-4" onSubmit={handleSubmit}>
+        <div className="border-b-2 border-[#ab1c1c]">
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className="w-full p-3 text-gray-700 bg-transparent focus:outline-none"
+            placeholder="أدخل اسمك الثلاثي"
+            required
+          />
+        </div>
 
-            <div className="border-b-2 border-[#ab1c1c]">
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full p-3 text-gray-700 bg-transparent focus:outline-none"
-                placeholder="أدخل البريد الإلكتروني"
-                required
-              />
-            </div>
+        <div className="border-b-2 border-[#ab1c1c]">
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full p-3 text-gray-700 bg-transparent focus:outline-none"
+            placeholder="أدخل البريد الإلكتروني"
+            required
+          />
+        </div>
 
-            <div className="border-b-2 border-[#ab1c1c]">
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full p-3 text-gray-700 bg-transparent focus:outline-none"
-                placeholder="أدخل كلمة المرور"
-                required
-              />
-            </div>
+        <div className="border-b-2 border-[#ab1c1c]">
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className="w-full p-3 text-gray-700 bg-transparent focus:outline-none"
+            placeholder="أدخل كلمة المرور"
+            required
+          />
+        </div>
 
-            <div className="border-b-2 border-[#ab1c1c]">
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="w-full p-3 text-gray-700 bg-transparent focus:outline-none text-right"
-                placeholder="أدخل رقم الهاتف"
-                required
-              />
-            </div>
+        <div className="border-b-2 border-[#ab1c1c]">
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            className="w-full p-3 text-gray-700 bg-transparent focus:outline-none text-right"
+            placeholder="أدخل رقم الهاتف"
+            required
+          />
+        </div>
 
-            <div>
-              <label
-                htmlFor="file-upload"
-                className="w-full cursor-pointer p-3 border-b-2 border-[#ab1c1c] bg-transparent text-gray-700 flex justify-between items-center"
-              >
-                <span id="file-label" className="text-gray-400">
-                  ارقق شهادتك الصحية
-                </span>
-                <span className="bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] text-white px-4 py-2 rounded-full hover:bg-opacity-90 transition duration-300">
-                  اختر ملف
-                </span>
-              </label>
-              <input
-                type="file"
-                id="file-upload"
-                name="file-upload"
-                className="hidden"
-                onChange={(e) => {
-                  const fileLabel = document.getElementById('file-label');
-                  const fileName =
-                    e.target.files.length > 0
-                      ? e.target.files[0].name
-                      : 'ارقق شهادتك الصحية';
-                  fileLabel.textContent = fileName;
-                }}
-              />
-            </div>
-            {errorMessage && (
-            <div className="text-red-500 text-center mt-4">{errorMessage}</div>
-          )}
-            <div className="mt-6">
-              <button
-                type="submit"
-                className={`w-full py-3 bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] text-white font-bold rounded-full shadow-lg ${
-                  isFormValid
-                    ? 'hover:bg-[#961a1a]'
-                    : 'opacity-50 cursor-not-allowed'
-                } transition-all duration-300`}
-                disabled={!isFormValid}
-              >
-                تسجيل
-              </button>
-            </div>
-          </form>
+        <div>
+          <label
+            htmlFor="file-upload"
+            className="w-full cursor-pointer p-3 border-b-2 border-[#ab1c1c] bg-transparent text-gray-700 flex justify-between items-center"
+          >
+            <span id="file-label" className="text-gray-400">
+              ارقق شهادتك الصحية
+            </span>
+            <span className="bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] text-white px-4 py-2 rounded-full hover:bg-opacity-90 transition duration-300">
+              اختر ملف
+            </span>
+          </label>
+          <input
+            type="file"
+            id="file-upload"
+            name="file-upload"
+            className="hidden"
+            onChange={(e) => {
+              const fileLabel = document.getElementById('file-label');
+              const fileName =
+                e.target.files.length > 0
+                  ? e.target.files[0].name
+                  : 'ارقق شهادتك الصحية';
+              fileLabel.textContent = fileName;
+            }}
+          />
+        </div>
+
+        {errorMessage && (
+          <div className="text-red-500 text-center mt-4">{errorMessage}</div>
+        )}
+
+        <div className="mt-6">
+          <button
+            type="submit"
+            className="w-full py-3 bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] text-white font-bold rounded-full shadow-lg hover:bg-[#961a1a] transition-all duration-300"
+          >
+            تسجيل
+          </button>
+        </div>
+      </form>
+
 
 
 

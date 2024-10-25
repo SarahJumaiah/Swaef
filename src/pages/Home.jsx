@@ -548,27 +548,72 @@ const Home = () => {
       {/* رؤيتن */}
       <section 
   ref={vision}
-  className="vision p-8 w-[80%] md:w-[75%] mx-auto my-24 opacity-0 transition-opacity duration-700 flex flex-col md:flex-row justify-between items-center gap-10"
+  className="vision p-8 w-[80%] md:w-[75%] mx-auto my-24 opacity-0 transition-opacity duration-700 flex flex-col items-center gap-10"
 >
-
-  <div className="our-vision flex flex-col items-center md:w-1/2 text-center md:text-right">
-    <div className="vision-title text-2xl text-[#ab1c1c] font-bold mb-4 flex items-center justify-center md:justify-start">
-      <i className="fas fa-lightbulb text-3xl ml-2"></i> رؤيتنا
+  <div className="flex flex-col md:flex-row justify-between items-center w-full gap-10">
+    <div className="our-vision flex flex-col items-center md:w-1/2 text-center md:text-right">
+      <div className="vision-title text-2xl text-[#ab1c1c] font-bold mb-4 flex items-center justify-center md:justify-start">
+        <i className="fas fa-lightbulb text-3xl ml-2"></i> رؤيتنا
+      </div>
+      <p className="sub-vision-title text-gray-800 text-lg leading-relaxed mb-6">
+        أن نكون المنصة الرائدة في تقديم الاستجابة السريعة والفعالة لحالات الطوارئ، ونساهم في إنقاذ الأرواح عبر تسهيل الوصول الفوري إلى أقرب مسعف.
+      </p>
     </div>
-    <p className="sub-vision-title text-gray-800 text-lg leading-relaxed mb-6">
-      أن نحقق الريادة في حفظ الأرواح وخدمة الإنسان ومشاركة المجتمع.
-    </p>
+
+    <div className="our-mission flex flex-col items-center md:w-1/2 text-center md:text-right">
+      <div className="mission-title text-2xl text-[#ab1c1c] font-bold mb-4 flex items-center justify-center md:justify-start">
+        <i className="fas fa-bullseye text-3xl ml-2"></i> رسالتنا
+      </div>
+      <p className="sub-mission-title text-gray-800 text-lg leading-relaxed mb-6">
+        تسريع زمن الاستجابة للطوارئ من خلال ربط الحالات الطارئة بأقرب مسعف متاح، لضمان وصول الدعم الأولي بسرعة وكفاءة حتى وصول فرق الإسعاف.
+      </p>
+    </div>
   </div>
 
-  <div className="our-mission flex flex-col items-center md:w-1/2 text-center md:text-right">
-    <div className="mission-title text-2xl text-[#ab1c1c] font-bold mb-4 flex items-center justify-center md:justify-start">
-      <i className="fas fa-bullseye text-3xl ml-2"></i> رسالتنا
-    </div>
-    <p className="sub-mission-title text-gray-800 text-lg leading-relaxed mb-6">
-      نحفظ الأرواح، ونخفف المعاناة من خلال خدمات إسعافية وإنسانية تقدمها سفراء الحياة المؤهَّلُون بإتقان ودون تمييز.
-    </p>
-  </div>
+  <div className="our-goals text-center mt-16">
+    <h2 className="text-2xl font-bold text-[#ab1c1c] mb-6">أهدافنا</h2>
+    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
+      {/* <div className="goal-card bg-white shadow-lg rounded-lg p-6 text-center">
+        <i className="fas fa-link text-[#ab1c1c] text-4xl mb-4"></i>
+        <h3 className="text-lg font-bold mb-2">ربط الحالات بالمسعفين</h3>
+        <p className="text-gray-700">
+          تحقيق استجابة فورية عبر ربط أصحاب الحالات بأقرب مسعف مؤهل.
+        </p>
+      </div> */}
 
+      <div className="goal-card bg-white shadow-lg rounded-lg p-6 text-center">
+        <i className="fas fa-heartbeat text-[#ab1c1c] text-4xl mb-4"></i>
+        <h3 className="text-lg font-bold mb-2">تعزيز السلامة المجتمعية</h3>
+        <p className="text-gray-700">
+          تقديم دعم أولي سريع وفعّال للحفاظ على سلامة المجتمع.
+        </p>
+      </div>
+
+      <div className="goal-card bg-white shadow-lg rounded-lg p-6 text-center">
+        <i className="fas fa-user-graduate text-[#ab1c1c] text-4xl mb-4"></i>
+        <h3 className="text-lg font-bold mb-2">رفع الوعي بالإسعافات الأولية</h3>
+        <p className="text-gray-700">
+          تشجيع الأفراد على التأهيل كمسعفين ورفع الوعي بأهمية الإسعافات الأولية.
+        </p>
+      </div>
+
+      <div className="goal-card bg-white shadow-lg rounded-lg p-6 text-center">
+        <i className="fas fa-clock text-[#ab1c1c] text-4xl mb-4"></i>
+        <h3 className="text-lg font-bold mb-2">تحسين زمن الاستجابة</h3>
+        <p className="text-gray-700">
+          استخدام تقنيات متطورة لتحسين زمن الاستجابة للطوارئ.
+        </p>
+      </div>
+
+      {/* <div className="goal-card bg-white shadow-lg rounded-lg p-6 text-center">
+        <i className="fas fa-hands-helping text-[#ab1c1c] text-4xl mb-4"></i>
+        <h3 className="text-lg font-bold mb-2">دعم جهود الإسعاف الوطنية</h3>
+        <p className="text-gray-700">
+          التعاون مع الجهات الرسمية لدعم جهود الإسعاف على المستوى الوطني.
+        </p>
+      </div> */}
+    </div>
+  </div>
 </section>
 
 
