@@ -31,6 +31,15 @@ const MedicPage = () => {
   const [medicLocation, setMedicLocation] = useState(null);
   const navigate = useNavigate();
 
+  const [medicName, setMedicName] = useState("");
+
+  useEffect(() => {
+    const storedMedicName = localStorage.getItem("medicName");
+    if (storedMedicName) {
+      setMedicName(storedMedicName);
+    }
+  }, []);
+
   useEffect(() => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -129,9 +138,7 @@ const MedicPage = () => {
             assigned_responder: null,
           }
         );
-        setCases((prevCases) =>
-          prevCases.filter((c) => c.id !== caseItem.id)
-        );
+        setCases((prevCases) => prevCases.filter((c) => c.id !== caseItem.id));
         Swal.fire({
           title: "تم رفض الحالة!",
           icon: "success",
@@ -218,13 +225,13 @@ const MedicPage = () => {
                             <>
                               <button
                                 onClick={() => handleCaseAccept(caseItem)}
-                                className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium w-1/2 py-2 rounded-lg hover:bg-[#f1f0f0b9] transition flex justify-center items-center"
+                                className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium w-1/2 py-2 rounded-full hover:bg-[#f1f0f0b9] transition flex justify-center items-center"
                               >
                                 <FaCheckCircle className="text-green-500 text-xl" />
                               </button>
                               <button
                                 onClick={() => handleCaseReject(caseItem)}
-                                className="bg-[#b02e2e] text-white w-1/2 py-2 rounded-lg hover:bg-[#c43a3a] transition flex justify-center items-center"
+                                className="bg-[#b02e2e] text-white w-1/2 py-2 rounded-full hover:bg-[#c43a3a] transition flex justify-center items-center"
                               >
                                 <FaTimesCircle className="text-white text-xl" />
                               </button>
@@ -233,7 +240,7 @@ const MedicPage = () => {
                           {caseItem.is_accepted && (
                             <button
                               onClick={() => handleCaseComplete(caseItem)}
-                              className="bg-[#ffffffb9] text-black font-medium border border-gray-400 w-full py-2 rounded-lg transition"
+                              className="bg-[#ffffffb9] text-black font-medium border border-gray-400 w-full py-2 rounded-full transition"
                             >
                               مكتمل
                             </button>
@@ -281,8 +288,13 @@ const MedicPage = () => {
           isSidebarOpen ? "translate-x-0" : "translate-x-full"
         } transition-transform lg:relative lg:w-1/4 lg:translate-x-0 z-50 shadow-xl`}
       >
-        <div className="mb-8 text-center">
-          <img src={logo} alt="Logo" className="w-16" />
+        <div className="mb-8 flex items-center justify-center lg:justify-start">
+          <img src={logo} alt="Logo" className="w-16 ml-1" />
+          {medicName && (
+            <div className="text-lg font-bold text-[#ab1c1c] ml-4">
+              مرحبًا بالمسعف، {medicName}
+            </div>
+          )}
         </div>
         <nav>
           <ul className="space-y-6">
@@ -294,7 +306,7 @@ const MedicPage = () => {
               } hover:text-[#ab1c1c]`}
               onClick={() => setSelectedSection("حالة المريض")}
             >
-              حالة المريض
+              طلبات الاستغاثه
               <span
                 className={`absolute left-0 right-0 bottom-0 h-0.5 bg-[#ab1c1c] transition-all duration-200 ease-in-out ${
                   selectedSection === "حالة المريض"
