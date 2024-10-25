@@ -69,7 +69,7 @@ function Login() {
 
   return (
     <div className="flex items-center justify-center w-full min-h-screen bg-gray-100">
-      <button onClick={goBack} className="absolute top-4 left-4 flex items-center text-[#ab1c1c] text-xl ">
+      <button onClick={goBack} className="absolute top-4 left-4 flex items-center text-[#ab1c1c] text-3xl ">
         عودة <IoArrowBack className="mr-1" /> 
 
       </button>
@@ -119,7 +119,7 @@ function Login() {
             <div className="mt-6">
               <button
                 type="submit"
-                className="w-full py-3 bg-[#ab1c1c] text-white font-bold rounded-lg shadow-lg hover:bg-[#961a1a] focus:outline-none transition-all duration-300"
+                className="w-full py-3 bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] text-white font-bold rounded-full shadow-lg hover:bg-[#961a1a] focus:outline-none transition-all duration-300"
               >
                 تسجيل
               </button>

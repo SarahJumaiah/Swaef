@@ -108,6 +108,7 @@
 // }
 
 // export default Sign;
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import logo from '../assets/logo.png';
@@ -197,7 +198,7 @@ function Sign() {
     <div className="flex items-center justify-center w-full min-h-screen bg-gray-100">
       <button
         onClick={goBack}
-        className="absolute top-4 left-4 flex items-center text-[#ab1c1c] text-xl"
+        className="absolute top-4 left-4 flex items-center text-[#ab1c1c] text-3xl"
       >
         عودة <IoArrowBack className="mr-1" />
       </button>
@@ -278,7 +279,7 @@ function Sign() {
                 <span id="file-label" className="text-gray-400">
                   ارقق شهادتك الصحية
                 </span>
-                <span className="bg-[#ab1c1c] text-white px-4 py-2 rounded-full hover:bg-opacity-90 transition duration-300">
+                <span className="bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] text-white px-4 py-2 rounded-full hover:bg-opacity-90 transition duration-300">
                   اختر ملف
                 </span>
               </label>
@@ -303,7 +304,7 @@ function Sign() {
             <div className="mt-6">
               <button
                 type="submit"
-                className={`w-full py-3 bg-[#ab1c1c] text-white font-bold rounded-lg shadow-lg ${
+                className={`w-full py-3 bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] text-white font-bold rounded-full shadow-lg ${
                   isFormValid
                     ? 'hover:bg-[#961a1a]'
                     : 'opacity-50 cursor-not-allowed'

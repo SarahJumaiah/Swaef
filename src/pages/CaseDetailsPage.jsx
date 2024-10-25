@@ -92,7 +92,7 @@ const CaseDetailsPage = () => {
             {caseInfo.status !== 'تم إكمال الحالة' && (
               <button
                 onClick={handleCompleteCase}
-                className="mt-6 bg-[#892222] text-white w-full py-3 rounded-full text-lg font-bold hover:bg-[#7b1e1e] transition"
+                className="mt-6 bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] text-white w-full py-3 rounded-full text-lg font-bold hover:bg-[#7b1e1e] transition"
                 disabled={loading} // تعطيل الزر أثناء التحميل
               >
                 {loading ? 'جاري الإكمال...' : 'إكمال الحالة'}

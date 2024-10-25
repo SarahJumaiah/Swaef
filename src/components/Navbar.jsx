@@ -143,7 +143,7 @@ const Navbar = ({ scrollToSection }) => {
             </ul>
 
             <div className="hidden md:block">
-              <Link to="/login" className="py-1 px-2 text-sm bg-red-700 text-white font-semibold rounded-full transition-all duration-300 shadow-md">
+              <Link to="/login" className="py-3 px-2 text-sm bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] text-white font-semibold rounded-full transition-all duration-300 shadow-md">
                 تسجيل الدخول
               </Link>
             </div>
@@ -180,7 +180,7 @@ const Navbar = ({ scrollToSection }) => {
               الانضمام كمسعف
             </li>
             <li>
-              <Link to='/login' className="py-1 px-2 text-sm bg-red-700 text-white font-semibold rounded-full transition-all duration-300 shadow-md">
+              <Link to='/login' className="py-3 px-2 text-sm bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] text-white font-semibold rounded-full transition-all duration-300 shadow-md">
                 تسجيل الدخول
               </Link>
             </li>

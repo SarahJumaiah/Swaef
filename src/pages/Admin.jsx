@@ -178,7 +178,7 @@ const Admin = () => {
       <h2 className="text-2xl font-semibold text-[#892222] mb-4">
         طلبات المسعفين
       </h2>
-      <ul>
+      <ul className="flex flex-col-reverse">
         {paramedics.map((paramedic) => (
           <li
             key={paramedic.id}
@@ -196,20 +196,22 @@ const Admin = () => {
             <div className="flex gap-4">
               <button
                 onClick={() => handleOpenModal(paramedic)}
-                className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium px-4 py-2 rounded-lg hover:bg-[#f1f0f0b9] transition flex justify-center items-center"
+                className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium px-4 py-2 rounded-full hover:bg-[#f1f0f0b9] transition flex justify-center items-center"
               >
-                <span className="ml-1">التفاصيل</span> <FaInfoCircle/> 
+                <span className="ml-1">التفاصيل</span> <FaInfoCircle />
               </button>
-              <button
-                onClick={() => handleAccept(paramedic.id)}
-                className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium w-[7vw] py-2 rounded-lg hover:bg-[#f1f0f0b9] transition flex justify-center items-center"
-                disabled={paramedic.isApproved}
-              >
-                <FaCheckCircle className="text-green-500 text-xl" />
-              </button>
+              {/* Only show the accept button if the paramedic is not approved */}
+              {!paramedic.isApproved && (
+                <button
+                  onClick={() => handleAccept(paramedic.id)}
+                  className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium w-[7vw] py-2 rounded-full hover:bg-[#f1f0f0b9] transition flex justify-center items-center"
+                >
+                  <FaCheckCircle className="text-green-500 text-xl" />
+                </button>
+              )}
               <button
                 onClick={() => handleReject(paramedic.id)}
-                className="bg-[#b02e2e] text-white py-2 rounded-lg hover:bg-[#c43a3a] transition w-[7vw] flex justify-center items-center"
+                className="bg-[#b02e2e] text-white py-2 rounded-full hover:bg-[#c43a3a] transition w-[7vw] flex justify-center items-center"
               >
                 <FaTimesCircle className="text-white text-xl" />
               </button>
@@ -219,6 +221,7 @@ const Admin = () => {
       </ul>
     </section>
   );
+  
 
   const renderParamedicModal = () => {
     if (!showModal || !selectedParamedic) return null;

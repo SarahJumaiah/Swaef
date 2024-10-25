@@ -4,6 +4,8 @@ import logo from "../assets/logo.png";
 import img1 from "../assets/rb_63409.png";
 import img2 from "../assets/rb_63411.png";
 import img3 from "../assets/rb.png";
+import img4 from '../assets/paramedic.png'
+
 
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
@@ -388,121 +390,118 @@ const Home = () => {
 
       {<Navbar scrollToSection={scrollToSection} />}
 
-      {/* من نحن */}
       <section
-        ref={aboutRef}
-        className="about my-24 opacity-0 transition-opacity duration-700 w-[90%] md:w-[100%] mx-auto"
-      >
-             <h2 className="text-center md:text-right text-3xl sm:text-4xl text-[#ab1c1c] font-bold mb-6 mt-14 w-[90%] sm:w-[70%] mx-auto">
+  ref={aboutRef}
+  className="about my-24 opacity-0 transition-opacity duration-700 w-[90%] md:w-[100%] mx-auto"
+>
+  <h2 className="text-center md:text-right text-3xl sm:text-4xl text-[#ab1c1c] font-bold mb-6 mt-14 w-[90%] sm:w-[70%] mx-auto">
+    من نحن
+  </h2>
 
-        من نحن
-        </h2>
+  <div className="p-4 sm:p-8">
+    <p className="text-right leading-relaxed text-gray-900 font-medium mb-6 w-[90%] sm:w-[70%] mx-auto">
+      منصة{" "}
+      <span className="text-[#ab1c1c] text-xl sm:text-2xl font-bold">
+        سواعف
+      </span>{" "}
+      هي الحل الأمثل للحالات الطبية الطارئة، حيث تتيح للمستخدمين المسجلين
+      طلب أقرب مسعف معتمد مؤهل لتقديم المساعدة الطبية الفورية. تعتمد
+      المنصة على نظام متطور لربط المرضى مباشرة مع المسعفين المتاحين في
+      مناطقهم لتلبية احتياجاتهم الصحية في أسرع وقت ممكن.
+      <br />
+      <br /> هدفنا هو تقديم خدمة طبية موثوقة وسريعة، حيث نضمن أن يحصل
+      المستخدم على الدعم اللازم من المسعف الأقرب في لحظات الطوارئ الحرجة.
+      بفضل شبكة المسعفين المؤهلين والمساعدات الطبية، نساهم في تقليل الزمن
+      المستغرق للوصول إلى المساعدة الصحية، مما يسهم في تحسين فرص التعافي
+      وتقليل المخاطر الصحية.
+    </p>
 
-        <div className="p-4 sm:p-8">
-          <p className="text-right leading-relaxed text-gray-900 font-medium mb-6 w-[90%] sm:w-[70%] mx-auto">
-            منصة{" "}
-            <span className="text-[#ab1c1c] text-xl sm:text-2xl font-bold">
-              سواعف
-            </span>{" "}
-            هي الحل الأمثل للحالات الطبية الطارئة، حيث تتيح للمستخدمين المسجلين
-            طلب أقرب مسعف معتمد مؤهل لتقديم المساعدة الطبية الفورية. تعتمد
-            المنصة على نظام متطور لربط المرضى مباشرة مع المسعفين المتاحين في
-            مناطقهم لتلبية احتياجاتهم الصحية في أسرع وقت ممكن.
-            <br />
-            <br /> هدفنا هو تقديم خدمة طبية موثوقة وسريعة، حيث نضمن أن يحصل
-            المستخدم على الدعم اللازم من المسعف الأقرب في لحظات الطوارئ الحرجة.
-            بفضل شبكة المسعفين المؤهلين والمساعدات الطبية، نساهم في تقليل الزمن
-            المستغرق للوصول إلى المساعدة الصحية، مما يسهم في تحسين فرص التعافي
-            وتقليل المخاطر الصحية.
-          </p>
-
-          <div className="flex flex-wrap justify-center gap-4 mt-8 lg:mx-32">
-            <img
-              src={img1}
-              alt="Image 1"
-              className="h-40 sm:h-60 w-auto transform transition-transform hover:scale-105"
-            />
-            <img
-              src={img3}
-              alt="image 2"
-              className="h-40 sm:h-60 w-auto transform transition-transform hover:scale-105"
-            />
-            <img
-              src={img2}
-              alt="image 3"
-              className="h-40 sm:h-60 w-auto transform transition-transform hover:scale-105"
-            />
-          </div>
-        </div>
-      </section>
-
+    <div className="flex flex-wrap justify-center gap-4 mt-8 lg:mx-32">
+      <img
+        src={img1}
+        alt="Image 1"
+        className="h-40 sm:h-60 w-auto transform transition-transform hover:scale-105"
+      />
+      <img
+        src={img3}
+        alt="image 2"
+        className="h-40 sm:h-60 w-auto transform transition-transform hover:scale-105"
+      />
+      <img
+        src={img2}
+        alt="image 3"
+        className="h-40 sm:h-60 w-auto transform transition-transform hover:scale-105"
+      />
+    </div>
+  </div>
+</section>
+      
       <section
-        ref={whySwa3efRef}
-        className="whyswa3ef p-8 w-[85%] mx-auto my-24 opacity-0 transition-opacity duration-700"
-      >
-        <h2 className="text-[#ab1c1c] text-3xl md:text-4xl font-bold mb-20 text-center md:text-right">
-          لماذا سواعف
-        </h2>{" "}
-        <br />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-          <div className="bg-white p-8 rounded-xl shadow-lg transform transition-transform hover:scale-105 hover:shadow-2xl relative flex flex-col items-center mb-8 lg:mb-0">
-            <div className="bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] p-4 rounded-full shadow-lg absolute -top-10 left-1/2 transform -translate-x-1/2">
-              <i className="fas fa-user-md text-white text-4xl"></i>
-            </div>
-            <h3 className="text-[#ab1c1c] font-bold text-lg mb-4 text-center mt-12">
-              المسعفون المعتمدون
-            </h3>
-            <p className="text-center text-gray-600">
-              جميع المسعفين المسجلين لدينا مؤهلون ومعتمدون لتقديم الرعاية الطبية
-              الطارئة.
-            </p>
-          </div>
+  ref={whySwa3efRef}
+  className="whyswa3ef p-16 w-[80%] mx-auto my-16 opacity-0 transition-opacity duration-700"
+>
+  <h2 className="text-[#ab1c1c] text-3xl md:text-4xl font-bold mb-16 text-center md:text-right">
+    لماذا سواعف
+  </h2>
 
-          <div className="bg-white p-8 rounded-xl shadow-lg transform transition-transform hover:scale-105 hover:shadow-2xl relative flex flex-col items-center mb-8 lg:mb-0">
-            <div className="bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] p-4 rounded-full shadow-lg absolute -top-10 left-1/2 transform -translate-x-1/2">
-              <i className="fas fa-ambulance text-white text-4xl"></i>
-            </div>
-            <h3 className="text-[#ab1c1c] font-bold text-lg mb-4 text-center mt-12">
-              الاستجابة السريعة
-            </h3>
-            <p className="text-center text-gray-600">
-              توصيل المريض بأقرب مسعف متواجد ضمن منطقة لتقديم المساعدة الفورية.
-            </p>
-          </div>
+  
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"> {/* Reduced gap */}
+    <div className="bg-white p-6 rounded-xl shadow-lg transform transition-transform hover:scale-105 hover:shadow-2xl relative flex flex-col items-center mb-8 lg:mb-0"> {/* Reduced padding */}
+      <div className="bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] p-4 rounded-full shadow-lg absolute -top-10 left-1/2 transform -translate-x-1/2">
+        <i className="fas fa-user-md text-white text-4xl"></i>
+      </div>
+      <h3 className="text-[#ab1c1c] font-bold text-lg mb-4 text-center mt-12">
+        المسعفون المعتمدون
+      </h3>
+      <p className="text-center text-gray-600">
+        جميع المسعفين المسجلين لدينا مؤهلون ومعتمدون لتقديم الرعاية الطبية الطارئة.
+      </p>
+    </div>
 
-          <div className="bg-white p-8 rounded-xl shadow-lg transform transition-transform hover:scale-105 hover:shadow-2xl relative flex flex-col items-center mb-8 lg:mb-0">
-            <div className="bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] p-4 rounded-full shadow-lg absolute -top-10 left-1/2 transform -translate-x-1/2">
-              <i className="fas fa-satellite-dish text-white text-4xl"></i>
-            </div>
-            <h3 className="text-[#ab1c1c] font-bold text-lg mb-4 text-center mt-12">
-              التكنولوجيا المتقدمة
-            </h3>
-            <p className="text-center text-gray-600">
-              نعتمد على تقنيات تحديد المواقع والتواصل الفوري لتقديم الخدمة في
-              الوقت المناسب.
-            </p>
-          </div>
+    <div className="bg-white p-6 rounded-xl shadow-lg transform transition-transform hover:scale-105 hover:shadow-2xl relative flex flex-col items-center mb-8 lg:mb-0">
+      <div className="bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] p-4 rounded-full shadow-lg absolute -top-10 left-1/2 transform -translate-x-1/2">
+        <i className="fas fa-ambulance text-white text-4xl"></i>
+      </div>
+      <h3 className="text-[#ab1c1c] font-bold text-lg mb-4 text-center mt-12">
+        الاستجابة السريعة
+      </h3>
+      <p className="text-center text-gray-600">
+        توصيل المريض بأقرب مسعف متواجد ضمن منطقة لتقديم المساعدة الفورية.
+      </p>
+    </div>
 
-          <div className="bg-white p-8 rounded-xl shadow-lg transform transition-transform hover:scale-105 hover:shadow-2xl relative flex flex-col items-center mb-8 lg:mb-0">
-            <div className="bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] p-4 rounded-full shadow-lg absolute -top-10 left-1/2 transform -translate-x-1/2">
-              <i className="fas fa-shield-alt text-white text-4xl"></i>
-            </div>
-            <h3 className="text-[#ab1c1c] font-bold text-lg mb-4 text-center mt-12">
-              الأمان والثقة
-            </h3>
-            <p className="text-center text-gray-600">
-              نوفر للمستخدمين وسيلة آمنة وموثوقة للتواصل مع محترفي الرعاية
-              الصحية.
-            </p>
-          </div>
-        </div>
-      </section>
+    <div className="bg-white p-6 rounded-xl shadow-lg transform transition-transform hover:scale-105 hover:shadow-2xl relative flex flex-col items-center mb-8 lg:mb-0">
+      <div className="bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] p-4 rounded-full shadow-lg absolute -top-10 left-1/2 transform -translate-x-1/2">
+        <i className="fas fa-satellite-dish text-white text-4xl"></i>
+      </div>
+      <h3 className="text-[#ab1c1c] font-bold text-lg mb-4 text-center mt-12">
+        التكنولوجيا المتقدمة
+      </h3>
+      <p className="text-center text-gray-600">
+        نعتمد على تقنيات تحديد المواقع والتواصل الفوري لتقديم الخدمة في الوقت المناسب.
+      </p>
+    </div>
+
+    <div className="bg-white p-6 rounded-xl shadow-lg transform transition-transform hover:scale-105 hover:shadow-2xl relative flex flex-col items-center mb-8 lg:mb-0">
+      <div className="bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] p-4 rounded-full shadow-lg absolute -top-10 left-1/2 transform -translate-x-1/2">
+        <i className="fas fa-shield-alt text-white text-4xl"></i>
+      </div>
+      <h3 className="text-[#ab1c1c] font-bold text-lg mb-4 text-center mt-12">
+        الأمان والثقة
+      </h3>
+      <p className="text-center text-gray-600">
+        نوفر للمستخدمين وسيلة آمنة وموثوقة للتواصل مع محترفي الرعاية الصحية.
+      </p>
+    </div>
+  </div>
+</section>
 
       {/* الانضمام */}
       <section
-        ref={joinRef}
-        className="join relative flex flex-col items-center md:flex-row md:items-center md:justify-between w-[90%] mx-auto my-24 p-12 opacity-0 transition-opacity duration-700"
-      >
+  ref={joinRef}
+  className="join relative flex flex-col items-center md:flex-row w-[85%] md:w-[80%] mx-auto my-24 p-8"
+>
+
         <div className="text-center md:text-right md:w-1/2 md:pr-12 mb-8 md:mb-0">
           <h2 className="text-2xl text-[#ab1c1c] font-extrabold mb-4">
             كن جزءًا من شبكة الإنقاذ
@@ -513,64 +512,70 @@ const Home = () => {
             إنقاذ الأرواح من خلال خبرتك الطبية. نحن نربطك بالمرضى في لحظات
             الطوارئ لتقديم الدعم الفوري. كل مسعف يعدّ بطلًا.
           </p>
-          <p className="text-gray-700 text-md leading-relaxed mb-10">
+          {/* <p className="text-gray-700 text-md leading-relaxed mb-10">
             المسعف يجب أن يكون من القطاع الصحي، وأن يمتلك شهادة في الإسعافات
             الأولية لضمان تقديم المساعدة الصحيحة في الحالات الطارئة.
-          </p>
+          </p> */}
+
+<p className="text-gray-700 text-md leading-relaxed mb-6">
+إذا كنت تمتلك أحد المؤهلات التالية، يمكنك الانضمام إلينا في منصة سواعف
+  </p>
+
+  <ul className="list-disc list-inside text-gray-700 text-md leading-relaxed mb-10">
+    <li>الانتماء إلى القطاع الصحي.</li>
+    <li>امتلاك شهادة في الإسعافات الأولية.</li>
+    <li>القدرة على تقديم المساعدة الفورية في الحالات الطارئة.</li>
+  </ul>
           <Link
             to="/sign"
-            className="mt-6 text-lg bg-gradient-to-r from-[#ab1c1c] to-red-500 hover:scale-105 transform transition-transform text-white py-3 px-8 rounded-full shadow-lg font-bold"
+            className="mt-6 text-lg  bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] hover:scale-105 transform transition-transform text-white py-3 px-8 rounded-full shadow-lg font-bold"
           >
             انضم الآن
           </Link>
         </div>
 
         <div className="md:w-1/2 w-full flex justify-center md:justify-end">
-          <img
-            src="https://www.aedcpr.com/articles/wp-content/uploads/2023/07/shutterstock_657810997.jpg"
-            alt="صورة مسعف"
-            className="rounded-lg shadow-xl transform hover:scale-105 transition-transform duration-500"
-          />
-        </div>
+  <img
+    src={img4}
+    alt="صورة مسعف"
+    className="transform hover:scale-105 transition-transform duration-500 bg-opacity-0"
+    // style={{ background: 'transparent' }}
+  />
+</div>
+
       </section>
 
       {/* رؤيتن */}
       <section 
-              ref={vision}
+  ref={vision}
+  className="vision p-8 w-[80%] md:w-[75%] mx-auto my-24 opacity-0 transition-opacity duration-700 flex flex-col md:flex-row justify-between items-center gap-10"
+>
 
-      className="vision p-8 w-[70%] mx-auto my-24 opacity-0 transition-opacity duration-700 flex flex-col md:flex-row justify-between items-center gap-10">
-        <div className="our-vision flex flex-col items-center md:w-1/2 text-center md:text-right">
-          <div className="our-vision-title w-full">
-            <div className="vision-title text-2xl text-[#ab1c1c] font-bold mb-4 flex items-center justify-center md:justify-start">
-              <i className="fas fa-lightbulb text-3xl ml-2"></i> رؤيتنا
-            </div>
-            <div className="sub-vision-title text-gray-800 text-lg leading-relaxed">
-              <p>
-                أن نحقق الريادة في حفظ الأرواح وخدمة الإنسان ومشاركة المجتمع.
-              </p>
-            </div>
-          </div>
-        </div>
+  <div className="our-vision flex flex-col items-center md:w-1/2 text-center md:text-right">
+    <div className="vision-title text-2xl text-[#ab1c1c] font-bold mb-4 flex items-center justify-center md:justify-start">
+      <i className="fas fa-lightbulb text-3xl ml-2"></i> رؤيتنا
+    </div>
+    <p className="sub-vision-title text-gray-800 text-lg leading-relaxed mb-6">
+      أن نحقق الريادة في حفظ الأرواح وخدمة الإنسان ومشاركة المجتمع.
+    </p>
+  </div>
 
-        <div className="our-mission flex flex-col items-center md:w-1/2 text-center md:text-right">
-          <div className="our-mission-title w-full">
-            <div className="mission-title text-2xl text-[#ab1c1c] font-bold mb-4 flex items-center justify-center md:justify-start">
-              <i className="fas fa-bullseye text-3xl ml-2"></i> رسالتنا
-            </div>
-            <div className="sub-mission-title text-gray-800 text-lg leading-relaxed">
-              <p>
-                نحفظ الأرواح، ونخفف المعاناة من خلال خدمات إسعافية وإنسانية
-                يقدمها سفراء الحياة المؤهَّلُون بإتقان ودون تمييز.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+  <div className="our-mission flex flex-col items-center md:w-1/2 text-center md:text-right">
+    <div className="mission-title text-2xl text-[#ab1c1c] font-bold mb-4 flex items-center justify-center md:justify-start">
+      <i className="fas fa-bullseye text-3xl ml-2"></i> رسالتنا
+    </div>
+    <p className="sub-mission-title text-gray-800 text-lg leading-relaxed mb-6">
+      نحفظ الأرواح، ونخفف المعاناة من خلال خدمات إسعافية وإنسانية تقدمها سفراء الحياة المؤهَّلُون بإتقان ودون تمييز.
+    </p>
+  </div>
+
+</section>
+
 
       <section
-        ref={contactRef}
-        className="contact-us w-full sm:w-[90%] lg:w-[90%] mx-auto mt-12 p-8 flex flex-col items-center justify-between my-24 opacity-0 transition-opacity duration-700"
-      >
+  ref={contactRef}
+  className="contact-us w-full sm:w-[80%] lg:w-[90%] mx-auto mt-12 p-8 flex flex-col items-center justify-between my-24 opacity-0 transition-opacity duration-700"
+>
         <div className="text-center w-full mb-8">
           <h2 className="text-3xl text-[#ab1c1c] font-extrabold mb-4">
             تواصل معنا
