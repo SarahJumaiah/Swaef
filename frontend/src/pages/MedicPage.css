@@ -55,7 +55,7 @@
   }
  
   .driver-popover-progress-text {
-    color: white !important;
+    display: none !important;
   }
   
 

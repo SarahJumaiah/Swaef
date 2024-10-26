@@ -102,7 +102,7 @@ const MedicPage = () => {
           popover: {
             title: "المسافة",
             description: "هنا يظهر بعد المسافة بين المسعف والمريض",
-            side: "top",
+            side: "bottom",
             align: "start",
           },
         },
