@@ -13,7 +13,7 @@
 - **Performance Rating System**: After completing a case, patients can rate the responder, fostering continuous improvement.
 - **Real-Time Notifications**: Keeps responders updated with new cases and important changes.
 
-## 👥 Team Members
+## 🤝 Team Members
 
 - Fahd Alqahtani
 - Sarah Aljumaiah
@@ -43,4 +43,18 @@ Follow these steps to set up the project on your local machine:
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/your-username/swaef.git
-   cd swaef
+   cd frontend
+2. **Install dependencies**:
+   ```bash
+   git clone https://github.com/your-username/swaef.git
+   npm install
+   
+## run the app
+
+ To run the frontend use this command
+
+```bash
+npm run dev
+```
+
+
