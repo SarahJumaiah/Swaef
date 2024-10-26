@@ -40,13 +40,11 @@ To run the project locally, ensure that you have the following installed:
 
 Follow these steps to set up the project on your local machine:
 
-1. **Clone the repository**:
+1. **navigate to the project folder**:
    ```bash
-   git clone https://github.com/your-username/swaef.git
    cd frontend
 2. **Install dependencies**:
    ```bash
-   git clone https://github.com/your-username/swaef.git
    npm install
    
 ## run the app
