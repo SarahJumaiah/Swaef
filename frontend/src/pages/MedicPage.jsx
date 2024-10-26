@@ -72,9 +72,9 @@ const MedicPage = () => {
         {
           element: "#tour-example11",
           popover: {
-            title: "Animated Tour Example",
+            title: "الطلبات",
             description:
-              "Here is the code example showing animated tour. Let's walk you through it.",
+              "هنا يمكنك استعراض طلبات الاستغاثه",
             side: "left",
             align: "start",
           },
@@ -82,9 +82,9 @@ const MedicPage = () => {
         {
           element: "#tour-example1",
           popover: {
-            title: "Import the Library",
+            title: "الطلب",
             description:
-              "It works the same in vanilla JavaScript as well as frameworks.",
+              "طلب الاستغاثه وتفاصيله",
             side: "bottom",
             align: "start",
           },
@@ -92,9 +92,9 @@ const MedicPage = () => {
         {
           element: "#tour-example3",
           popover: {
-            title: "Start Tour",
+            title: "تفاصيل الحالة",
             description:
-              "Call the drive method to start the tour and your tour will be started.",
+              "هنا تظهر تفاصيل الحالة ورقم الهاتف عند القبول",
             side: "top",
             align: "start",
           },
@@ -102,9 +102,9 @@ const MedicPage = () => {
         {
           element: "#notifications",
           popover: {
-            title: "Start Tour",
+            title: "المسافة",
             description:
-              "Call the drive method to start the tour and your tour will be started.",
+              "هنا يظهر بعد المسافة بين المسعف والمريض",
             side: "top",
             align: "start",
           },
@@ -112,9 +112,9 @@ const MedicPage = () => {
         {
           element: "#tour-example2",
           popover: {
-            title: "Importing CSS",
+            title: "القبول والرفض",
             description:
-              "Import the CSS which gives you the default styling for popover and overlay.",
+              "هنا يمكنك قبول او رفض الحالة, علما ب أن لايمكنك قبول حالة بينما يوجد حالة قيد التنفيذ",
             side: "bottom",
             align: "start",
           },
@@ -122,9 +122,9 @@ const MedicPage = () => {
         {
           element: "#tour-example4",
           popover: {
-            title: "More Configuration",
+            title: "الاحصائيات",
             description:
-              "Look at this page for all the configuration options you can pass.",
+              "هنا يمكنك رؤية احصائيات ادائك وساعاتك التطوعية",
             side: "right",
             align: "start",
           },
