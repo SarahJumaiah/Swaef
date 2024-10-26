@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { Doughnut } from "react-chartjs-2";
+import ScrollReveal from 'scrollreveal';
+
 import axios from "axios";
 import {
   Chart as ChartJS,
@@ -111,7 +113,14 @@ const Admin = () => {
       }
     });
   };
-
+  useEffect(() => {
+    // إعداد تأثير ScrollReveal على العناصر عند التمرير
+    ScrollReveal().reveal('.headline', {
+      duration: 1000, // مدة التأثير
+      origin: 'bottom', // اتجاه التأثير
+      distance: '50px', // المسافة التي يتحرك بها العنصر
+    });
+  }, []);
   const handleReject = (id) => {
     Swal.fire({
       title: "هل تريد رفض هذا المسعف؟",
@@ -178,11 +187,11 @@ const Admin = () => {
       <h2 className="text-2xl font-semibold text-[#892222] mb-4">
         طلبات المسعفين
       </h2>
-      <ul className="flex flex-col-reverse">
+      <ul className="flex flex-col-reverse ">
         {paramedics.map((paramedic) => (
           <li
             key={paramedic.id}
-            className="p-6 mb-4 bg-white shadow-md border border-gray-300 rounded-lg transition duration-300 ease-in-out hover:scale-105 flex flex-col lg:flex-row justify-between items-start lg:items-center"
+            className="p-6 mb-4 bg-white shadow-md border border-gray-300 rounded-lg transition duration-300 ease-in-out hover:scale-105 flex flex-col lg:flex-row justify-between items-start lg:items-center headline"
           >
             <div className="mb-4 lg:mb-0">
               <p>
@@ -198,7 +207,7 @@ const Admin = () => {
                 onClick={() => handleOpenModal(paramedic)}
                 className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium px-4 py-2 rounded-full hover:bg-[#f1f0f0b9] transition flex justify-center items-center"
               >
-                <span className="ml-1">التفاصيل</span> <FaInfoCircle />
+               <FaInfoCircle /> <span className="mr-2">التفاصيل</span> 
               </button>
               {/* Only show the accept button if the paramedic is not approved */}
               {!paramedic.isApproved && (

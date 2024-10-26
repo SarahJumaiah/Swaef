@@ -3,4 +3,18 @@
     height: 100%;
     border-radius: 8px;
   }
+  .driver-popover.driverjs-theme {
+    direction: ltr !important;
+  }
+
   
+  .driver-popover.driverjs-theme .driver-popover-title {
+    font-size: 20px;
+  }
+  
+  .driver-popover.driverjs-theme button {
+
+/* تنسيقات الزر الخاصه ب التعليمات */
+    text-shadow: none;
+
+  }

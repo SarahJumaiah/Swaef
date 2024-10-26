@@ -1,9 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect , useRef  } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import logo from "../assets/logo.png";
+import ScrollReveal from "scrollreveal";
+import { driver } from "driver.js"; // استخدام الاستيراد بتسمية
+import "driver.js/dist/driver.css";
+import "./MedicPage.css";
 
 // دالة لحساب المسافة باستخدام صيغة Haversine
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -30,6 +34,7 @@ const MedicPage = () => {
   const [cases, setCases] = useState([]);
   const [medicLocation, setMedicLocation] = useState(null);
   const navigate = useNavigate();
+  const driverRef = useRef(null); // إنشاء مرجع لتخزين driverObj
 
   const [medicName, setMedicName] = useState("");
 
@@ -54,6 +59,83 @@ const MedicPage = () => {
     } else {
       console.error("Geolocation not supported");
     }
+    
+    driverRef.current = driver({
+      popoverClass: "driverjs-theme",
+      showProgress: true,
+      allowClose: false,
+      nextBtnText: "التالي",
+      prevBtnText: "السابق",
+      doneBtnText: "إنهاء",
+      showButtons: ["next", "previous", "close"], // إظهار الأزرار الثلاثة
+      steps: [
+        {
+          element: "#tour-example11",
+          popover: {
+            title: "Animated Tour Example",
+            description:
+              "Here is the code example showing animated tour. Let's walk you through it.",
+            side: "left",
+            align: "start",
+          },
+        },
+        {
+          element: "#tour-example1",
+          popover: {
+            title: "Import the Library",
+            description:
+              "It works the same in vanilla JavaScript as well as frameworks.",
+            side: "bottom",
+            align: "start",
+          },
+        },
+        {
+          element: "#tour-example3",
+          popover: {
+            title: "Start Tour",
+            description:
+              "Call the drive method to start the tour and your tour will be started.",
+            side: "top",
+            align: "start",
+          },
+        },
+        {
+          element: "#notifications",
+          popover: {
+            title: "Start Tour",
+            description:
+              "Call the drive method to start the tour and your tour will be started.",
+            side: "top",
+            align: "start",
+          },
+        },
+        {
+          element: "#tour-example2",
+          popover: {
+            title: "Importing CSS",
+            description:
+              "Import the CSS which gives you the default styling for popover and overlay.",
+            side: "bottom",
+            align: "start",
+          },
+        },
+        {
+          element: "#tour-example4",
+          popover: {
+            title: "More Configuration",
+            description:
+              "Look at this page for all the configuration options you can pass.",
+            side: "right",
+            align: "start",
+          },
+        },
+      ],
+    });
+
+    const startTour = () => {
+      driverObj.drive();
+
+    };
   }, []);
 
   const toggleSidebar = () => {
@@ -63,7 +145,13 @@ const MedicPage = () => {
   const handleLogout = () => {
     navigate("/");
   };
-
+  useEffect(() => {
+    ScrollReveal().reveal(".headline", {
+      duration: 1000, // مدة التأثير
+      origin: "bottom", // اتجاه التأثير
+      distance: "50px", // المسافة التي يتحرك بها العنصر
+    });
+  }, []);
   useEffect(() => {
     const fetchCases = async () => {
       try {
@@ -164,17 +252,35 @@ const MedicPage = () => {
       console.error("Error completing case:", error);
     }
   };
-
+  const startTour = () => {
+    if (driverRef.current) {
+      driverRef.current.drive(); // تشغيل الجولة إذا تم تهيئة driverRef.current
+    } else {
+      console.error("Driver.js instance not initialized.");
+    }
+  };
   const renderContent = () => {
     switch (selectedSection) {
       case "حالة المريض":
         return (
           <main className="w-full lg:w-3/4 p-4 sm:p-10 h-auto min-h-screen bg-gray-100">
-            <h2 className="text-3xl font-semibold text-[#ab1c1c] mb-6">
-              الحالات المتاحة
-            </h2>
+<div className="flex justify-between items-center mb-6">
+  <h2 className="text-3xl font-semibold text-[#ab1c1c]">
+    الحالات المتاحة 
+  </h2>
+  <button
+    onClick={startTour}
+    className="bg-[#b02e2e] text-white  p-2 rounded-full hover:bg-[#c43a3a] transition flex justify-center items-center"
+  >
+    ابدأ الجولة التوضيحية
+  </button>
+</div>
+
             {cases.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                id="tour-example"
+              >
                 {cases
                   .filter((caseItem) => caseItem.status !== "تم إكمال الحالة")
                   .map((caseItem) => {
@@ -192,22 +298,37 @@ const MedicPage = () => {
 
                     return (
                       <div
+                      id="tour-example1"
+
                         key={caseItem.case_id}
-                        className="bg-white p-6 rounded-lg border border-[#d8c1c1cc] shadow-md transition duration-300 ease-in-out transform hover:scale-105 relative flex flex-col flex-grow"
+                        className="bg-white p-6 rounded-lg border border-[#d8c1c1cc] shadow-md transition duration-300 ease-in-out transform hover:scale-105 relative flex flex-col flex-grow headline"
                       >
                         {/* المسافه */}
-                        {distance && (
-                          <p className="absolute top-2 left-2 text-xs text-gray-600 mr-auto">
-                            {distance.toFixed(2)} كم
-                          </p>
-                        )}
+                        {distance !== null && (
+  <p
 
-                        <div className="flex justify-between items-start">
-                          <h3 className="font-bold text-lg text-gray-800">
+    className={`absolute top-2 left-2 text-sm font-semibold ${
+      distance === 0 ? "text-green-500" : "text-blue-500"
+    }`}
+    id="notifications"
+  >
+    {distance === 0 ? "قريب جدًا" : `${distance.toFixed(2)} كم`}
+  </p>
+)}
+
+
+
+                        <div className="flex justify-between items-start"                     
+                        >
+                          <h3
+                            className="font-bold text-lg text-gray-800"
+                            id="case-details"
+                          >
                             نوع الحالة: {caseItem.case_type}
                           </h3>
                         </div>
-                        <div className="mb-4 flex-grow">
+                        <div className="mb-4 flex-grow"                         id="tour-example3"
+                        >
                           <p className="text-sm text-gray-600">
                             المريض: {caseItem.patient.name}
                           </p>
@@ -220,11 +341,15 @@ const MedicPage = () => {
                         </div>
 
                         {/* الأزرار */}
-                        <div className="flex justify-between gap-3">
+                        <div className="flex justify-between gap-3"                                 id="tour-example2"
+                        >
                           {!caseItem.is_accepted && (
-                            <>
+                            < >
+                            
                               <button
+                                id="accept-case-button"
                                 onClick={() => handleCaseAccept(caseItem)}
+
                                 className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium w-1/2 py-2 rounded-full hover:bg-[#f1f0f0b9] transition flex justify-center items-center"
                               >
                                 <FaCheckCircle className="text-green-500 text-xl" />
@@ -291,7 +416,8 @@ const MedicPage = () => {
         <div className="mb-8 flex items-center justify-center lg:justify-start">
           <img src={logo} alt="Logo" className="w-16 ml-1" />
           {medicName && (
-            <div className="text-lg font-bold text-[#ab1c1c] ml-4">
+            <div className="text-lg font-bold text-[#ab1c1c] ml-4"                                     id="tour-example22"
+>
               مرحبًا بالمسعف، {medicName}
             </div>
           )}
@@ -299,6 +425,7 @@ const MedicPage = () => {
         <nav>
           <ul className="space-y-6">
             <li
+            id="tour-example11"
               className={`font-bold text-xl cursor-pointer relative p-3 transition duration-200 ease-in-out ${
                 selectedSection === "حالة المريض"
                   ? "text-[#ab1c1c]"
@@ -316,6 +443,8 @@ const MedicPage = () => {
               />
             </li>
             <li
+                                    id="tour-example4"
+
               className={`font-bold text-xl cursor-pointer relative p-3 transition duration-200 ease-in-out ${
                 selectedSection === "الاحصائيات"
                   ? "text-[#ab1c1c]"
