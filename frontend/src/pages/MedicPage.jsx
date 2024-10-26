@@ -1,4 +1,4 @@
-import { useState, useEffect , useRef  } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -8,6 +8,7 @@ import ScrollReveal from "scrollreveal";
 import { driver } from "driver.js"; // استخدام الاستيراد بتسمية
 import "driver.js/dist/driver.css";
 import "./MedicPage.css";
+import { FaLightbulb } from "react-icons/fa";
 
 // دالة لحساب المسافة باستخدام صيغة Haversine
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -59,7 +60,7 @@ const MedicPage = () => {
     } else {
       console.error("Geolocation not supported");
     }
-    
+
     driverRef.current = driver({
       popoverClass: "driverjs-theme",
       showProgress: true,
@@ -73,8 +74,7 @@ const MedicPage = () => {
           element: "#tour-example11",
           popover: {
             title: "الطلبات",
-            description:
-              "هنا يمكنك استعراض طلبات الاستغاثه",
+            description: "هنا يمكنك استعراض طلبات الاستغاثه",
             side: "left",
             align: "start",
           },
@@ -83,8 +83,7 @@ const MedicPage = () => {
           element: "#tour-example1",
           popover: {
             title: "الطلب",
-            description:
-              "طلب الاستغاثه وتفاصيله",
+            description: "طلب الاستغاثه وتفاصيله",
             side: "bottom",
             align: "start",
           },
@@ -93,8 +92,7 @@ const MedicPage = () => {
           element: "#tour-example3",
           popover: {
             title: "تفاصيل الحالة",
-            description:
-              "هنا تظهر تفاصيل الحالة ورقم الهاتف عند القبول",
+            description: "هنا تظهر تفاصيل الحالة ورقم الهاتف عند القبول",
             side: "top",
             align: "start",
           },
@@ -103,8 +101,7 @@ const MedicPage = () => {
           element: "#notifications",
           popover: {
             title: "المسافة",
-            description:
-              "هنا يظهر بعد المسافة بين المسعف والمريض",
+            description: "هنا يظهر بعد المسافة بين المسعف والمريض",
             side: "top",
             align: "start",
           },
@@ -123,8 +120,7 @@ const MedicPage = () => {
           element: "#tour-example4",
           popover: {
             title: "الاحصائيات",
-            description:
-              "هنا يمكنك رؤية احصائيات ادائك وساعاتك التطوعية",
+            description: "هنا يمكنك رؤية احصائيات ادائك وساعاتك التطوعية",
             side: "right",
             align: "start",
           },
@@ -134,7 +130,6 @@ const MedicPage = () => {
 
     const startTour = () => {
       driverObj.drive();
-
     };
   }, []);
 
@@ -264,17 +259,17 @@ const MedicPage = () => {
       case "حالة المريض":
         return (
           <main className="w-full lg:w-3/4 p-4 sm:p-10 h-auto min-h-screen bg-gray-100">
-<div className="flex justify-between items-center mb-6">
-  <h2 className="text-3xl font-semibold text-[#ab1c1c]">
-    الحالات المتاحة 
-  </h2>
-  <button
-    onClick={startTour}
-    className="bg-[#b02e2e] text-white  p-2 rounded-full hover:bg-[#c43a3a] transition flex justify-center items-center"
-  >
-    ابدأ الجولة التوضيحية
-  </button>
-</div>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-3xl font-semibold text-[#ab1c1c]">
+                الحالات المتاحة
+              </h2>
+              <button
+                onClick={startTour}
+                className="text-[#b02e2e] p-2 hover:text-[#c43a3a] transition flex justify-center items-center"
+              >
+                <FaLightbulb size={30} />
+              </button>
+            </div>
 
             {cases.length > 0 ? (
               <div
@@ -298,28 +293,27 @@ const MedicPage = () => {
 
                     return (
                       <div
-                      id="tour-example1"
-
+                        id="tour-example1"
                         key={caseItem.case_id}
                         className="bg-white p-6 rounded-lg border border-[#d8c1c1cc] shadow-md transition duration-300 ease-in-out transform hover:scale-105 relative flex flex-col flex-grow headline"
                       >
                         {/* المسافه */}
                         {distance !== null && (
-  <p
+                          <p
+                            className={`absolute top-2 left-2 text-sm font-semibold ${
+                              distance === 0
+                                ? "text-green-500"
+                                : "text-blue-500"
+                            }`}
+                            id="notifications"
+                          >
+                            {distance === 0
+                              ? "قريب جدًا"
+                              : `${distance.toFixed(2)} كم`}
+                          </p>
+                        )}
 
-    className={`absolute top-2 left-2 text-sm font-semibold ${
-      distance === 0 ? "text-green-500" : "text-blue-500"
-    }`}
-    id="notifications"
-  >
-    {distance === 0 ? "قريب جدًا" : `${distance.toFixed(2)} كم`}
-  </p>
-)}
-
-
-
-                        <div className="flex justify-between items-start"                     
-                        >
+                        <div className="flex justify-between items-start">
                           <h3
                             className="font-bold text-lg text-gray-800"
                             id="case-details"
@@ -327,8 +321,7 @@ const MedicPage = () => {
                             نوع الحالة: {caseItem.case_type}
                           </h3>
                         </div>
-                        <div className="mb-4 flex-grow"                         id="tour-example3"
-                        >
+                        <div className="mb-4 flex-grow" id="tour-example3">
                           <p className="text-sm text-gray-600">
                             المريض: {caseItem.patient.name}
                           </p>
@@ -341,15 +334,15 @@ const MedicPage = () => {
                         </div>
 
                         {/* الأزرار */}
-                        <div className="flex justify-between gap-3"                                 id="tour-example2"
+                        <div
+                          className="flex justify-between gap-3"
+                          id="tour-example2"
                         >
                           {!caseItem.is_accepted && (
-                            < >
-                            
+                            <>
                               <button
                                 id="accept-case-button"
                                 onClick={() => handleCaseAccept(caseItem)}
-
                                 className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium w-1/2 py-2 rounded-full hover:bg-[#f1f0f0b9] transition flex justify-center items-center"
                               >
                                 <FaCheckCircle className="text-green-500 text-xl" />
@@ -416,8 +409,10 @@ const MedicPage = () => {
         <div className="mb-8 flex items-center justify-center lg:justify-start">
           <img src={logo} alt="Logo" className="w-16 ml-1" />
           {medicName && (
-            <div className="text-lg font-bold text-[#ab1c1c] ml-4"                                     id="tour-example22"
->
+            <div
+              className="text-lg font-bold text-[#ab1c1c] ml-4"
+              id="tour-example22"
+            >
               مرحبًا بالمسعف، {medicName}
             </div>
           )}
@@ -425,7 +420,7 @@ const MedicPage = () => {
         <nav>
           <ul className="space-y-6">
             <li
-            id="tour-example11"
+              id="tour-example11"
               className={`font-bold text-xl cursor-pointer relative p-3 transition duration-200 ease-in-out ${
                 selectedSection === "حالة المريض"
                   ? "text-[#ab1c1c]"
@@ -443,8 +438,7 @@ const MedicPage = () => {
               />
             </li>
             <li
-                                    id="tour-example4"
-
+              id="tour-example4"
               className={`font-bold text-xl cursor-pointer relative p-3 transition duration-200 ease-in-out ${
                 selectedSection === "الاحصائيات"
                   ? "text-[#ab1c1c]"
