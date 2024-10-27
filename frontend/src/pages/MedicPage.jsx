@@ -181,7 +181,8 @@ const MedicPage = () => {
           "https://67073bf9a0e04071d2298046.mockapi.io/users"
         );
         setCases(response.data);
-        // Calculate statistics
+        
+        ///////// الاحصائيات//////////////
         const saved = response.data.filter(
           (c) => c.status === "تم إكمال الحالة"
         ).length;
@@ -190,7 +191,7 @@ const MedicPage = () => {
         ).length;
         setSavedCases(saved);
         setRejectedCases(rejected);
-        setVolunteerHours(saved * 2); // Example calculation for volunteer hours
+        setVolunteerHours(saved * 2); // حسبة من راسي
       } catch (error) {
         console.error("Error fetching cases:", error);
       }
@@ -417,6 +418,7 @@ const MedicPage = () => {
 
         const options = {
           responsive: true,
+          maintainAspectRatio: false,
           plugins: {
             legend: {
               position: "top",
@@ -434,26 +436,27 @@ const MedicPage = () => {
               الاحصائيات
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="bg-white p-6 rounded-lg border border-[#d8c1c1cc] shadow-md">
+              <div className="bg-white p-6 rounded-lg border border-[#d8c1c1cc] shadow-md text-center">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   الحالات التي تم إنقاذها
                 </h3>
                 <p className="text-2xl font-bold text-green-500">{savedCases}</p>
               </div>
-              <div className="bg-white p-6 rounded-lg border border-[#d8c1c1cc] shadow-md">
+              <div className="bg-white p-6 rounded-lg border border-[#d8c1c1cc] shadow-md text-center">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   الحالات التي تم رفضها
                 </h3>
                 <p className="text-2xl font-bold text-red-500">{rejectedCases}</p>
               </div>
-              <div className="bg-white p-6 rounded-lg border border-[#d8c1c1cc] shadow-md">
+              <div className="bg-white p-6 rounded-lg border border-[#d8c1c1cc] shadow-md text-center">
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   ساعات التطوع
                 </h3>
                 <p className="text-2xl font-bold text-blue-500">{volunteerHours}</p>
               </div>
             </div>
-            <div className="mb-8">
+
+            <div className="mb-8" style={{ height: "400px" }}>
               <Bar data={data} options={options} />
             </div>
           </main>
