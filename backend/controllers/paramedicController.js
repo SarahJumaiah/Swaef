@@ -66,6 +66,65 @@ const loginParamedic = async (req, res) => {
       res.status(500).json({ error: 'An error occurred during login. Please try again.' });
     }
   };
+
+  const getAllParamedics = async (req, res) => {
+    try {
+      const paramedics = await Paramedic.find();
+      res.status(200).json(paramedics);
+    } catch (error) {
+      console.error('Error fetching paramedics:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+
+
+  const approveParamedic = async (req, res) => {
+    const { id } = req.params;
+    const { isApproved } = req.body; // Use approval status from request body
+
+    console.log(`Approving paramedic with ID: ${id}, isApproved: ${isApproved}`);
+
+    try {
+        const updatedParamedic = await Paramedic.findByIdAndUpdate(
+            id,
+            { isApproved },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedParamedic) {
+            return res.status(404).json({ message: 'Paramedic not found' });
+        }
+
+        const statusMessage = isApproved ? 'approved' : 'rejected';
+        res.status(200).json({
+            message: `Paramedic ${statusMessage} successfully`,
+            paramedic: updatedParamedic,
+        });
+    } catch (error) {
+        console.error('Error updating approval status:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+const deleteParamedic = async (req, res) => {
+    const { id } = req.params; // Extract ID from the request parameters
   
-  module.exports = { registerParamedic, loginParamedic };
+    try {
+      const deletedParamedic = await Paramedic.findByIdAndDelete(id); // Find and delete the paramedic by ID
+  
+      if (!deletedParamedic) {
+        return res.status(404).json({ message: 'Paramedic not found' }); // Return a 404 if not found
+      }
+  
+      res.status(200).json({ message: 'Paramedic deleted successfully' }); // Return success message
+    } catch (error) {
+      console.error('Error deleting paramedic:', error);
+      res.status(500).json({ message: 'Server error' }); // Return a 500 for any server errors
+    }
+  };
+  
+
+  
+  
+  module.exports = { registerParamedic, loginParamedic , getAllParamedics , approveParamedic , deleteParamedic };
 

@@ -1,14 +1,14 @@
-const express = require('express')
+const express = require('express');
 const mongoose = require('mongoose');
-const app = express()
-require('dotenv').config();
 const cors = require('cors');
+require('dotenv').config();
+
+const app = express();
 app.use(cors());
-const paramedicRoutes = require('./routes/paramedicRoute');
-
-const port = process.env.PORT  || 3024
-
 app.use(express.json()); 
+
+const paramedicRoutes = require('./routes/paramedicRoute');
+const port = process.env.PORT || 3024;
 
 async function main() {
     try {
@@ -20,8 +20,8 @@ async function main() {
 }
 main().catch(err => console.log("Error connecting to MongoDB: ", err));
 
+// Routes
 app.use('/api/paramedics', paramedicRoutes);
-
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
