@@ -1,20 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FaCheckCircle, FaTimesCircle, FaLightbulb } from "react-icons/fa";
 import logo from "../assets/logo.png";
 import ScrollReveal from "scrollreveal";
-import { driver } from "driver.js"; // استخدام الاستيراد بتسمية
+import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import "./MedicPage.css";
-import { FaLightbulb } from "react-icons/fa";
 
-// دالة لحساب المسافة باستخدام صيغة Haversine
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const toRad = (value) => (value * Math.PI) / 180;
-
-  const R = 6371; // نصف قطر الأرض بالكيلومترات
+  const R = 6371;
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
   const a =
@@ -24,8 +21,7 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
       Math.sin(dLon / 2) *
       Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const distance = R * c; // المسافة بالكيلومترات
-
+  const distance = R * c;
   return distance;
 };
 
@@ -35,8 +31,7 @@ const MedicPage = () => {
   const [cases, setCases] = useState([]);
   const [medicLocation, setMedicLocation] = useState(null);
   const navigate = useNavigate();
-  const driverRef = useRef(null); // إنشاء مرجع لتخزين driverObj
-
+  const driverRef = useRef(null);
   const [medicName, setMedicName] = useState("");
 
   useEffect(() => {
@@ -68,7 +63,7 @@ const MedicPage = () => {
       nextBtnText: "التالي",
       prevBtnText: "السابق",
       doneBtnText: "إنهاء",
-      showButtons: ["next", "previous", "close"], // إظهار الأزرار الثلاثة
+      showButtons: ["next", "previous", "close"],
       steps: [
         {
           element: "#tour-example11",
@@ -78,6 +73,8 @@ const MedicPage = () => {
             side: "left",
             align: "start",
           },
+          onHighlightStarted: () => setIsSidebarOpen(true),
+          onDeselected: () => setIsSidebarOpen(false),
         },
         {
           element: "#tour-example1",
@@ -124,14 +121,20 @@ const MedicPage = () => {
             side: "right",
             align: "start",
           },
+          onHighlightStarted: () => setIsSidebarOpen(true),
+          onDeselected: () => setIsSidebarOpen(false),
         },
       ],
     });
-
-    const startTour = () => {
-      driverObj.drive();
-    };
   }, []);
+
+  const startTour = () => {
+    if (driverRef.current) {
+      driverRef.current.drive();
+    } else {
+      console.error("Driver.js instance not initialized.");
+    }
+  };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -140,13 +143,15 @@ const MedicPage = () => {
   const handleLogout = () => {
     navigate("/");
   };
+
   useEffect(() => {
     ScrollReveal().reveal(".headline", {
-      duration: 1000, // مدة التأثير
-      origin: "bottom", // اتجاه التأثير
-      distance: "50px", // المسافة التي يتحرك بها العنصر
+      duration: 1000,
+      origin: "bottom",
+      distance: "50px",
     });
   }, []);
+
   useEffect(() => {
     const fetchCases = async () => {
       try {
@@ -161,7 +166,6 @@ const MedicPage = () => {
 
     fetchCases();
     const intervalId = setInterval(fetchCases, 10000);
-
     return () => clearInterval(intervalId);
   }, []);
 
@@ -247,13 +251,7 @@ const MedicPage = () => {
       console.error("Error completing case:", error);
     }
   };
-  const startTour = () => {
-    if (driverRef.current) {
-      driverRef.current.drive(); // تشغيل الجولة إذا تم تهيئة driverRef.current
-    } else {
-      console.error("Driver.js instance not initialized.");
-    }
-  };
+
   const renderContent = () => {
     switch (selectedSection) {
       case "حالة المريض":
@@ -265,7 +263,7 @@ const MedicPage = () => {
               </h2>
               <button
                 onClick={startTour}
-                className="text-[#b02e2e] p-2 hover:text-[#c43a3a] transition flex justify-center items-center"
+                className="text-[#b02e2e] p-2 hover:text-[#c43a3a] transition flex justify-center items-center ml-[38%] sm:ml-0"
               >
                 <FaLightbulb size={30} />
               </button>
@@ -298,7 +296,6 @@ const MedicPage = () => {
                         key={caseItem.case_id}
                         className="bg-white p-6 rounded-lg border border-[#d8c1c1cc] shadow-md transition duration-300 ease-in-out transform hover:scale-105 relative flex flex-col flex-grow headline"
                       >
-                        {/* المسافه */}
                         {distance !== null && (
                           <p
                             className={`absolute top-2 left-2 text-sm font-semibold ${
@@ -334,7 +331,6 @@ const MedicPage = () => {
                           )}
                         </div>
 
-                        {/* الأزرار */}
                         <div
                           className="flex justify-between gap-3"
                           id="tour-example2"
@@ -396,7 +392,7 @@ const MedicPage = () => {
       dir="rtl"
     >
       <button
-        className="absolute top-4 left-4 lg:hidden bg-[#892222] text-white px-4 py-2 rounded"
+        className="absolute top-4 left-4 lg:hidden bg-[#892222] text-white px-4 py-2 rounded-lg"
         onClick={toggleSidebar}
       >
         {isSidebarOpen ? "✖" : "☰"}

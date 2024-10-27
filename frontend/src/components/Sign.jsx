@@ -203,7 +203,7 @@ function Sign() {
     };
 
     axios
-      .post('https://6717e676b910c6a6e02a7fd0.mockapi.io/log', submissionData)
+      .post('http://localhost:3024/api/paramedics/register', submissionData)
       .then((response) => {
         if (response.status === 201) {
           navigate('/login');
