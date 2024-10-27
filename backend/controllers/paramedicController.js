@@ -35,4 +35,37 @@ const registerParamedic = async (req, res) => {
   }
 };
 
-module.exports = { registerParamedic,};
+const loginParamedic = async (req, res) => {
+    try {
+      const { email, password } = req.body;
+  
+
+      if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required.' });
+      }
+  
+
+      const paramedic = await Paramedic.findOne({ email, password });
+      if (!paramedic) {
+        return res.status(401).json({ error: 'Invalid email or password.' });
+      }
+  
+
+      if (!paramedic.isApproved) {
+        return res.status(403).json({ error: 'Account pending approval by admin.' });
+      }
+  
+
+      res.status(200).json({
+        id: paramedic._id,
+        name: paramedic.name,
+        phone: paramedic.phone,
+      });
+    } catch (error) {
+      console.error('Error during login:', error);
+      res.status(500).json({ error: 'An error occurred during login. Please try again.' });
+    }
+  };
+  
+  module.exports = { registerParamedic, loginParamedic };
+
