@@ -496,54 +496,49 @@ const Home = () => {
   </div>
 </section>
 
-      {/* الانضمام */}
-      <section
+  {/* الانضمام */}
+<section
   ref={joinRef}
-  className="join relative flex flex-col items-center md:flex-row w-[85%] md:w-[80%] mx-auto my-24 p-8"
+  className="join relative flex flex-col items-center md:flex-row w-[90%] sm:w-[85%] lg:w-[80%] mx-auto my-24 p-6 sm:p-8 md:px-12 lg:px-28"
 >
+  <div className="text-center md:text-right md:w-1/2 md:pr-8 lg:pr-12 mb-8 md:mb-0">
+    <h2 className="text-2xl sm:text-3xl lg:text-4xl text-[#ab1c1c] font-extrabold mb-4">
+      كن جزءًا من شبكة الإنقاذ
+    </h2>
+    <p className="text-gray-800 text-md sm:text-lg leading-relaxed mb-6">
+      انضم إلى منصة{" "}
+      <span className="text-[#ab1c1c] font-bold">سواعف</span> وساهم في إنقاذ
+      الأرواح من خلال خبرتك الطبية. نحن نربطك بالمرضى في لحظات الطوارئ
+      لتقديم الدعم الفوري. كل مسعف يعدّ بطلًا.
+    </p>
 
-        <div className="text-center md:text-right md:w-1/2 md:pr-12 mb-8 md:mb-0">
-          <h2 className="text-2xl text-[#ab1c1c] font-extrabold mb-4">
-            كن جزءًا من شبكة الإنقاذ
-          </h2>
-          <p className="text-gray-800 text-lg leading-relaxed mb-6">
-            انضم إلى منصة{" "}
-            <span className="text-[#ab1c1c] font-bold">سواعف</span> وساهم في
-            إنقاذ الأرواح من خلال خبرتك الطبية. نحن نربطك بالمرضى في لحظات
-            الطوارئ لتقديم الدعم الفوري. كل مسعف يعدّ بطلًا.
-          </p>
-          {/* <p className="text-gray-700 text-md leading-relaxed mb-10">
-            المسعف يجب أن يكون من القطاع الصحي، وأن يمتلك شهادة في الإسعافات
-            الأولية لضمان تقديم المساعدة الصحيحة في الحالات الطارئة.
-          </p> */}
+    <p className="text-gray-700 text-sm sm:text-md leading-relaxed mb-6">
+      إذا كنت تمتلك أحد المؤهلات التالية، يمكنك الانضمام إلينا في منصة سواعف
+    </p>
 
-<p className="text-gray-700 text-md leading-relaxed mb-6">
-إذا كنت تمتلك أحد المؤهلات التالية، يمكنك الانضمام إلينا في منصة سواعف
-  </p>
+    <ul className="list-disc list-inside text-gray-700 text-sm sm:text-md leading-relaxed mb-8 sm:mb-10">
+      <li>الانتماء إلى القطاع الصحي.</li>
+      <li>امتلاك شهادة في الإسعافات الأولية.</li>
+      <li>القدرة على تقديم المساعدة الفورية في الحالات الطارئة.</li>
+    </ul>
 
-  <ul className="list-disc list-inside text-gray-700 text-md leading-relaxed mb-10">
-    <li>الانتماء إلى القطاع الصحي.</li>
-    <li>امتلاك شهادة في الإسعافات الأولية.</li>
-    <li>القدرة على تقديم المساعدة الفورية في الحالات الطارئة.</li>
-  </ul>
-          <Link
-            to="/sign"
-            className="mt-6 text-lg  bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] hover:scale-105 transform transition-transform text-white py-3 px-8 rounded-full shadow-lg font-bold"
-          >
-            انضم الآن
-          </Link>
-        </div>
+    <Link
+      to="/sign"
+      className="mt-6 text-sm sm:text-lg bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] hover:scale-105 transform transition-transform text-white py-3 px-6 sm:px-8 rounded-full shadow-lg font-bold"
+    >
+      انضم الآن
+    </Link>
+  </div>
 
-        <div className="md:w-1/2 w-full flex justify-center md:justify-end">
-  <img
-    src={img4}
-    alt="صورة مسعف"
-    className="transform hover:scale-105 transition-transform duration-500 bg-opacity-0"
-    // style={{ background: 'transparent' }}
-  />
-</div>
+  <div className="md:w-1/2 w-full flex justify-center md:justify-end">
+    <img
+      src={img4}
+      alt="صورة مسعف"
+      className="w-full max-w-xs sm:max-w-md md:max-w-full transform hover:scale-105 transition-transform duration-500"
+    />
+  </div>
+</section>
 
-      </section>
 
       {/* رؤيتن */}
       <section 

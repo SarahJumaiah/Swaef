@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { Doughnut } from "react-chartjs-2";
 import ScrollReveal from 'scrollreveal';
-
 import axios from "axios";
 import {
   Chart as ChartJS,
@@ -13,7 +12,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { FaCheckCircle, FaTimesCircle, FaInfoCircle } from "react-icons/fa"; // Added new icons
+import { FaCheckCircle, FaTimesCircle, FaInfoCircle } from "react-icons/fa"; 
 import logo from "../assets/logo.png";
 
 ChartJS.register(CategoryScale, LinearScale, ArcElement, Tooltip, Legend);
@@ -85,7 +84,7 @@ const Admin = () => {
       confirmButtonText: "نعم",
       cancelButtonText: "إلغاء",
       icon: "question",
-      confirmButtonColor: "#28a745", // Changed the color to match the acceptance button color
+      confirmButtonColor: "#28a745", 
       cancelButtonColor: "#CACACA",
     }).then((result) => {
       if (result.isConfirmed) {
@@ -104,7 +103,7 @@ const Admin = () => {
             Swal.fire({
               title: "تم القبول",
               icon: "success",
-              confirmButtonColor: "#28a745", // Matched the color
+              confirmButtonColor: "#28a745", 
             });
           })
           .catch((error) => {
@@ -113,14 +112,15 @@ const Admin = () => {
       }
     });
   };
+
   useEffect(() => {
-    // إعداد تأثير ScrollReveal على العناصر عند التمرير
     ScrollReveal().reveal('.headline', {
-      duration: 1000, // مدة التأثير
-      origin: 'bottom', // اتجاه التأثير
-      distance: '50px', // المسافة التي يتحرك بها العنصر
+      duration: 1000, 
+      origin: 'bottom',
+      distance: '50px',
     });
   }, []);
+
   const handleReject = (id) => {
     Swal.fire({
       title: "هل تريد رفض هذا المسعف؟",
@@ -183,11 +183,11 @@ const Admin = () => {
   );
 
   const renderParamedicsList = () => (
-    <section className="bg-gray-100 p-6 lg:p-10 h-[50vh]">
+    <section className="bg-gray-100 p-6 lg:p-10 h-[70vh] ">
       <h2 className="text-2xl font-semibold text-[#892222] mb-4">
         طلبات المسعفين
       </h2>
-      <ul className="flex flex-col-reverse ">
+      <ul className="flex flex-col-reverse">
         {paramedics.map((paramedic) => (
           <li
             key={paramedic.id}
@@ -209,7 +209,6 @@ const Admin = () => {
               >
                <FaInfoCircle /> <span className="mr-2">التفاصيل</span> 
               </button>
-              {/* Only show the accept button if the paramedic is not approved */}
               {!paramedic.isApproved && (
                 <button
                   onClick={() => handleAccept(paramedic.id)}
@@ -230,7 +229,6 @@ const Admin = () => {
       </ul>
     </section>
   );
-  
 
   const renderParamedicModal = () => {
     if (!showModal || !selectedParamedic) return null;
@@ -373,7 +371,7 @@ const Admin = () => {
         </nav>
       </aside>
 
-      <main className="w-full lg:w-3/4 p-4 sm:p-10 h-screen">
+      <main className="w-full lg:w-3/4 p-4 sm:p-10 h-screen overflow-y-auto">
         {renderContent()}
       </main>
     </div>
