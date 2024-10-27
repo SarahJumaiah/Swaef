@@ -164,70 +164,70 @@ const Admin = () => {
   const renderSummaryCards = () => (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
       <div className="p-6 rounded-lg text-center bg-white shadow-md border border-gray-300 transition duration-300 ease-in-out hover:scale-105">
-        <h3 className="text-lg font-bold text-[#892222]">إجمالي المسعفين</h3>
-        <p className="text-4xl font-bold text-[#892222]">{totalParamedics}</p>
+        <h3 className="text-lg font-bold text-[#b51c1c]">إجمالي المسعفين</h3>
+        <p className="text-4xl font-bold text-[#b51c1c]">{totalParamedics}</p>
       </div>
       <div className="p-6 rounded-lg text-center bg-white shadow-md border border-gray-300 transition duration-300 ease-in-out hover:scale-105">
-        <h3 className="text-lg font-bold text-[#892222]">المسعفين المقبولين</h3>
-        <p className="text-4xl font-bold text-[#892222]">
+        <h3 className="text-lg font-bold text-[#b51c1c]">المسعفين المقبولين</h3>
+        <p className="text-4xl font-bold text-[#b51c1c]">
           {acceptedParamedics}
         </p>
       </div>
       <div className="p-6 rounded-lg text-center bg-white shadow-md border border-gray-300 transition duration-300 ease-in-out hover:scale-105">
-        <h3 className="text-lg font-bold text-[#892222]">
+        <h3 className="text-lg font-bold text-[#b51c1c]">
           المسعفين في الانتظار
         </h3>
-        <p className="text-4xl font-bold text-[#892222]">{pendingParamedics}</p>
+        <p className="text-4xl font-bold text-[#b51c1c]">{pendingParamedics}</p>
       </div>
     </div>
   );
 
   const renderParamedicsList = () => (
-    <section className="bg-gray-100 p-6 lg:p-10 h-[70vh] ">
-      <h2 className="text-2xl font-semibold text-[#892222] mb-4">
-        طلبات المسعفين
-      </h2>
-      <ul className="flex flex-col-reverse">
-        {paramedics.map((paramedic) => (
-          <li
-            key={paramedic.id}
-            className="p-6 mb-4 bg-white shadow-md border border-gray-300 rounded-lg transition duration-300 ease-in-out hover:scale-105 flex flex-col lg:flex-row justify-between items-start lg:items-center headline"
+<section className="bg-gray-100 p-6 lg:p-10 h-[70vh]">
+  <h2 className="text-2xl font-semibold text-[#b51c1c] mb-4">
+    طلبات المسعفين
+  </h2>
+  <ul className="flex flex-col-reverse">
+    {paramedics.map((paramedic) => (
+      <li
+        key={paramedic.id}
+        className="p-4 mb-4 bg-white shadow-md border border-gray-300 rounded-lg transition duration-300 ease-in-out hover:scale-105 flex flex-col lg:flex-row justify-between items-start lg:items-center"
+      >
+        <div className="mb-4 lg:mb-0">
+          <p>
+            <strong>الاسم:</strong> {paramedic.name}
+          </p>
+          <p>
+            <strong>الحالة:</strong> {paramedic.isApproved ? "مقبول" : "في الانتظار"}
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2 lg:gap-4">
+          <button
+            onClick={() => handleOpenModal(paramedic)}
+            className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium px-3 py-2 rounded-full hover:bg-[#f1f0f0b9] transition flex justify-center items-center"
           >
-            <div className="mb-4 lg:mb-0">
-              <p>
-                <strong>الاسم:</strong> {paramedic.name}
-              </p>
-              <p>
-                <strong>الحالة:</strong>{" "}
-                {paramedic.isApproved ? "مقبول" : "في الانتظار"}
-              </p>
-            </div>
-            <div className="flex gap-4">
-              <button
-                onClick={() => handleOpenModal(paramedic)}
-                className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium px-4 py-2 rounded-full hover:bg-[#f1f0f0b9] transition flex justify-center items-center"
-              >
-               <FaInfoCircle /> <span className="mr-2">التفاصيل</span> 
-              </button>
-              {!paramedic.isApproved && (
-                <button
-                  onClick={() => handleAccept(paramedic.id)}
-                  className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium w-[7vw] py-2 rounded-full hover:bg-[#f1f0f0b9] transition flex justify-center items-center"
-                >
-                  <FaCheckCircle className="text-green-500 text-xl" />
-                </button>
-              )}
-              <button
-                onClick={() => handleReject(paramedic.id)}
-                className="bg-[#b02e2e] text-white py-2 rounded-full hover:bg-[#c43a3a] transition w-[7vw] flex justify-center items-center"
-              >
-                <FaTimesCircle className="text-white text-xl" />
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </section>
+            <FaInfoCircle /> <span className="mr-2">التفاصيل</span>
+          </button>
+          {!paramedic.isApproved && (
+            <button
+              onClick={() => handleAccept(paramedic.id)}
+              className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium px-3 py-2 rounded-full hover:bg-[#f1f0f0b9] transition flex justify-center items-center w-auto lg:w-[7vw]"
+            >
+              <FaCheckCircle className="text-green-500 text-xl" />
+            </button>
+          )}
+          <button
+            onClick={() => handleReject(paramedic.id)}
+            className="bg-[#b02e2e] text-white px-3 py-2 rounded-full hover:bg-[#c43a3a] transition flex justify-center items-center w-auto lg:w-[7vw]"
+          >
+            <FaTimesCircle className="text-white text-xl" />
+          </button>
+        </div>
+      </li>
+    ))}
+  </ul>
+</section>
+
   );
 
   const renderParamedicModal = () => {
@@ -270,7 +270,7 @@ const Admin = () => {
         return (
           <>
             <header className="mb-8">
-              <h1 className="text-3xl font-bold text-[#892222]">الملخص</h1>
+              <h1 className="text-3xl font-bold text-[#b51c1c]">الملخص</h1>
             </header>
             {renderSummaryCards()}
             <section className="bg-gray-100 p-6 overflow-hidden">
@@ -286,7 +286,7 @@ const Admin = () => {
         return (
           <>
             <header className="mb-8">
-              <h1 className="text-3xl font-bold text-[#892222]">المسعفين</h1>
+              <h1 className="text-3xl font-bold text-[#b51c1c]">المسعفين</h1>
             </header>
             {renderParamedicsList()}
             {renderParamedicModal()}
