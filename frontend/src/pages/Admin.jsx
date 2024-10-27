@@ -365,6 +365,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { Doughnut } from "react-chartjs-2";
+import ScrollReveal from 'scrollreveal';
 import axios from "axios";
 import {
   Chart as ChartJS,
@@ -374,7 +375,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import logo from '../assets/logo.png'
+import { FaCheckCircle, FaTimesCircle, FaInfoCircle } from "react-icons/fa"; 
+import logo from "../assets/logo.png";
 
 ChartJS.register(CategoryScale, LinearScale, ArcElement, Tooltip, Legend);
 
@@ -445,7 +447,7 @@ const Admin = () => {
       confirmButtonText: "نعم",
       cancelButtonText: "إلغاء",
       icon: "question",
-      confirmButtonColor: "#892222",
+      confirmButtonColor: "#28a745", 
       cancelButtonColor: "#CACACA",
     }).then((result) => {
       if (result.isConfirmed) {
@@ -460,7 +462,7 @@ const Admin = () => {
             Swal.fire({
               title: "تم القبول",
               icon: "success",
-              confirmButtonColor: "#892222",
+              confirmButtonColor: "#28a745", 
             });
           })
           .catch((error) => {
@@ -469,6 +471,14 @@ const Admin = () => {
       }
     });
   };
+
+  useEffect(() => {
+    ScrollReveal().reveal('.headline', {
+      duration: 1000, 
+      origin: 'bottom',
+      distance: '50px',
+    });
+  }, []);
 
   const handleReject = (id) => {
     Swal.fire({
@@ -510,74 +520,71 @@ const Admin = () => {
 
   const renderSummaryCards = () => (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-      <div className="p-6 rounded-lg text-center bg-[#be828233] border-4 border-[#892222]">
-        <h3 className="text-lg font-extrabold text-[#892222]">
-          إجمالي المسعفين
-        </h3>
-        <p className="text-4xl font-bold text-[#892222]">{totalParamedics}</p>
+      <div className="p-6 rounded-lg text-center bg-white shadow-md border border-gray-300 transition duration-300 ease-in-out hover:scale-105">
+        <h3 className="text-lg font-bold text-[#b51c1c]">إجمالي المسعفين</h3>
+        <p className="text-4xl font-bold text-[#b51c1c]">{totalParamedics}</p>
       </div>
-      <div className="p-6 rounded-lg text-center bg-[#be828233] border-4 border-[#892222]">
-        <h3 className="text-lg font-extrabold text-[#892222]">
-          المسعفين المقبولين
-        </h3>
-        <p className="text-4xl font-bold text-[#892222]">
+      <div className="p-6 rounded-lg text-center bg-white shadow-md border border-gray-300 transition duration-300 ease-in-out hover:scale-105">
+        <h3 className="text-lg font-bold text-[#b51c1c]">المسعفين المقبولين</h3>
+        <p className="text-4xl font-bold text-[#b51c1c]">
           {acceptedParamedics}
         </p>
       </div>
-      <div className="p-6 rounded-lg text-center bg-[#be828233] border-4 border-[#892222]">
-        <h3 className="text-lg font-extrabold text-[#892222]">
+      <div className="p-6 rounded-lg text-center bg-white shadow-md border border-gray-300 transition duration-300 ease-in-out hover:scale-105">
+        <h3 className="text-lg font-bold text-[#b51c1c]">
           المسعفين في الانتظار
         </h3>
-        <p className="text-4xl font-bold text-[#892222]">{pendingParamedics}</p>
+        <p className="text-4xl font-bold text-[#b51c1c]">{pendingParamedics}</p>
       </div>
     </div>
   );
 
   const renderParamedicsList = () => (
-    <section className="bg-gray-100 p-6 lg:p-10 h-[50vh]">
-      <h2 className="text-2xl font-semibold text-[#ab1c1c] mb-4">
-        طلبات المسعفين
-      </h2>
-      <ul>
-        {paramedics.map((paramedic) => (
-          <li
-            key={paramedic.id}
-            className="p-4 mb-4 bg-[#be828233] border-2 border-[#892222] rounded-lg flex flex-col lg:flex-row justify-between items-start lg:items-center"
+<section className="bg-gray-100 p-6 lg:p-10 h-[70vh]">
+  <h2 className="text-2xl font-semibold text-[#b51c1c] mb-4">
+    طلبات المسعفين
+  </h2>
+  <ul className="flex flex-col-reverse">
+    {paramedics.map((paramedic) => (
+      <li
+        key={paramedic.id}
+        className="p-4 mb-4 bg-white shadow-md border border-gray-300 rounded-lg transition duration-300 ease-in-out hover:scale-105 flex flex-col lg:flex-row justify-between items-start lg:items-center"
+      >
+        <div className="mb-4 lg:mb-0">
+          <p>
+            <strong>الاسم:</strong> {paramedic.name}
+          </p>
+          <p>
+            <strong>الحالة:</strong> {paramedic.isApproved ? "مقبول" : "في الانتظار"}
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2 lg:gap-4">
+          <button
+            onClick={() => handleOpenModal(paramedic)}
+            className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium px-3 py-2 rounded-full hover:bg-[#f1f0f0b9] transition flex justify-center items-center"
           >
-            <div className="mb-4 lg:mb-0">
-              <p>
-                <strong>الاسم:</strong> {paramedic.name}
-              </p>
-              <p>
-                <strong>الحالة:</strong>{" "}
-                {paramedic.isApproved ? "مقبول" : "في الانتظار"}
-              </p>
-            </div>
-            <div className="flex gap-4">
-              <button
-                onClick={() => handleOpenModal(paramedic)}
-                className="bg-[#892222] text-white px-4 py-2 rounded"
-              >
-                التفاصيل
-              </button>
-              <button
-                onClick={() => handleAccept(paramedic.id)}
-                className="bg-[#892222] text-white px-4 py-2 rounded"
-                disabled={paramedic.isApproved}
-              >
-                قبول
-              </button>
-              <button
-                onClick={() => handleReject(paramedic.id)}
-                className="bg-[#892222] text-white px-4 py-2 rounded"
-              >
-                رفض
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </section>
+            <FaInfoCircle /> <span className="mr-2">التفاصيل</span>
+          </button>
+          {!paramedic.isApproved && (
+            <button
+              onClick={() => handleAccept(paramedic.id)}
+              className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium px-3 py-2 rounded-full hover:bg-[#f1f0f0b9] transition flex justify-center items-center w-auto lg:w-[7vw]"
+            >
+              <FaCheckCircle className="text-green-500 text-xl" />
+            </button>
+          )}
+          <button
+            onClick={() => handleReject(paramedic.id)}
+            className="bg-[#b02e2e] text-white px-3 py-2 rounded-full hover:bg-[#c43a3a] transition flex justify-center items-center w-auto lg:w-[7vw]"
+          >
+            <FaTimesCircle className="text-white text-xl" />
+          </button>
+        </div>
+      </li>
+    ))}
+  </ul>
+</section>
+
   );
 
   const renderParamedicModal = () => {
@@ -619,7 +626,7 @@ const Admin = () => {
         return (
           <>
             <header className="mb-8">
-              <h1 className="text-3xl font-bold text-[#ab1c1c]">الملخص</h1>
+              <h1 className="text-3xl font-bold text-[#b51c1c]">الملخص</h1>
             </header>
             {renderSummaryCards()}
             <section className="bg-gray-100 p-6 overflow-hidden">
@@ -635,7 +642,7 @@ const Admin = () => {
         return (
           <>
             <header className="mb-8">
-              <h1 className="text-3xl font-bold text-[#ab1c1c]">المسعفين</h1>
+              <h1 className="text-3xl font-bold text-[#b51c1c]">المسعفين</h1>
             </header>
             {renderParamedicsList()}
             {renderParamedicModal()}
@@ -714,7 +721,9 @@ const Admin = () => {
         </nav>
       </aside>
 
-      <main className="w-full lg:w-3/4 p-4 sm:p-10 h-screen">{renderContent()}</main>
+      <main className="w-full lg:w-3/4 p-4 sm:p-10 h-screen overflow-y-auto">
+        {renderContent()}
+      </main>
     </div>
   );
 };

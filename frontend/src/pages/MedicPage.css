@@ -1,0 +1,76 @@
+.leaflet-container {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+  }
+  .driver-popover.driverjs-theme {
+    direction: rtl !important;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+  }
+  
+  .driver-popover.driverjs-theme .driver-popover-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ab1c1e;
+    margin-bottom: 8px;
+  }
+  
+  .driver-popover.driverjs-theme .driver-popover-description {
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .driver-popover.driverjs-theme button {
+    background-color: white;
+    color: black;
+    border: 1px solid gray;
+    padding: 8px 16px;
+    margin: 4px; 
+    border-radius: 20px; 
+    cursor: pointer; 
+    text-shadow: none;
+    font-size: 14px;
+  }
+  
+  .driver-popover.driverjs-theme button:hover {
+    background-color: rgb(239, 238, 238);
+  }
+  
+ 
+  .driver-popover.driverjs-theme .driver-popover-progress {
+    background-color: #ab1c1c;
+  }
+  
+  .driver-popover.driverjs-theme .driver-close-btn {
+    background-color: transparent;
+    color: #ab1c1c;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .pagination-info {
+    display: none;
+  }
+ 
+  .driver-popover-progress-text {
+    display: none !important;
+  }
+  
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .driver-popover.driverjs-theme {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
