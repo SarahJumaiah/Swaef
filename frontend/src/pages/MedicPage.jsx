@@ -278,6 +278,7 @@ const MedicPage = () => {
               >
                 {cases
                   .filter((caseItem) => caseItem.status !== "تم إكمال الحالة")
+                  .sort((a, b) => b.case_id - a.case_id)
                   .map((caseItem) => {
                     const distance =
                       medicLocation &&

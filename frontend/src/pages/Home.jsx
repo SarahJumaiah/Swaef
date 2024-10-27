@@ -238,7 +238,7 @@ const Home = () => {
         <div className="relative z-10 mx-auto">
           <h1 className="text-4xl mb-16 leading-tight drop-shadow-lg headertxt">
             نحن هنا لمساعدتك في حالات
-            <span className="text-red-600 font-extrabold"> الطوارئ</span>
+            <span className="text-[#ab1c1c] font-extrabold"> الطوارئ</span>
             <br />
           </h1>
           <button
@@ -319,7 +319,7 @@ const Home = () => {
                   </div>
                 </div>
                 {errorMessage && (
-                  <p className="text-red-600 text-center mb-4">
+                  <p className="text-[#ab1c1c] text-center mb-4">
                     {errorMessage}
                   </p>
                 )}
@@ -339,38 +339,80 @@ const Home = () => {
                 {/* عرض نوع الحالة وصاحب البلاغ فقط إذا لم يتم قبول المسعف بعد */}
                 {!isAccepted && (
                   <>
-                    <p className="mb-2 text-lg text-gray-600">
-                      <strong>نوع الحالة:</strong> {acceptedCase?.case_type}
-                    </p>
+  <div className="mb-4 p-4 bg-gray-100 rounded-lg shadow-md flex items-center">
+  <i className={`text-xl text-[#ab1c1c] ml-3 ${
+      acceptedCase?.case_type === "كسور" ? "fas fa-bone" : 
+      acceptedCase?.case_type === "حروق" ? "fas fa-fire" :
+      acceptedCase?.case_type === "إغماء" ? "fas fa-dizzy" :
+      acceptedCase?.case_type === "اختناق" ? "fas fa-wind" :
+      "fas fa-info-circle"
+    }`}></i>  <div>
+      <p className="text-lg font-semibold text-gray-600">
+        <strong>نوع الحالة:</strong> {acceptedCase?.case_type}
+      </p>
+    </div>
+  </div>
 
-                    <p className="mb-2 text-lg text-gray-600">
-                      <strong>صاحب البلاغ :</strong>{" "}
-                      {acceptedCase?.patient?.name}
-                    </p>
-                    <p className="mb-2 text-lg text-gray-600">
-                      <strong>رقم الهاتف :</strong>{" "}
-                      {acceptedCase?.patient?.phone}
-                    </p>
-                  </>
+  <div className="mb-4 p-4 bg-gray-100 rounded-lg shadow-md flex items-center">
+    <i className="fas fa-user text-xl text-[#ab1c1c] ml-3"></i>
+    <div>
+      <p className="text-lg font-semibold text-gray-600">
+        <strong>صاحب البلاغ:</strong> {acceptedCase?.patient?.name}
+      </p>
+    </div>
+  </div>
+
+  <div className="p-4 bg-gray-100 rounded-lg shadow-md flex items-center">
+    <i className="fas fa-phone-alt text-xl text-[#ab1c1c] ml-3"></i>
+    <div>
+      <p className="text-lg font-semibold text-gray-600">
+        <strong>رقم الهاتف:</strong> {acceptedCase?.patient?.phone}
+      </p>
+    </div>
+  </div>
+</>
+
                 )}
 
                 {/* معلومات المسعف تظهر فقط في حال القبول */}
                 {isAccepted && acceptedCase?.assigned_responder ? (
                   <>
-                    <p className="mb-2 text-lg text-gray-600">
-                      <strong>اسم المسعف:</strong>{" "}
-                      {acceptedCase.assigned_responder.name}
-                    </p>
-                    <p className="mb-2 text-lg text-gray-600">
-                      <strong>رقم الهاتف:</strong>{" "}
-                      {acceptedCase.assigned_responder.phone}
-                    </p>
-                    <p className="text-lg text-gray-600 text-center">
+  {/* حالة القبول */}
+
+  {/* معلومات المسعف */}
+  <div className="p-4 bg-gray-50 rounded-lg shadow-md flex flex-col items-center mb-4">
+    <div className="text-center">
+      <p className="text-lg text-[#ab1c1c] font-semibold">
+        <i className="fas fa-user-md mr-2"></i> اسم المسعف
+      </p>
+      <p className="text-gray-800 font-medium">{acceptedCase.assigned_responder.name}</p>
+    </div>
+    <div className="text-center mt-3">
+      <p className="text-lg text-[#ab1c1c] font-semibold">
+        <i className="fas fa-phone-alt mr-2"></i> رقم الهاتف
+      </p>
+      <p className="text-gray-800 font-medium">{acceptedCase.assigned_responder.phone}</p>
+    </div>
+  </div>
+  <p className="text-lg text-gray-600 text-center">
                       <strong className="text-sm">حالة القبول:</strong>
                       <br />
                       "المسعف في الطريق اليك حالا!"
                     </p>
-                  </>
+
+  {/* الوقت المتوقع للوصول */}
+  <div className="p-4 bg-red-50 rounded-lg shadow-md text-center">
+    <p className="text-lg text-[#ab1c1c] font-bold">
+      <i className="far fa-clock mr-2"></i> الوقت المتوقع للوصول:
+    </p>
+    <p className="text-gray-700 font-medium">حوالي دقيقة</p>
+  </div>
+
+</>
+
+
+
+
                 ) : (
                   <p className="text-lg text-gray-600 text-center">
                     <strong className="text-sm">حالة القبول:</strong>
@@ -389,7 +431,7 @@ const Home = () => {
       {/* { end edit the pop fahd} */}
 
       {<Navbar scrollToSection={scrollToSection} />}
-
+ 
       <section
   ref={aboutRef}
   className="about my-24 opacity-0 transition-opacity duration-700 w-[90%] md:w-[100%] mx-auto"
