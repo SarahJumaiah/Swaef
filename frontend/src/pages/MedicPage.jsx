@@ -8,6 +8,25 @@ import ScrollReveal from "scrollreveal";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import "./MedicPage.css";
+import { Bar } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const toRad = (value) => (value * Math.PI) / 180;
@@ -33,6 +52,9 @@ const MedicPage = () => {
   const navigate = useNavigate();
   const driverRef = useRef(null);
   const [medicName, setMedicName] = useState("");
+  const [savedCases, setSavedCases] = useState(0);
+  const [rejectedCases, setRejectedCases] = useState(0);
+  const [volunteerHours, setVolunteerHours] = useState(0);
 
   useEffect(() => {
     const storedMedicName = localStorage.getItem("medicName");
@@ -159,6 +181,16 @@ const MedicPage = () => {
           "https://67073bf9a0e04071d2298046.mockapi.io/users"
         );
         setCases(response.data);
+        // Calculate statistics
+        const saved = response.data.filter(
+          (c) => c.status === "تم إكمال الحالة"
+        ).length;
+        const rejected = response.data.filter(
+          (c) => c.status === "تم رفض الحالة"
+        ).length;
+        setSavedCases(saved);
+        setRejectedCases(rejected);
+        setVolunteerHours(saved * 2); // Example calculation for volunteer hours
       } catch (error) {
         console.error("Error fetching cases:", error);
       }
@@ -254,7 +286,7 @@ const MedicPage = () => {
 
   const renderContent = () => {
     switch (selectedSection) {
-      case "حالة المريض":
+      case "حالة المريض": {
         return (
           <main className="w-full lg:w-3/4 p-4 sm:p-10 h-auto min-h-screen bg-gray-100">
             <div className="flex justify-between items-center mb-6">
@@ -370,17 +402,67 @@ const MedicPage = () => {
             )}
           </main>
         );
-      case "الاحصائيات":
+      }
+      case "الاحصائيات": {
+        const data = {
+          labels: ["تم إنقاذها", "تم رفضها", "ساعات التطوع"],
+          datasets: [
+            {
+              label: "إحصائيات المسعف",
+              data: [savedCases, rejectedCases, volunteerHours],
+              backgroundColor: ["#4caf50", "#f44336", "#2196f3"],
+            },
+          ],
+        };
+
+        const options = {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: "top",
+            },
+            title: {
+              display: true,
+              text: "إحصائيات المسعف",
+            },
+          },
+        };
+
         return (
           <main className="w-full lg:w-3/4 p-4 sm:p-10 h-auto min-h-screen bg-gray-100">
             <h2 className="text-2xl font-semibold text-[#ab1c1c] mb-6">
               الاحصائيات
             </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="bg-white p-6 rounded-lg border border-[#d8c1c1cc] shadow-md">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  الحالات التي تم إنقاذها
+                </h3>
+                <p className="text-2xl font-bold text-green-500">{savedCases}</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg border border-[#d8c1c1cc] shadow-md">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  الحالات التي تم رفضها
+                </h3>
+                <p className="text-2xl font-bold text-red-500">{rejectedCases}</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg border border-[#d8c1c1cc] shadow-md">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  ساعات التطوع
+                </h3>
+                <p className="text-2xl font-bold text-blue-500">{volunteerHours}</p>
+              </div>
+            </div>
+            <div className="mb-8">
+              <Bar data={data} options={options} />
+            </div>
           </main>
         );
-      case "تسجيل خروج":
+      }
+      case "تسجيل خروج": {
         handleLogout();
         return null;
+      }
       default:
         return null;
     }
