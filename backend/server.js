@@ -46,6 +46,8 @@ const path = require('path'); // لإعداد مسار المجلد
 const app = express();
 const PORT = process.env.PORT || 3024;
 
+
+
 // استخدام CORS للسماح بالطلبات من localhost:5173 و localhost:5174
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:5174']
