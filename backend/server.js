@@ -3,9 +3,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors'); // استيراد مكتبة CORS
 const caseRoutes = require('./routes/caseRoute'); // استيراد مسارات الحالات
+const paramedicRoutes = require('./routes/paramedicRoute')
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3024;
 
 // استخدام CORS للسماح بالطلبات من localhost:5173
 app.use(cors({
@@ -23,6 +24,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 // ربط مسارات الحالات
 app.use('/api/cases', caseRoutes);
+app.use('/api/paramedics', paramedicRoutes);
 
 // إعداد المسار الرئيسي للتأكد من أن الخادم يعمل
 app.get('/', (req, res) => {
