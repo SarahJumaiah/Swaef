@@ -1,0 +1,37 @@
+body.dark-theme {
+    background-color: #121212;
+    color: #e0e0e0;
+  }
+  
+  .dev-container {
+    background-color: #121212;
+  }
+  
+  .dev-header {
+    background: linear-gradient(135deg, #1f1f1f, #3b3b3b);
+  }
+  
+  .about-section,
+  .team-section {
+    background-color: #1e1e1e;
+  }
+  
+  a {
+    color: #e0e0e0;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    color: #ff4b4b;
+  }
+  
+  button {
+    background-color: #ff4b4b;
+    border: none;
+    color: #fff;
+  }
+  
+  button:hover {
+    background-color: #ff6f6f;
+  }
+  
