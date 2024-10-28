@@ -479,7 +479,6 @@ useEffect(() => {
       إرسال التقييم
     </button>
 
-    {/* رسالة الشكر بعد إرسال التقييم */}
     {isSubmitted && (
       <p className="text-green-500 mt-4 animate__animated animate__fadeIn">
         شكرًا على تقييمك!
@@ -855,3 +854,4 @@ useEffect(() => {
 };
 
 export default Home;
+
