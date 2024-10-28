@@ -1,10 +1,11 @@
 import DevNav from "../components/Dev/DevNav";
 import DevFooter from "../components/Dev/DevFooter";
-import { Link } from "react-router-dom";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const Dev = () => {
   const productsRef = useRef(null);
+  const location = useLocation();
 
   const scrollToProducts = () => {
     if (productsRef.current) {
@@ -12,10 +13,16 @@ const Dev = () => {
     }
   };
 
+  useEffect(() => {
+    if (location.state?.scrollToProducts) {
+      scrollToProducts();
+    }
+  }, [location.state]);
+
   return (
     <div className="dev-container text-white">
       <DevNav scrollToProducts={scrollToProducts} />
-      <header className="w-full flex flex-col items-center justify-center text-center py-20 bg-gradient-to-r from-[#121212] to-[#3a3a3a]">
+      <header className="w-full flex flex-col items-center justify-center text-center py-48 bg-gradient-to-r from-[#121212] to-[#3a3a3a]">
         <h1 className="text-4xl font-bold text-white mb-4">
           اربط نظامك بالبيانات المقدمة من سواعف
         </h1>
@@ -30,12 +37,6 @@ const Dev = () => {
           >
             استعراض المنتجات
           </button>
-          <Link
-            to="/Dev"
-            className="bg-transparent border-2 border-white text-white py-3 px-6 rounded-full hover:bg-white hover:text-gray-800 transition"
-          >
-            ابدأ معنا
-          </Link>
         </div>
       </header>
 
@@ -82,7 +83,6 @@ const Dev = () => {
               هذا الـ API يوفر لك إمكانية عرض كافة الحالات التي تمت معالجتها
               واكتملت بنجاح، مما يسهل تتبع تاريخ الحالات.
             </p>
-
             <button className="bg-gradient-to-r from-red-600 to-red-800 text-white py-2 px-6 rounded-full hover:bg-red-700 transition">
               استعراض API
             </button>
@@ -98,7 +98,6 @@ const Dev = () => {
               هذا الـ API يتيح لك الوصول إلى معلومات المسعفين المتاحة، بما في
               ذلك بياناتهم التفصيلية والموقع الجغرافي لتقديم خدمات طوارئ مخصصة.
             </p>
-
             <button className="bg-gradient-to-r from-red-600 to-red-800 text-white py-2 px-6 rounded-full hover:bg-red-700 transition">
               استعراض API
             </button>
