@@ -9,13 +9,16 @@ function Login() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
+    isApproved: false
+
   });
   const [errorMessage, setErrorMessage] = useState('');
 
   // بيانات الإدمن 
   const adminCredentials = {
     email: 'admin@Swaef.com', 
-    password: 'admin1234', 
+    password: 'admin1234',
+     
   };
 
   const goBack = () => {

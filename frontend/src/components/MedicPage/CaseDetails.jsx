@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import MedicMap from '../components/MedicPage/MedicMap';
+// import MedicMap from '../components/MedicPage/MedicMap';
+import MedicMap from '../../components/MedicPage/MedicMap';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
