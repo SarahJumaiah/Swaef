@@ -38,10 +38,10 @@ const DevNav = ({ scrollToProducts }) => {
 
       <div className="flex-1 text-left">
         <Link
-          to="/Dev"
+          to="/"
           className="bg-gradient-to-r from-red-600 to-red-800 text-white py-2 px-6 rounded-full hover:bg-red-700 transition"
         >
-          انضم لنا
+          سواعف
         </Link>
       </div>
 
