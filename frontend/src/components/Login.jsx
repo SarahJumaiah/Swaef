@@ -33,41 +33,71 @@ function Login() {
     });
   };
 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   // تحقق من بيانات الإدمن
+  //   if (formData.email === adminCredentials.email && formData.password === adminCredentials.password) {
+  //     navigate('/admin');
+  //   } else {
+  //     axios.get('https://6717e676b910c6a6e02a7fd0.mockapi.io/log')
+  //       .then((response) => {
+  //         const users = response.data;
+  //         const user = users.find((user) => user.email === formData.email && user.password === formData.password);
+
+  //         if (user) {
+  //           if (user.isApproved) {  // التحقق من اعتماد المستخدم
+  //             // تخزين معرف المسعف وبياناته في localStorage
+  //             localStorage.setItem('medicId', user.id);
+  //             localStorage.setItem('medicName', user.name);
+  //             localStorage.setItem('medicPhone', user.phone);
+
+  //             // الانتقال إلى صفحة المسعف
+  //             navigate(`/MedicPage/${user.id}`);
+  //           } else {
+  //             // المستخدم لم يعتمد بعد
+  //             setErrorMessage('حسابك قيد المراجعة. انتظر حتى يتم اعتمادك من قبل الأدمن.');
+  //           }
+  //         } else {
+  //           // المستخدم غير موجود أو البيانات غير صحيحة
+  //           setErrorMessage('البريد الإلكتروني أو كلمة المرور غير صحيحة.');
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error('Error fetching users:', error);
+  //         setErrorMessage('حدث خطأ أثناء محاولة تسجيل الدخول.');
+  //       });
+  //   }
+  // };
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // تحقق من بيانات الإدمن
+  
+    // Check for admin login
     if (formData.email === adminCredentials.email && formData.password === adminCredentials.password) {
       navigate('/admin');
     } else {
-      axios.get('https://6717e676b910c6a6e02a7fd0.mockapi.io/log')
+      // Paramedic login
+      axios.post('http://localhost:3024/api/paramedics/login', formData)
         .then((response) => {
-          const users = response.data;
-          const user = users.find((user) => user.email === formData.email && user.password === formData.password);
-
-          if (user) {
-            if (user.isApproved) {  // التحقق من اعتماد المستخدم
-              // تخزين معرف المسعف وبياناته في localStorage
-              localStorage.setItem('medicId', user.id);
-              localStorage.setItem('medicName', user.name);
-              localStorage.setItem('medicPhone', user.phone);
-
-              // الانتقال إلى صفحة المسعف
-              navigate(`/MedicPage/${user.id}`);
-            } else {
-              // المستخدم لم يعتمد بعد
-              setErrorMessage('حسابك قيد المراجعة. انتظر حتى يتم اعتمادك من قبل الأدمن.');
-            }
-          } else {
-            setErrorMessage('البريد الإلكتروني أو كلمة المرور غير صحيحة.');
-          }
+          const { id, name, phone } = response.data;
+  
+          // Save paramedic data to localStorage
+          localStorage.setItem('medicId', id);
+          localStorage.setItem('medicName', name);
+          localStorage.setItem('medicPhone', phone);
+  
+          // Navigate to the medic's page
+          navigate(`/MedicPage/${id}`);
         })
         .catch((error) => {
-          console.error('Error fetching users:', error);
-          setErrorMessage('حدث خطأ أثناء محاولة تسجيل الدخول.');
+          const errorMessage = error.response?.data?.error || 'Error logging in. Please try again.';
+          setErrorMessage(errorMessage);
         });
     }
   };
+  
 
   return (
     <div className="flex items-center justify-center w-full min-h-screen bg-gray-100">

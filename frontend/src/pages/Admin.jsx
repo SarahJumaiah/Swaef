@@ -394,7 +394,9 @@ const Admin = () => {
 
   // Fetch paramedics data from the API
   useEffect(() => {
-    axios.get("https://6717e676b910c6a6e02a7fd0.mockapi.io/log")
+    axios
+      // .get("https://6717e676b910c6a6e02a7fd0.mockapi.io/log")
+      .get("http://localhost:3024/api/paramedics/all")
       .then((response) => {
         setParamedics(response.data);
       })
@@ -440,7 +442,7 @@ const Admin = () => {
     navigate("/");
   };
 
-  const handleAccept = (id) => {
+  const handleAccept = (_id) => {
     Swal.fire({
       title: "هل تريد قبول هذا المسعف؟",
       showCancelButton: true,
@@ -451,12 +453,18 @@ const Admin = () => {
       cancelButtonColor: "#CACACA",
     }).then((result) => {
       if (result.isConfirmed) {
-        // Update the status in the API
-        axios.put(`https://6717e676b910c6a6e02a7fd0.mockapi.io/log/${id}`, { isApproved: true })
+        axios
+          .put(`http://localhost:3024/api/paramedics/approve/${_id}`
+        
+            , {
+            isApproved: true,
+          })
           .then(() => {
             setParamedics((prev) =>
               prev.map((paramedic) =>
-                paramedic.id === id ? { ...paramedic, isApproved: true } : paramedic
+                paramedic._id === _id
+                  ? { ...paramedic, isApproved: true }
+                  : paramedic
               )
             );
             Swal.fire({
@@ -480,7 +488,7 @@ const Admin = () => {
     });
   }, []);
 
-  const handleReject = (id) => {
+  const handleReject = (_id) => {
     Swal.fire({
       title: "هل تريد رفض هذا المسعف؟",
       showCancelButton: true,
@@ -491,10 +499,12 @@ const Admin = () => {
       cancelButtonColor: "#CACACA",
     }).then((result) => {
       if (result.isConfirmed) {
-        // Delete or update the status of the paramedic in the API
-        axios.delete(`https://6717e676b910c6a6e02a7fd0.mockapi.io/log/${id}`)
+        axios
+          .delete(`http://localhost:3024/api/paramedics/delete/${_id}`)
           .then(() => {
-            setParamedics((prev) => prev.filter((paramedic) => paramedic.id !== id));
+            setParamedics((prev) =>
+              prev.filter((paramedic) => paramedic._id !== _id)
+            );
             Swal.fire({
               title: "تم الرفض",
               icon: "error",
@@ -547,7 +557,7 @@ const Admin = () => {
   <ul className="flex flex-col-reverse">
     {paramedics.map((paramedic) => (
       <li
-        key={paramedic.id}
+        key={paramedic._id}
         className="p-4 mb-4 bg-white shadow-md border border-gray-300 rounded-lg transition duration-300 ease-in-out hover:scale-105 flex flex-col lg:flex-row justify-between items-start lg:items-center"
       >
         <div className="mb-4 lg:mb-0">
@@ -567,14 +577,14 @@ const Admin = () => {
           </button>
           {!paramedic.isApproved && (
             <button
-              onClick={() => handleAccept(paramedic.id)}
+              onClick={() => handleAccept(paramedic._id)}
               className="bg-[#ffffffb9] border-2 border-[#cccc] text-black font-medium px-3 py-2 rounded-full hover:bg-[#f1f0f0b9] transition flex justify-center items-center w-auto lg:w-[7vw]"
             >
               <FaCheckCircle className="text-green-500 text-xl" />
             </button>
           )}
           <button
-            onClick={() => handleReject(paramedic.id)}
+            onClick={() => handleReject(paramedic._id)}
             className="bg-[#b02e2e] text-white px-3 py-2 rounded-full hover:bg-[#c43a3a] transition flex justify-center items-center w-auto lg:w-[7vw]"
           >
             <FaTimesCircle className="text-white text-xl" />
