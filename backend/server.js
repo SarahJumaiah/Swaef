@@ -9,8 +9,9 @@ const PORT = process.env.PORT || 5000;
 
 // استخدام CORS للسماح بالطلبات من localhost:5173
 app.use(cors({
-  origin: 'http://localhost:5173'
-}));
+    origin: ['http://localhost:5173', 'http://localhost:5174']
+  }));
+  
 
 // إعدادات Middleware
 app.use(express.json());

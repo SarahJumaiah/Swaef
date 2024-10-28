@@ -5,6 +5,8 @@ import MedicPage from "./pages/MedicPage";
 import CaseDetailsPage from "./pages/CaseDetailsPage";
 import Admin from "./pages/Admin";
 import NotFoundPage from "./pages/NotFoundPage";
+import Dev from "./pages/Dev";
+import Docs from "./pages/DevDocs";
 import Login from "./components/login";
 const router = createBrowserRouter([
   {
@@ -31,6 +33,14 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: <Admin />,
+  },
+  {
+    path: "/Dev",
+    element: <Dev />,
+  },
+  {
+    path: "/Docs",
+    element: <Docs/>,
   },
   {
     path: "*",
