@@ -10,53 +10,56 @@ const CaseDetailsPage = () => {
   const [caseInfo, setCaseInfo] = useState(null);
   const [loading, setLoading] = useState(false); // لتتبع حالة الإكمال
   const navigate = useNavigate(); // للتوجيه إلى MedicPage بعد الإكمال
+  const BASE_URL = import.meta.env.VITE_API_URL;
 
-  useEffect(() => {
-    const fetchCaseDetails = async () => {
-      try {
-        const response = await axios.get(`https://67073bf9a0e04071d2298046.mockapi.io/users/${caseId}`);
-        setCaseInfo(response.data);
-      } catch (error) {
-        console.error("Error fetching case details:", error);
-      }
-    };
-
-    if (caseId) {
-      fetchCaseDetails();
-    }
-  }, [caseId]);
-
-  // دالة إكمال الحالة
-  const handleCompleteCase = async () => {
+// جلب تفاصيل الحالة
+useEffect(() => {
+  const fetchCaseDetails = async () => {
     try {
-      setLoading(true); // بدء حالة التحميل
-      const updatedCase = { ...caseInfo, status: 'تم إكمال الحالة', is_accepted: false };
-
-      // تحديث الحالة في الـ API
-      await axios.put(`https://67073bf9a0e04071d2298046.mockapi.io/users/${caseId}`, updatedCase);
-      
-      // عرض رسالة إكمال وتحويل المستخدم إلى صفحة المسعف باستخدام SweetAlert2
-      Swal.fire({
-        title: 'تم إكمال الحالة بنجاح!',
-        icon: 'success',
-        confirmButtonColor: '#892222',
-        confirmButtonText: 'موافق'
-      }).then(() => {
-        const medicId = localStorage.getItem('medicId');
-        navigate(`/MedicPage/${medicId}`);
-      });
+      const response = await axios.get(`${BASE_URL}/cases/${caseId}`);
+      setCaseInfo(response.data);
     } catch (error) {
-      console.error("Error completing case:", error);
-      Swal.fire({
-        title: 'حدث خطأ!',
-        text: 'يرجى المحاولة مرة أخرى.',
-        icon: 'error',
-        confirmButtonColor: '#892222',
-      });
-    } finally {
-      setLoading(false); // إنهاء حالة التحميل
+      console.error("Error fetching case details:", error);
     }
   };
+
+  if (caseId) {
+    fetchCaseDetails();
+  }
+}, [caseId]);
+
+
+// دالة إكمال الحالة
+const handleCompleteCase = async () => {
+  try {
+    setLoading(true);
+    const updatedCase = { ...caseInfo, status: 'تم إكمال الحالة', is_accepted: false };
+
+    // تحديث الحالة في الـ API
+    await axios.put(`${BASE_URL}/cases/${caseId}`, updatedCase);
+
+    Swal.fire({
+      title: 'تم إكمال الحالة بنجاح!',
+      icon: 'success',
+      confirmButtonColor: '#892222',
+      confirmButtonText: 'موافق'
+    }).then(() => {
+      const medicId = localStorage.getItem('medicId');
+      navigate(`/MedicPage/${medicId}`);
+    });
+  } catch (error) {
+    console.error("Error completing case:", error);
+    Swal.fire({
+      title: 'حدث خطأ!',
+      text: 'يرجى المحاولة مرة أخرى.',
+      icon: 'error',
+      confirmButtonColor: '#892222',
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="flex flex-col lg:flex-row h-auto min-h-screen bg-gray-50 p-8" dir="rtl">

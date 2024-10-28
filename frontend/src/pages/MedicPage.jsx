@@ -10,6 +10,7 @@ import "driver.js/dist/driver.css";
 import "./MedicPage.css";
 
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
+
   const toRad = (value) => (value * Math.PI) / 180;
   const R = 6371;
   const dLat = toRad(lat2 - lat1);
@@ -33,6 +34,7 @@ const MedicPage = () => {
   const navigate = useNavigate();
   const driverRef = useRef(null);
   const [medicName, setMedicName] = useState("");
+  const BASE_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const storedMedicName = localStorage.getItem("medicName");
@@ -152,105 +154,112 @@ const MedicPage = () => {
     });
   }, []);
 
+
   useEffect(() => {
     const fetchCases = async () => {
       try {
-        const response = await axios.get(
-          "https://67073bf9a0e04071d2298046.mockapi.io/users"
-        );
+        // استدعاء الباك إند لجلب جميع الحالات
+        const response = await axios.get(`${BASE_URL}/cases`);
         setCases(response.data);
       } catch (error) {
         console.error("Error fetching cases:", error);
       }
     };
-
+  
     fetchCases();
-    const intervalId = setInterval(fetchCases, 10000);
+    
+    // تحديث قائمة الحالات كل 10 ثوانٍ
+    const intervalId = setInterval(fetchCases, 5000);
     return () => clearInterval(intervalId);
   }, []);
+  
 
-  const handleCaseAccept = async (caseItem) => {
-    const medicName = localStorage.getItem("medicName");
-    const medicPhone = localStorage.getItem("medicPhone");
+// قبول الحالة
+const handleCaseAccept = async (caseItem) => {
+  const medicName = localStorage.getItem("medicName");
+  const medicPhone = localStorage.getItem("medicPhone");
 
-    const activeCase = cases.find((c) => c.is_accepted);
-    if (activeCase) {
-      Swal.fire({
-        title: "لا يمكنك قبول حالة جديدة حتى تنهي الحالة الحالية.",
-        icon: "error",
-        confirmButtonColor: "#ab1c1c",
+  const activeCase = cases.find((c) => c.is_accepted);
+  if (activeCase) {
+    Swal.fire({
+      title: "لا يمكنك قبول حالة جديدة حتى تنهي الحالة الحالية.",
+      icon: "error",
+      confirmButtonColor: "#ab1c1c",
+    });
+    return;
+  }
+
+  const updatedCase = {
+    ...caseItem,
+    is_accepted: true,
+    status: "تم قبول الحالة",
+    assigned_responder: {
+      name: medicName,
+      phone: medicPhone,
+    },
+  };
+
+  try {
+    console.log("Case ID:", caseItem._id); // تحقق من المعرف
+    await axios.put(`${BASE_URL}/cases/${caseItem._id}`, updatedCase); // استخدم _id إذا كانت قاعدة بياناتك MongoDB
+    setCases((prevCases) =>
+      prevCases.map((c) => (c._id === caseItem._id ? updatedCase : c))
+    );
+    navigate(`/CaseDetailsPage/${caseItem._id}`);
+  } catch (error) {
+    console.error("Error accepting case:", error.response?.data || error.message);
+  }
+};
+
+
+// رفض الحالة
+const handleCaseReject = async (caseItem) => {
+  Swal.fire({
+    title: "هل تريد رفض هذه الحالة؟",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#6c1111",
+    cancelButtonColor: "#b02e2e",
+    cancelButtonText: "إلغاء",
+    confirmButtonText: "نعم، رفض",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      await axios.put(`${BASE_URL}/cases/${caseItem.id}`, {
+        status: "تم رفض الحالة",
+        assigned_responder: null,
       });
-      return;
+      setCases((prevCases) => prevCases.filter((c) => c.id !== caseItem.id));
+      Swal.fire({
+        title: "تم رفض الحالة!",
+        icon: "success",
+        confirmButtonColor: "#892222",
+      });
     }
+  });
+};
 
+
+const handleCaseComplete = async (caseItem) => {
+  try {
     const updatedCase = {
       ...caseItem,
-      is_accepted: true,
-      status: "تم قبول الحالة",
-      assigned_responder: {
-        name: medicName,
-        phone: medicPhone,
-      },
+      status: "تم إكمال الحالة",
+      is_accepted: false,
     };
+    
+    // تحديث الحالة في الـ API المحلي
+    await axios.put(
+      `${BASE_URL}/cases/${caseItem.id}`,
+      updatedCase
+    );
 
-    try {
-      await axios.put(
-        `https://67073bf9a0e04071d2298046.mockapi.io/users/${caseItem.id}`,
-        updatedCase
-      );
-      setCases((prevCases) =>
-        prevCases.map((c) => (c.id === caseItem.id ? updatedCase : c))
-      );
-      navigate(`/CaseDetailsPage/${caseItem.id}`);
-    } catch (error) {
-      console.error("Error accepting case:", error);
-    }
-  };
+    // إزالة الحالة المكتملة من القائمة المحلية
+    setCases((prevCases) => prevCases.filter((c) => c.id !== caseItem.id));
+  } catch (error) {
+    console.error("Error completing case:", error);
+  }
+};
 
-  const handleCaseReject = async (caseItem) => {
-    Swal.fire({
-      title: "هل تريد رفض هذه الحالة؟",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#6c1111",
-      cancelButtonColor: "#b02e2e",
-      cancelButtonText: "إلغاء",
-      confirmButtonText: "نعم، رفض",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await axios.put(
-          `https://67073bf9a0e04071d2298046.mockapi.io/users/${caseItem.id}`,
-          {
-            status: "تم رفض الحالة",
-            assigned_responder: null,
-          }
-        );
-        setCases((prevCases) => prevCases.filter((c) => c.id !== caseItem.id));
-        Swal.fire({
-          title: "تم رفض الحالة!",
-          icon: "success",
-          confirmButtonColor: "#892222",
-        });
-      }
-    });
-  };
-
-  const handleCaseComplete = async (caseItem) => {
-    try {
-      const updatedCase = {
-        ...caseItem,
-        status: "تم إكمال الحالة",
-        is_accepted: false,
-      };
-      await axios.put(
-        `https://67073bf9a0e04071d2298046.mockapi.io/users/${caseItem.id}`,
-        updatedCase
-      );
-      setCases((prevCases) => prevCases.filter((c) => c.id !== caseItem.id));
-    } catch (error) {
-      console.error("Error completing case:", error);
-    }
-  };
 
   const renderContent = () => {
     switch (selectedSection) {
