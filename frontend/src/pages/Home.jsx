@@ -21,9 +21,6 @@ const Home = () => {
   const vision = useRef(null);
   const contactRef = useRef(null);
   const BASE_URL = import.meta.env.VITE_API_URL;
-  console.log("Environment Variables:", import.meta.env);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOrderSent, setIsOrderSent] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -35,7 +32,29 @@ const Home = () => {
   const [location, setLocation] = useState(null);
   const [isAccepted, setIsAccepted] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [userRating, setUserRating] = useState(0); // لحفظ التقييم الحالي
+  const [hoverRating, setHoverRating] = useState(0); // لحفظ التقييم عند تمرير المؤشر فوق النجوم
+  const [isSubmitted, setIsSubmitted] = useState(false); // لتحديد ما إذا كان التقييم قد أُرسل
+  const [isModalOpen, setIsModalOpen] = useState(false); // لفتح أو إغلاق البوب آب
 
+  // دالة لإغلاق البوب بعد 30 ثانية
+  useEffect(() => {
+    if (isSubmitted) {
+      const timer = setTimeout(() => {
+        setIsModalOpen(false);
+      }, 15000); 
+
+      return () => clearTimeout(timer); // تنظيف التايمر
+    }
+  }, [isSubmitted]);
+
+  // عند الضغط على زر "إرسال التقييم"
+  const handleSubmit = () => {
+    setIsSubmitted(true);
+    setTimeout(() => {
+      setIsSubmitted(false); // إعادة تعيين الحالة بعد ظهور الرسالة
+    }, 3000); // رسالة الشكر تظهر لمدة 3 ثوانٍ
+  };
   const statuses = ["كسور", "حروق", "اغماء", "اختناق"];
 
   // تحديد الموقع باستخدام المتصفح
@@ -328,101 +347,159 @@ useEffect(() => {
                   ملخص الحالة:
                 </h3>
 
-                {/* عرض نوع الحالة وصاحب البلاغ فقط إذا لم يتم قبول المسعف بعد */}
-                {!isAccepted && (
-                  <>
-                    <div className="mb-4 p-4 bg-gray-100 rounded-lg shadow-md flex items-center">
-                      <i
-                        className={`text-xl text-[#ab1c1c] ml-3 ${
-                          acceptedCase?.case_type === "كسور"
-                            ? "fas fa-bone"
-                            : acceptedCase?.case_type === "حروق"
-                            ? "fas fa-fire"
-                            : acceptedCase?.case_type === "إغماء"
-                            ? "fas fa-dizzy"
-                            : acceptedCase?.case_type === "اختناق"
-                            ? "fas fa-wind"
-                            : "fas fa-info-circle"
-                        }`}
-                      ></i>{" "}
-                      <div>
-                        <p className="text-lg font-semibold text-gray-600">
-                          <strong>نوع الحالة:</strong> {acceptedCase?.case_type}
-                        </p>
-                      </div>
-                    </div>
+{/* عرض نوع الحالة وصاحب البلاغ فقط إذا لم يتم قبول المسعف بعد */}
+{!isAccepted && (
+  <>
+    <div className="mb-4 p-4 bg-gray-100 rounded-lg shadow-md flex items-center">
+      <i
+        className={`text-xl text-[#ab1c1c] ml-3 ${
+          acceptedCase?.case_type === "كسور"
+            ? "fas fa-bone"
+            : acceptedCase?.case_type === "حروق"
+            ? "fas fa-fire"
+            : acceptedCase?.case_type === "إغماء"
+            ? "fas fa-dizzy"
+            : acceptedCase?.case_type === "اختناق"
+            ? "fas fa-wind"
+            : "fas fa-info-circle"
+        }`}
+      ></i>{" "}
+      <div>
+        <p className="text-lg font-semibold text-gray-600">
+          <strong>نوع الحالة:</strong> {acceptedCase?.case_type}
+        </p>
+      </div>
+    </div>
 
-                    <div className="mb-4 p-4 bg-gray-100 rounded-lg shadow-md flex items-center">
-                      <i className="fas fa-user text-xl text-[#ab1c1c] ml-3"></i>
-                      <div>
-                        <p className="text-lg font-semibold text-gray-600">
-                          <strong>صاحب البلاغ:</strong>{" "}
-                          {acceptedCase?.patient?.name}
-                        </p>
-                      </div>
-                    </div>
+    <div className="mb-4 p-4 bg-gray-100 rounded-lg shadow-md flex items-center">
+      <i className="fas fa-user text-xl text-[#ab1c1c] ml-3"></i>
+      <div>
+        <p className="text-lg font-semibold text-gray-600">
+          <strong>صاحب البلاغ:</strong>{" "}
+          {acceptedCase?.patient?.name}
+        </p>
+      </div>
+    </div>
 
-                    <div className="p-4 bg-gray-100 rounded-lg shadow-md flex items-center">
-                      <i className="fas fa-phone-alt text-xl text-[#ab1c1c] ml-3"></i>
-                      <div>
-                        <p className="text-lg font-semibold text-gray-600">
-                          <strong>رقم الهاتف:</strong>{" "}
-                          {acceptedCase?.patient?.phone}
-                        </p>
-                      </div>
-                    </div>
-                  </>
-                )}
+    <div className="p-4 bg-gray-100 rounded-lg shadow-md flex items-center">
+      <i className="fas fa-phone-alt text-xl text-[#ab1c1c] ml-3"></i>
+      <div>
+        <p className="text-lg font-semibold text-gray-600">
+          <strong>رقم الهاتف:</strong>{" "}
+          {acceptedCase?.patient?.phone}
+        </p>
+      </div>
+    </div>
+  </>
+)}
 
-                {/* معلومات المسعف تظهر فقط في حال القبول */}
-                {isAccepted && acceptedCase?.assigned_responder ? (
-                  <>
-                    {/* حالة القبول */}
+{/* معلومات المسعف تظهر فقط في حال القبول */}
+{/* معلومات المسعف تظهر فقط في حال القبول وغير مكتملة */} 
+{isAccepted && acceptedCase?.assigned_responder && acceptedCase?.status !== "تم إكمال الحالة" ? (
+  <>
+    {/* حالة القبول */}
 
-                    {/* معلومات المسعف */}
-                    <div className="p-4 bg-gray-50 rounded-lg shadow-md flex flex-col items-center mb-4">
-                      <div className="text-center">
-                        <p className="text-lg text-[#ab1c1c] font-semibold">
-                          <i className="fas fa-user-md mr-2"></i> اسم المسعف
-                        </p>
-                        <p className="text-gray-800 font-medium">
-                          {acceptedCase.assigned_responder.name}
-                        </p>
-                      </div>
-                      <div className="text-center mt-3">
-                        <p className="text-lg text-[#ab1c1c] font-semibold">
-                          <i className="fas fa-phone-alt mr-2"></i> رقم الهاتف
-                        </p>
-                        <p className="text-gray-800 font-medium">
-                          {acceptedCase.assigned_responder.phone}
-                        </p>
-                      </div>
-                    </div>
-                    <p className="text-lg text-gray-600 text-center">
-                      <strong className="text-sm">حالة القبول:</strong>
-                      <br />
-                      "المسعف في الطريق اليك حالا!"
-                    </p>
+    {/* معلومات المسعف */}
+    <div className="p-4 bg-gray-50 rounded-lg shadow-md flex flex-col items-center mb-4">
+      <div className="text-center">
+        <p className="text-lg text-[#ab1c1c] font-semibold">
+          <i className="fas fa-user-md mr-2"></i> اسم المسعف
+        </p>
+        <p className="text-gray-800 font-medium">
+          {acceptedCase.assigned_responder.name}
+        </p>
+      </div>
+      <div className="text-center mt-3">
+        <p className="text-lg text-[#ab1c1c] font-semibold">
+          <i className="fas fa-phone-alt mr-2"></i> رقم الهاتف
+        </p>
+        <p className="text-gray-800 font-medium">
+          {acceptedCase.assigned_responder.phone}
+        </p>
+      </div>
+    </div>
+    <p className="text-lg text-gray-600 text-center">
+      <strong className="text-sm">حالة القبول:</strong>
+      <br />
+      "المسعف في الطريق اليك حالا!"
+    </p>
 
-                    {/* الوقت المتوقع للوصول */}
-                    <div className="p-4 bg-red-50 rounded-lg shadow-md text-center">
-                      <p className="text-lg text-[#ab1c1c] font-bold">
-                        <i className="far fa-clock mr-2"></i> الوقت المتوقع
-                        للوصول:
-                      </p>
-                      <p className="text-gray-700 font-medium">حوالي دقيقة</p>
-                    </div>
-                  </>
-                ) : (
-                  <p className="text-lg text-gray-600 text-center">
-                    <strong className="text-sm">حالة القبول:</strong>
-                    <br />
-                    <div className="flex justify-center mt-4">
-                      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#ab1c1c]"></div>
-                    </div>
-                    "جاري البحث عن أقرب مسعف لك، تطمن!"
-                  </p>
-                )}
+    {/* الوقت المتوقع للوصول */}
+    <div className="p-4 bg-red-50 rounded-lg shadow-md text-center">
+      <p className="text-lg text-[#ab1c1c] font-bold">
+        <i className="far fa-clock mr-2"></i> الوقت المتوقع للوصول:
+      </p>
+      <p className="text-gray-700 font-medium">حوالي دقيقة</p>
+    </div>
+  </>
+) : acceptedCase?.status === "تم إكمال الحالة" ? (
+  <div className="text-center p-6 rounded-lg mt-6 animate__animated animate__fadeIn">
+    {/* أيقونة "صح" متحركة تشير إلى اكتمال الحالة */}
+    <div className="flex justify-center items-center mb-4">
+      <div className="bg-green-500 rounded-full p-4 animate__animated animate__bounceIn">
+        <i className="fas fa-check text-white text-4xl"></i>
+      </div>
+    </div>
+
+    {/* العبارة */}
+    <h2 className="text-3xl font-bold text-green-600 mb-2 animate__animated animate__fadeInUp">
+      الحمدلله على السلامة!
+    </h2>
+    <p className="text-gray-600 mb-4 animate__animated animate__fadeInUp">
+      يمكنك تقييم المسعف أدناه:
+    </p>
+
+    {/* نجوم التقييم */}
+    <div className="flex justify-center mb-4 animate__animated animate__bounceIn">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <i
+          key={star}
+          className={`cursor-pointer text-3xl transition-transform duration-200 ${
+            star <= (hoverRating || userRating)
+              ? "fas fa-star text-yellow-400 animate__animated animate__pulse"
+              : "far fa-star text-gray-300"
+          }`}
+          onClick={() => setUserRating(star)}
+          onMouseEnter={() => setHoverRating(star)}
+          onMouseLeave={() => setHoverRating(0)}
+        ></i>
+      ))}
+    </div>
+
+    {/* زر إرسال التقييم */}
+    <button
+      className="py-2 px-4 bg-[#ab1c1c] text-white font-bold rounded-full animate__animated animate__fadeInUp"
+      onClick={() => {
+        setIsSubmitted(true); // عرض رسالة الشكر
+        setTimeout(() => {
+          setIsModalOpen(false); // إغلاق البوب بعد فترة
+        }, 3000); // إغلاق البوب بعد 3 ثوانٍ
+      }}
+    >
+      إرسال التقييم
+    </button>
+
+    {/* رسالة الشكر بعد إرسال التقييم */}
+    {isSubmitted && (
+      <p className="text-green-500 mt-4 animate__animated animate__fadeIn">
+        شكرًا على تقييمك!
+      </p>
+    )}
+  </div>
+) : (
+  <p className="text-lg text-gray-600 text-center">
+    <strong className="text-sm">حالة القبول:</strong>
+    <br />
+    <div className="flex justify-center mt-4">
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#ab1c1c]"></div>
+    </div>
+    "جاري البحث عن أقرب مسعف لك، تطمن!"
+  </p>
+)}
+
+
+
+
               </div>
             )}
           </div>
