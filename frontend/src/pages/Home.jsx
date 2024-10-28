@@ -20,6 +20,8 @@ const Home = () => {
   const joinRef = useRef(null);
   const vision = useRef(null);
   const contactRef = useRef(null);
+  const BASE_URL = import.meta.env.VITE_API_URL;
+  console.log("Environment Variables:", import.meta.env);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOrderSent, setIsOrderSent] = useState(false);
@@ -77,97 +79,88 @@ const Home = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // إرسال الحالة
-  // إرسال الحالة
-  const handleSend = async () => {
-    if (!formData.name || !formData.phone || !formData.status) {
-      setErrorMessage("يرجى ملء جميع الحقول المطلوبة.");
-      return;
+// إرسال الحالة
+const handleSend = async () => {
+  if (!formData.name || !formData.phone || !formData.status) {
+    setErrorMessage("يرجى ملء جميع الحقول المطلوبة.");
+    return;
+  }
+
+  if (!location) {
+    Swal.fire({
+      icon: "error",
+      title: "خطأ",
+      text: "يرجى تحديد موقعك أولاً.",
+      confirmButtonText: "حسنًا",
+      confirmButtonColor: "#ab1c1c",
+    });
+    return;
+  }
+
+  setLoading(true);
+  setErrorMessage("");
+
+  const newCase = {
+    case_id: Date.now(),
+    case_type: formData.status,
+    location: location,
+    assigned_responder: null,
+    status: "الحالة معلقة حتى يتم قبولها",
+    patient: {
+      name: formData.name,
+      phone: formData.phone,
+    },
+    is_accepted: false,
+  };
+
+  try {
+    await axios.post(`${BASE_URL}/cases`, newCase);
+    setIsOrderSent(true);
+
+    const response = await axios.get(`${BASE_URL}/cases`);
+    const lastCase = response.data[response.data.length - 1];
+    setAcceptedCase(lastCase);
+    if (lastCase.is_accepted) {
+      setIsAccepted(true);
     }
+  } catch (error) {
+    console.error("Error sending case:", error);
+    Swal.fire({
+      icon: "error",
+      title: "خطأ",
+      text: "حدث خطأ أثناء إرسال الطلب. حاول مرة أخرى لاحقًا.",
+      confirmButtonText: "حسنًا",
+      confirmButtonColor: "#ab1c1c",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
-    if (!location) {
-      Swal.fire({
-        icon: "error",
-        title: "خطأ",
-        text: "يرجى تحديد موقعك أولاً.",
-        confirmButtonText: "حسنًا",
-        confirmButtonColor: "#ab1c1c",
-      });
-      return;
-    }
 
-    // تعيين حالة التحميل إلى true عند بدء الإرسال
-    setLoading(true);
-    setErrorMessage("");
+  // إزالة جلب الحالة بشكل دوري، والاعتماد على جلب البيانات مرة واحدة بعد الإرسال
 
-    const newCase = {
-      case_id: Date.now(),
-      case_type: formData.status,
-      location: location,
-      assigned_responder: null,
-      status: "الحالة معلقة حتى يتم قبولها",
-      patient: {
-        name: formData.name,
-        phone: formData.phone,
-      },
-      is_accepted: false,
-    };
-
+// جلب الحالة بشكل دوري للتحقق من حالة القبول
+useEffect(() => {
+  const fetchCaseStatus = async () => {
     try {
-      await axios.post(
-        "https://67073bf9a0e04071d2298046.mockapi.io/users",
-        newCase
-      );
-      setIsOrderSent(true);
-
-      // جلب الحالة مباشرة بعد الإرسال
-      const response = await axios.get(
-        "https://67073bf9a0e04071d2298046.mockapi.io/users"
-      );
+      const response = await axios.get(`${BASE_URL}/cases`);
       const lastCase = response.data[response.data.length - 1];
       setAcceptedCase(lastCase);
       if (lastCase.is_accepted) {
         setIsAccepted(true);
       }
     } catch (error) {
-      console.error("Error sending case:", error);
-      Swal.fire({
-        icon: "error",
-        title: "خطأ",
-        text: "حدث خطأ أثناء إرسال الطلب. حاول مرة أخرى لاحقًا.",
-        confirmButtonText: "حسنًا",
-        confirmButtonColor: "#ab1c1c",
-      });
-    } finally {
-      // تعيين حالة التحميل إلى false بعد إتمام الإرسال
-      setLoading(false);
+      console.error("Error fetching cases:", error);
     }
   };
 
-  // إزالة جلب الحالة بشكل دوري، والاعتماد على جلب البيانات مرة واحدة بعد الإرسال
+  if (isOrderSent) {
+    const intervalId = setInterval(fetchCaseStatus, 5000);
+    return () => clearInterval(intervalId);
+  }
+}, [isOrderSent]);
 
-  // جلب الحالة بشكل دوري
-  useEffect(() => {
-    const fetchCaseStatus = async () => {
-      try {
-        const response = await axios.get(
-          "https://67073bf9a0e04071d2298046.mockapi.io/users"
-        );
-        const lastCase = response.data[response.data.length - 1];
-        setAcceptedCase(lastCase);
-        if (lastCase.is_accepted) {
-          setIsAccepted(true);
-        }
-      } catch (error) {
-        console.error("Error fetching cases:", error);
-      }
-    };
-
-    if (isOrderSent) {
-      const intervalId = setInterval(fetchCaseStatus, 3000);
-      return () => clearInterval(intervalId);
-    }
-  }, [isOrderSent]);
 
   const scrollToSection = (section) => {
     let sectionRef;

@@ -14,13 +14,15 @@ const MedicMap = ({ caseId }) => {
   const [caseLocation, setCaseLocation] = useState(null); // سيتم جلب موقع الحالة من API
   const [estimatedTime, setEstimatedTime] = useState(''); // لتخزين المدة الزمنية المقدرة
   const [isLoading, setIsLoading] = useState(true); // حالة البحث (جاري البحث)
+  const BASE_URL = import.meta.env.VITE_API_URL;
 
-  // جلب موقع الحالة من API
   useEffect(() => {
     const fetchCaseLocation = async () => {
       try {
-        const response = await axios.get(`https://67073bf9a0e04071d2298046.mockapi.io/users/${caseId}`);
+        // استدعاء الباك إند لجلب بيانات الحالة
+        const response = await axios.get(`${BASE_URL}/cases/${caseId}`);
         const caseData = response.data;
+  
         if (caseData.location) {
           const { latitude, longitude } = caseData.location;
           setCaseLocation([longitude, latitude]);
@@ -31,12 +33,12 @@ const MedicMap = ({ caseId }) => {
         setIsLoading(true);
       }
     };
-
+  
     if (caseId) {
       fetchCaseLocation();
     }
   }, [caseId]);
-
+  
   // تتبع موقع المسعف باستخدام Geolocation API
   useEffect(() => {
     if ('geolocation' in navigator) {
@@ -139,3 +141,6 @@ const MedicMap = ({ caseId }) => {
 };
 
 export default MedicMap;
+
+
+
