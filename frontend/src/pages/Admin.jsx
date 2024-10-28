@@ -615,6 +615,35 @@ const Admin = () => {
           <p>
   <strong>رقم الجوال:</strong> {selectedParamedic.phone || "غير متوفر"}
 </p>
+<p >
+  <strong>المؤهلات:</strong> 
+  {selectedParamedic.pdfFile ? (
+    <a 
+      href={`http://localhost:3024/${selectedParamedic.pdfFile}`} 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      className="text-[#ab1c1c] underline"
+    >
+     
+
+      عرض المؤهلات الصحية
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth="2"
+        stroke="currentColor"
+        className="w-5 h-5 mr-2 inline"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12H9m4-8H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-7m-5-5l6 6" />
+      </svg>
+   
+    </a>
+    
+  ) : (
+    "غير متوفر"
+  )}
+</p>
           <button
             onClick={handleCloseModal}
             className="bg-[#892222] text-white px-4 py-2 rounded mt-4 "
