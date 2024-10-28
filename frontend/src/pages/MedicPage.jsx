@@ -56,6 +56,7 @@ const MedicPage = () => {
   const [savedCases, setSavedCases] = useState(0);
   const [rejectedCases, setRejectedCases] = useState(0);
   const [volunteerHours, setVolunteerHours] = useState(0);
+  const BASE_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const storedMedicName = localStorage.getItem("medicName");
