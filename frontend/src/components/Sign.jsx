@@ -195,6 +195,20 @@ function Sign() {
             }}
           />
         </div>
+        <div className="">
+  <label className="flex items-center p-3 text-gray-700 text-right text-xs">
+    <input
+      type="checkbox"
+      onChange={handleChange}
+      required
+      className="ml-2 w-4 h-4 border-2 border-[#ab1c1c] rounded-md text-[#ab1c1c] focus:outline-none focus:ring-2 focus:ring-[#ab1c1c]"
+    />
+    <span className="leading-5">
+      أقر بأنني أتحمل المسؤولية الكاملة وألتزم بتقديم الإسعافات الأولية وأوافق على استقبال إشعارات الحالات الطارئة القريبة مني.
+    </span>
+  </label>
+</div>
+
 
         {errorMessage && (
           <div className="text-red-500 text-center mt-4">{errorMessage}</div>
