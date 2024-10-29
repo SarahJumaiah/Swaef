@@ -122,7 +122,7 @@ function Login() {
             <div className="text-red-500 text-center">{errorMessage}</div>
           )}
           <form className="rtl space-y-4" onSubmit={handleSubmit}>
-            <div className="border-b-2 border-[#ab1c1c]">
+            <div className="border-b border-[#ab1c1c]">
               <input
                 type="email"
                 id="email"
@@ -135,7 +135,7 @@ function Login() {
               />
             </div>
 
-            <div className="border-b-2 border-[#ab1c1c]">
+            <div className="border-b border-[#ab1c1c]">
               <input
                 type="password"
                 id="password"
@@ -148,17 +148,19 @@ function Login() {
               />
             </div>
 
-            <div className="mt-6">
+
+            <div className="mt-10">
               <button
                 type="submit"
                 className="w-full py-3 bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] text-white font-bold rounded-full shadow-lg hover:bg-[#961a1a] focus:outline-none transition-all duration-300"
+                style={{ position: "relative", top: "10px" }}
               >
-                تسجيل
+                دخول
               </button>
             </div>
           </form>
 
-          <div className="mt-4 text-sm text-center">
+          <div className="mt-4 text-sm text-center" style={{ position: "relative", top: "5px" }}          >
             <p className="text-gray-600">ليس لديك حساب؟
               <Link to="/sign" className="text-[#ab1c1c] hover:underline"> تسجيل</Link>
             </p>

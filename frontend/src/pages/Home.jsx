@@ -5,7 +5,7 @@ import img1 from "../assets/rb_63409.png";
 import img2 from "../assets/rb_63411.png";
 import img3 from "../assets/rb.png";
 import img4 from "../assets/paramedic.png";
-
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -14,7 +14,9 @@ import { v4 as uuidv4 } from "uuid";
 import Swal from "sweetalert2";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 
+
 const Home = () => {
+  const navigate = useNavigate();
   const aboutRef = useRef(null);
   const whySwa3efRef = useRef(null);
   const joinRef = useRef(null);
@@ -245,7 +247,7 @@ useEffect(() => {
 
   return (
     <div>
-      <header className="h-screen lg:h-[79vh] relative p-8 text-center bg-white text-gray-800 flex flex-col justify-center items-center overflow-hidden header">
+      <header className="h-screen lg:h-[70vh] relative p-8 text-center bg-white text-gray-800 flex flex-col justify-center items-center overflow-hidden header">
         <div className="relative z-10 mx-auto">
           <h1 className="text-4xl mb-16 leading-tight drop-shadow-lg headertxt">
             نحن هنا لمساعدتك في حالات
@@ -433,16 +435,17 @@ useEffect(() => {
     </div>
   </>
 ) : acceptedCase?.status === "تم إكمال الحالة" ? (
-  <div className="text-center p-6 rounded-lg mt-6 animate__animated animate__fadeIn">
+  // التقييم
+  <div className="text-center p-6 rounded-lg animate__animated animate__fadeIn">
     {/* أيقونة "صح" متحركة تشير إلى اكتمال الحالة */}
     <div className="flex justify-center items-center mb-4">
-      <div className="bg-green-500 rounded-full p-4 animate__animated animate__bounceIn">
+      <div className="bg-green-800 rounded-full p-4 animate__animated animate__bounceIn">
         <i className="fas fa-check text-white text-4xl"></i>
       </div>
     </div>
 
     {/* العبارة */}
-    <h2 className="text-3xl font-bold text-green-600 mb-2 animate__animated animate__fadeInUp">
+    <h2 className="text-3xl font-bold text-gray-900 mb-2 animate__animated animate__fadeInUp">
       الحمدلله على السلامة!
     </h2>
     <p className="text-gray-600 mb-4 animate__animated animate__fadeInUp">
@@ -456,7 +459,7 @@ useEffect(() => {
           key={star}
           className={`cursor-pointer text-3xl transition-transform duration-200 ${
             star <= (hoverRating || userRating)
-              ? "fas fa-star text-yellow-400 animate__animated animate__pulse"
+              ? "fas fa-star text-yellow-500 animate__animated animate__pulse"
               : "far fa-star text-gray-300"
           }`}
           onClick={() => setUserRating(star)}
@@ -480,11 +483,12 @@ useEffect(() => {
     </button>
 
     {isSubmitted && (
-      <p className="text-green-500 mt-4 animate__animated animate__fadeIn">
+      <p className="text-green-800 mt-4 animate__animated animate__fadeIn">
         شكرًا على تقييمك!
       </p>
     )}
   </div>
+  // التقييم
 ) : (
   <p className="text-lg text-gray-600 text-center">
     <strong className="text-sm">حالة القبول:</strong>
@@ -755,6 +759,15 @@ useEffect(() => {
           </p>
         </div>
 
+<div className="mb-5">
+        <h3 className="text-xl text-[#ab1c1c] font-bold mb-4 text-center">بوابة المطورين</h3>
+  <p className="text-gray-800 text-lg leading-relaxed mb-4 w-[65%] mx-auto text-center">
+    يمكنك الوصول إلى "بوابة المطورين" التي تحتوي على   (APIs) الخاصة بنا. لمزيد من المعلومات أو البدء، يمكنك زيارة
+    <Link to="/dev" className="text-[#ab1c1c] font-bold cursor-pointer hover:underline mr-1" >
+      بوابة المطورين
+    </Link>
+  </p>
+  </div>
         <h3 className="text-xl text-[#ab1c1c] font-bold mb-4 ">فريق الدعم</h3>
 
         <div className="flex flex-wrap justify-center gap-8 p-6 bg-gray-100">

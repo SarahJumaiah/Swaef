@@ -418,7 +418,7 @@ const Admin = () => {
     datasets: [
       {
         data: [acceptedParamedics, pendingParamedics],
-        backgroundColor: ["#6c1111", "#910210"],
+        backgroundColor: ["#22c569", "#5d83f6"],
         borderColor: ["#fff"],
         borderWidth: 2,
       },
@@ -531,20 +531,20 @@ const Admin = () => {
   const renderSummaryCards = () => (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
       <div className="p-6 rounded-lg text-center bg-white shadow-md border border-gray-300 transition duration-300 ease-in-out hover:scale-105">
-        <h3 className="text-lg font-bold text-[#b51c1c]">إجمالي المسعفين</h3>
-        <p className="text-4xl font-bold text-[#b51c1c]">{totalParamedics}</p>
+        <h3 className="text-lg font-bold text-gray-900">إجمالي المسعفين</h3>
+        <p className="text-4xl font-bold text-gray-800">{totalParamedics}</p>
       </div>
       <div className="p-6 rounded-lg text-center bg-white shadow-md border border-gray-300 transition duration-300 ease-in-out hover:scale-105">
-        <h3 className="text-lg font-bold text-[#b51c1c]">المسعفين المقبولين</h3>
-        <p className="text-4xl font-bold text-[#b51c1c]">
+        <h3 className="text-lg font-bold text-gray-900">المسعفين المقبولين</h3>
+        <p className="text-4xl font-bold text-[#22c569]">
           {acceptedParamedics}
         </p>
       </div>
       <div className="p-6 rounded-lg text-center bg-white shadow-md border border-gray-300 transition duration-300 ease-in-out hover:scale-105">
-        <h3 className="text-lg font-bold text-[#b51c1c]">
+        <h3 className="text-lg font-bold text-gray-900">
           المسعفين في الانتظار
         </h3>
-        <p className="text-4xl font-bold text-[#b51c1c]">{pendingParamedics}</p>
+        <p className="text-4xl font-bold text-[#5d83f6]">{pendingParamedics}</p>
       </div>
     </div>
   );

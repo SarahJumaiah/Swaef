@@ -116,7 +116,7 @@ function Sign() {
         </div>
         <div className="md:w-1/2 bg-white shadow-lg rounded-xl p-6 space-y-6">
       <form className="rtl space-y-4" onSubmit={handleSubmit}>
-        <div className="border-b-2 border-[#ab1c1c]">
+        <div className="border-b border-[#ab1c1c]">
           <input
             type="text"
             id="name"
@@ -129,7 +129,7 @@ function Sign() {
           />
         </div>
 
-        <div className="border-b-2 border-[#ab1c1c]">
+        <div className="border-b border-[#ab1c1c]">
           <input
             type="email"
             id="email"
@@ -142,7 +142,7 @@ function Sign() {
           />
         </div>
 
-        <div className="border-b-2 border-[#ab1c1c]">
+        <div className="border-b border-[#ab1c1c]">
           <input
             type="password"
             id="password"
@@ -155,7 +155,7 @@ function Sign() {
           />
         </div>
 
-        <div className="border-b-2 border-[#ab1c1c]">
+        <div className="border-b border-[#ab1c1c]">
           <input
             type="tel"
             id="phone"
@@ -171,12 +171,12 @@ function Sign() {
         <div>
           <label
             htmlFor="file-upload"
-            className="w-full cursor-pointer p-3 border-b-2 border-[#ab1c1c] bg-transparent text-gray-700 flex justify-between items-center"
+            className="w-full cursor-pointer p-3 border-b border-[#ab1c1c] bg-transparent text-gray-700 flex justify-between items-center"
           >
             <span id="file-label" className="text-gray-400">
               ارقق شهادتك الصحية
             </span>
-            <span className="bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] text-white px-4 py-2 rounded-full hover:bg-opacity-90 transition duration-300">
+            <span className="bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] text-white px-3 py-1 rounded-full hover:bg-opacity-90 transition duration-300">
               اختر ملف
             </span>
           </label>

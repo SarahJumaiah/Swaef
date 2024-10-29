@@ -8,25 +8,17 @@ import ScrollReveal from "scrollreveal";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import "./MedicPage.css";
-import { Bar } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  BarElement,
-  Title,
+  ArcElement,
   Tooltip,
   Legend,
 } from "chart.js";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, ArcElement, Tooltip, Legend);
 
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
 
@@ -209,39 +201,50 @@ const MedicPage = () => {
 
 // قبول الحالة
 const handleCaseAccept = async (caseItem) => {
-  const medicName = localStorage.getItem("medicName");
-  const medicPhone = localStorage.getItem("medicPhone");
+  Swal.fire({
+    title: "هل تريد قبول هذه الحالة؟",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#6c1111",
+    cancelButtonColor: "#b02e2e",
+    cancelButtonText: "إلغاء",
+    confirmButtonText: "نعم، قبول",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      const medicName = localStorage.getItem("medicName");
+      const medicPhone = localStorage.getItem("medicPhone");
 
-  const activeCase = cases.find((c) => c.is_accepted);
-  if (activeCase) {
-    Swal.fire({
-      title: "لا يمكنك قبول حالة جديدة حتى تنهي الحالة الحالية.",
-      icon: "error",
-      confirmButtonColor: "#ab1c1c",
-    });
-    return;
-  }
+      const activeCase = cases.find((c) => c.is_accepted);
+      if (activeCase) {
+        Swal.fire({
+          title: "لا يمكنك قبول حالة جديدة حتى تنهي الحالة الحالية.",
+          icon: "error",
+          confirmButtonColor: "#ab1c1c",
+        });
+        return;
+      }
 
-  const updatedCase = {
-    ...caseItem,
-    is_accepted: true,
-    status: "تم قبول الحالة",
-    assigned_responder: {
-      name: medicName,
-      phone: medicPhone,
-    },
-  };
+      const updatedCase = {
+        ...caseItem,
+        is_accepted: true,
+        status: "تم قبول الحالة",
+        assigned_responder: {
+          name: medicName,
+          phone: medicPhone,
+        },
+      };
 
-  try {
-    console.log("Case ID:", caseItem._id); // تحقق من المعرف
-    await axios.put(`${BASE_URL}/cases/${caseItem._id}`, updatedCase); // استخدم _id إذا كانت قاعدة بياناتك MongoDB
-    setCases((prevCases) =>
-      prevCases.map((c) => (c._id === caseItem._id ? updatedCase : c))
-    );
-    navigate(`/CaseDetailsPage/${caseItem._id}`);
-  } catch (error) {
-    console.error("Error accepting case:", error.response?.data || error.message);
-  }
+      try {
+        await axios.put(`${BASE_URL}/cases/${caseItem._id}`, updatedCase);
+        setCases((prevCases) =>
+          prevCases.map((c) => (c._id === caseItem._id ? updatedCase : c))
+        );
+        navigate(`/CaseDetailsPage/${caseItem._id}`);
+      } catch (error) {
+        console.error("Error accepting case:", error.response?.data || error.message);
+      }
+    }
+  });
 };
 
 
@@ -436,6 +439,7 @@ const handleCaseComplete = async (caseItem) => {
               label: "إحصائيات المسعف",
               data: [savedCases, rejectedCases, volunteerHours],
               backgroundColor: ["#4caf50", "#f44336", "#2196f3"],
+              hoverOffset: 4,
             },
           ],
         };
@@ -452,6 +456,7 @@ const handleCaseComplete = async (caseItem) => {
               text: "إحصائيات المسعف",
             },
           },
+          cutout: "60%",
         };
 
         return (
@@ -481,7 +486,7 @@ const handleCaseComplete = async (caseItem) => {
             </div>
 
             <div className="mb-8" style={{ height: "400px" }}>
-              <Bar data={data} options={options} />
+              <Doughnut data={data} options={options} />
             </div>
           </main>
         );

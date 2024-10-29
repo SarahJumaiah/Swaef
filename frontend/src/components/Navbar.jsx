@@ -12,7 +12,7 @@ const Navbar = ({ scrollToSection }) => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      setIsSticky(scrollPosition > 600); 
+      setIsSticky(scrollPosition > 500); 
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -33,7 +33,7 @@ const Navbar = ({ scrollToSection }) => {
       } transition-all duration-500 ease-in-out w-full z-1`}
     >
       <div
-        className={`flex items-center justify-between w-full px-8 ${
+        className={`flex items-center justify-between w-full px-8 pl-24 ${
           isSticky ? "" : "flex-col"
         }`}
       >
@@ -42,17 +42,17 @@ const Navbar = ({ scrollToSection }) => {
             <ul className="flex flex-row space-x-2 lg:space-x-8 text-center text-black mb-4 lg:mb-0 mr-32">
               <li
                 onClick={() => scrollToSection("home")}
-                className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer"
-                style={{ position: "relative", top: "-14px" }}
+                className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer text-xl"
+                style={{ position: "relative", top: "-9px", left: "20px" }}
               >
                 الرئيسية
               </li>
               <li
-                onClick={() => scrollToSection("about")}
-                className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer"
-                style={{ position: "relative", top: "4px", right: "30px" }}
+                onClick={() => scrollToSection("contact")}
+                className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer text-xl"
+                style={{ position: "relative", top: "14px", right: "30px" }}
               >
-                من نحن
+تواصل معنا
               </li>
             </ul>
 
@@ -70,19 +70,21 @@ const Navbar = ({ scrollToSection }) => {
               />
             </div>
 
-            <ul className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-8 text-center text-black">
+            <ul className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-8 text-center text-black ">
             <li
                 onClick={() => scrollToSection("join")}
-                className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer pl-14 mt-6"
+                className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer pl-10 text-xl"
+                style={{ position: "relative", top: "15px", left: "1px" }}
+
               >
                 الانضمام كمسعف
               </li>
               <li
-                onClick={() => scrollToSection("contact")}
-                className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer"
-                style={{ position: "relative", top: "4px", left: "30px" }}
+                onClick={() => scrollToSection("about")}
+                className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer text-xl"
+                style={{ position: "relative", top: "0px", left: "-9px" }}
               >
-                تواصل معنا
+                من نحن
               </li>
            
             </ul>
@@ -98,7 +100,7 @@ const Navbar = ({ scrollToSection }) => {
                 alt="Logo"
                 className="h-8 w-8 transition-all duration-500"
               />
-              <span className="text-lg transition-all duration-500 text-black font-semibold ml-4">
+              <span className="text-lg transition-all duration-500 text-black font-semibold ml-4 mr-1">
                 سواعف
               </span>
             </div>
@@ -143,7 +145,7 @@ const Navbar = ({ scrollToSection }) => {
             </ul>
 
             <div className="hidden md:block">
-              <Link to="/login" className="py-3 px-2 text-sm bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] text-white font-semibold rounded-full transition-all duration-300 shadow-md">
+              <Link to="/login" className="py-2 px-3 text-xs bg-gradient-to-r from-[#ab1c1c] to-[#FF6B6B] text-white font-semibold rounded-full transition-all duration-300 shadow-md">
                 تسجيل الدخول
               </Link>
             </div>
