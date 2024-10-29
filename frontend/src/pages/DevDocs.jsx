@@ -1,200 +1,84 @@
 import DevNav from "../components/Dev/DevNav";
 import DevFooter from "../components/Dev/DevFooter";
-import { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { FaInfoCircle } from "react-icons/fa";
 
 const DevDocs = () => {
-  const [completedCases, setCompletedCases] = useState([]);
-  const [medics, setMedics] = useState([]);
   const navigate = useNavigate();
 
-  const handleProductsClick = () => {
-    navigate("/dev", { state: { scrollToProducts: true } });
+  const handleBackClick = () => {
+    navigate("/dev"); // للعودة للصفحة الرئيسية
   };
 
-  useEffect(() => {
-    const fetchCompletedCases = async () => {
-      try {
-        const response = await axios.get(
-          "https://67073bf9a0e04071d2298046.mockapi.io/users"
-        );
-
-        const filteredCases = response.data.filter(
-          (c) => c.status === "تم إكمال الحالة"
-        );
-        setCompletedCases(filteredCases);
-      } catch (error) {
-        console.error("Error fetching completed cases:", error);
-      }
-    };
-
-    const fetchMedics = async () => {
-      try {
-        const response = await axios.get(
-          "https://6717e676b910c6a6e02a7fd0.mockapi.io/log"
-        );
-        setMedics(response.data);
-      } catch (error) {
-        console.error("Error fetching medics:", error);
-      }
-    };
-
-    fetchCompletedCases();
-    fetchMedics();
-  }, []);
-
   return (
-    <div className="dev-container text-white" dir="rtl">
+    <div className="bg-gray-900 text-white min-h-screen">
       <DevNav />
-      <header className="w-full flex flex-col items-center justify-center text-center py-48 bg-gradient-to-r from-[#121212] to-[#3a3a3a]">
-        <h1 className="text-4xl font-bold text-white mb-4">
-          دليل استخدام (API) سواعف
-        </h1>
-        <p className="text-lg text-gray-200 mb-8 max-w-2xl mx-auto">
-          تعرف على كيفية استخدام (API) لعرض الحالات المكتملة والمعلومات عن
-          المسعفين من خلال التعامل مع (API) سواعف خطوة بخطوة.
+
+      {/* مربع الرسالة حول إخفاء الهوية */}
+      <div className="bg-gray-800 text-gray-300 p-4 rounded-lg mb-8 mx-8 mt-8 flex items-center space-x-2" dir="ltr">
+        <FaInfoCircle className="text-blue-400 text-lg" />
+        <p className="text-gray-300">
+          يتم إخفاء هوية المستخدم للحفاظ على الخصوصية. يُرجى ملاحظة أنه يتم الحفاظ على خصوصية المستخدم حيث ستكون هوية المستخدمين مخفية.
         </p>
-        <button
-          onClick={handleProductsClick}
-          className="bg-gray-100 text-gray-900 py-3 px-6 rounded-full hover:bg-gray-200 transition"
-        >
-          استعراض المنتجات
-        </button>
-      </header>
+      </div>
 
-      <section className="py-20 bg-[#1e1e1e] text-gray-200">
-        <h2 className="text-3xl font-bold mb-12 text-center">
-          <span dir="rtl">API : عرض الحالات المكتملة</span>
-        </h2>
-        <div className="container mx-auto w-1/2">
+      {/* القسم الأول: عرض الحالات السابقة - مجاني */}
+      <section className="mb-16 mx-8">
+        <div className="p-6 bg-[#2a2a2a] rounded-lg shadow-lg">
+          <h2 className="text-3xl font-bold mb-1 text-gray-100">عرض الحالات السابقة</h2>
+          <span className="text-lg text-green-400 font-semibold mb-4 inline-block">مجاني</span>
           <p className="text-gray-400 mb-4">
-            يُستخدم هذا الـ API لعرض الحالات المكتملة فقط. من خلال إرسال طلب
-            <code> GET</code> إلى العنوان المناسب، يمكن استرجاع جميع الحالات
-            التي تم إكمالها بنجاح.
+            يمكنك استخدام هذا الـ API للوصول إلى قائمة بالحالات السابقة لأغراض التحليل. يتم إخفاء هوية المستخدم حفاظاً على الخصوصية.
           </p>
-          <div className="bg-gray-800 p-4 rounded mb-4 text-left" dir="ltr">
-            <div className="text-green-400">
-              axios.get("https://67073bf9a0e04071d2298046.mockapi.io/users")
-              <br />
-              .then(response => {`{`}
-              <br />
-              &nbsp;&nbsp;const completedCases = response.data.filter(c =>
-              c.status === "تم إكمال الحالة");
-              <br />
-              &nbsp;&nbsp;console.log(completedCases);
-              <br />
-              {`}`})<br />
-              .catch(error => console.error("Error fetching cases:", error));
-            </div>
-          </div>
-          <p className="text-gray-400 mb-4">
-            هذا المثال يوضح كيفية جلب البيانات وتصفيتها لعرض الحالات التي تم
-            إكمالها فقط.
-          </p>
+          <SyntaxHighlighter language="javascript" style={vscDarkPlus} className="rounded mb-4">
+            {`axios.get("https://api.swaef.fake/v1/cases/previous")
+  .then(response => {
+    const previousCases = response.data;
+    console.log(previousCases);
+  })
+  .catch(error => console.error("Error fetching previous cases:", error));`}
+          </SyntaxHighlighter>
         </div>
       </section>
 
-      <section className="py-20 bg-[#1b1b1b] text-gray-200">
-        <h2 className="text-3xl font-bold mb-12 text-center">
-          <span dir="rtl">عرض نتائج API : الحالات المكتملة</span>
-        </h2>
-        <div className="container mx-auto">
-          <p className="text-gray-400 mb-14 text-center">
-            الآن، يمكننا عرض بعض الحالات المكتملة للمستخدمين. في هذا المثال، نقوم
-            بعرض أربع حالات مكتملة من أنواع مختلفة.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 px-8">
-            {completedCases
-              .filter(
-                (caseItem) =>
-                  caseItem.case_type === "كسور" ||
-                  caseItem.case_type === "حروق" ||
-                  caseItem.case_type === "إغماء" ||
-                  caseItem.case_type === "اختناق"
-              )
-              .slice(0, 4)
-              .map((caseItem) => (
-                <div
-                  key={caseItem.id}
-                  className="bg-[#2a2a2a] p-6 rounded-lg shadow-lg"
-                >
-                  <h3 className="text-xl font-bold text-gray-100 mb-2">
-                    {caseItem.case_type}
-                  </h3>
-                  <p className="text-gray-400 mb-2">
-                    المريض: {caseItem.patient.name}
-                  </p>
-                  <p className="text-gray-400 mb-2">
-                    الحالة: {caseItem.status}
-                  </p>
-                  <p className="text-gray-400">
-                    المسعف: {caseItem.assigned_responder?.name || "غير متوفر"}
-                  </p>
-                </div>
-              ))}
-          </div>
-        </div>
-      </section>
+      {/* القسم الثاني: عرض الحالات المتقدمة - مدفوع */}
+      <section className="mb-16 mx-8">
+  <div className="p-6 bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg shadow-xl">
+    <h2 className="text-3xl font-bold mb-1 text-red-500">عرض الحالات المتقدمة</h2>
+    <span className="text-lg text-gray-400 font-semibold mb-4 inline-block">مدفوع</span>
+    <p className="text-gray-200 mb-4">
+      هذا الـ API يقدم بيانات متقدمة للحالات الطارئة لأغراض تحليلية دقيقة. يتطلب الوصول إلى هذه البيانات مفتاح API مدفوع للاستفادة من التفاصيل الكاملة.
+    </p>
+    <SyntaxHighlighter language="javascript" style={vscDarkPlus} className="rounded mb-4">
+      {`axios.get("https://api.swaef.fake/v1/cases/advanced", {
+  headers: {
+    Authorization: "Bearer YOUR_API_KEY"
+  }
+})
+  .then(response => console.log("Advanced Cases:", response.data))
+  .catch(error => console.error("Error fetching advanced cases:", error));`}
+    </SyntaxHighlighter>
+  </div>
+</section>
 
-      <section className="py-20 bg-[#1e1e1e] text-gray-200">
-        <h2 className="text-3xl font-bold mb-12 text-center">
-          <span dir="rtl">API : عرض المسعفين ومعلوماتهم</span>
-        </h2>
-        <div className="container mx-auto w-1/2">
-          <p className="text-gray-400 mb-4">
-            هذا الـ API يُتيح الوصول إلى معلومات المسعفين، بما في ذلك أسماؤهم
-            وتفاصيل الاتصال، مما يساعد على توفير البيانات اللازمة لخدمات الطوارئ.
-            يمكن إرسال طلب <code>GET</code> لاسترجاع قائمة المسعفين المتاحة.
-          </p>
-          <div className="bg-gray-800 p-4 rounded mb-4 text-left" dir="ltr">
-            <div className="text-green-400">
-              axios.get("https://6717e676b910c6a6e02a7fd0.mockapi.io/log")
-              <br />
-              .then(response => {`{`}
-              <br />
-              &nbsp;&nbsp;const medicsData = response.data;
-              <br />
-              &nbsp;&nbsp;console.log(medicsData);
-              <br />
-              {`}`})<br />
-              .catch(error => console.error("Error fetching medics:", error));
-            </div>
-          </div>
-          <p className="text-gray-400 mb-4">
-            هنا نقوم بجلب قائمة المسعفين المتاحة مع معلوماتهم التفصيلية.
-          </p>
-        </div>
-      </section>
 
-      <section className="py-20 bg-[#1b1b1b] text-gray-200">
-        <h2 className="text-3xl font-bold mb-12 text-center">
-          <span dir="rtl">عرض نتائج API 2: المسعفين ومعلوماتهم</span>
-        </h2>
-        <div className="container mx-auto">
-          <p className="text-gray-400 mb-14 text-center">
-            هنا نعرض قائمة المسعفين المتاحين مع معلومات الاتصال الخاصة بكل واحد
-            منهم.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 px-9">
-            {medics.slice(0, 4).map((medic) => (
-              <div
-                key={medic.id}
-                className="bg-[#2a2a2a] p-6 rounded-lg shadow-lg"
-              >
-                <h3 className="text-xl font-bold text-gray-100 mb-2">
-                  {medic.name}
-                </h3>
-                <p className="text-gray-400 mb-2">
-                  الهاتف: {medic.phone || "غير متوفر"}
-                </p>
-                <p className="text-gray-400">
-                  الحالة: {medic.isApproved ? "مقبول" : "غير مقبول"}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* تعليمات استخدام المفتاح API Key */}
+      <section className="mb-16 mx-8">
+        <h2 className="text-2xl font-bold mb-4">كيفية استخدام مفتاح API للوصول المدفوع</h2>
+        <p className="text-gray-400 mb-4">
+          للوصول إلى البيانات المتقدمة، يجب تضمين مفتاح API الخاص بك في ترويسة الطلبات. يمكنك إضافته كالتالي:
+        </p>
+        <SyntaxHighlighter language="javascript" style={vscDarkPlus} className="rounded mb-4">
+          {`axios.get("https://api.swaef.fake/v1/cases/advanced", {
+  headers: {
+    Authorization: "Bearer YOUR_API_KEY"
+  }
+})
+  .then(response => console.log(response.data))
+  .catch(error => console.error("Error with API Key:", error));`}
+        </SyntaxHighlighter>
       </section>
 
       <DevFooter />
