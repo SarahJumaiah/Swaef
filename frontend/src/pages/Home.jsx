@@ -768,7 +768,7 @@ useEffect(() => {
     </Link>
   </p>
   <div className="absolute inset-0 bg-[#ab1c1c] opacity-5 z-0 transform scale-105 rounded-lg pointer-events-none" />
-  {/* <div className="absolute inset-0 border border-[#d77a7a] z-0 rounded-lg opacity-50 pointer-events-none" style={{ transform: 'scale(0.98)' }} /> */}
+
 </div>
 
 

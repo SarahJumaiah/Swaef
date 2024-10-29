@@ -52,7 +52,7 @@ const Navbar = ({ scrollToSection }) => {
                 className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer text-xl"
                 style={{ position: "relative", top: "14px", right: "30px" }}
               >
-تواصل معنا
+من نحن
               </li>
             </ul>
 
@@ -84,8 +84,7 @@ const Navbar = ({ scrollToSection }) => {
                 className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer text-xl"
                 style={{ position: "relative", top: "0px", left: "-9px" }}
               >
-                من نحن
-              </li>
+تواصل معنا              </li>
            
             </ul>
           </div>
