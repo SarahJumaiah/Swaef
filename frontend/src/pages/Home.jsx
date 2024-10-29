@@ -748,7 +748,7 @@ useEffect(() => {
         ref={contactRef}
         className="contact-us w-full sm:w-[80%] lg:w-[90%] mx-auto mt-12 p-8 flex flex-col items-center justify-between my-24 opacity-0 transition-opacity duration-700"
       >
-        <div className="text-center w-full mb-8">
+        <div className="text-center w-full ">
           <h2 className="text-3xl text-[#ab1c1c] font-extrabold mb-4">
             تواصل معنا
           </h2>
@@ -759,15 +759,20 @@ useEffect(() => {
           </p>
         </div>
 
-<div className="mb-5">
-        <h3 className="text-xl text-[#ab1c1c] font-bold mb-4 text-center">بوابة المطورين</h3>
-  <p className="text-gray-800 text-lg leading-relaxed mb-4 w-[65%] mx-auto text-center">
-    يمكنك الوصول إلى "بوابة المطورين" التي تحتوي على   (APIs) الخاصة بنا. لمزيد من المعلومات أو البدء، يمكنك زيارة
-    <Link to="/dev" className="text-[#ab1c1c] font-bold cursor-pointer hover:underline mr-1" >
-      بوابة المطورين
+        <div className="my-10 text-center p-6 rounded-lg bg-white shadow-lg border border-[#d77a7a] relative overflow-hidden">
+  <h3 className="text-xl text-[#ab1c1c] font-bold mb-2 relative z-10">بوابة المطورين</h3>
+  <p className="text-gray-700 text-md leading-relaxed mb-4 w-[90%] mx-auto relative z-10">
+    يمكنك الوصول إلى واجهات برمجة التطبيقات (APIs) الخاصة بنا. للمزيد من المعلومات أو للبدء، يمكنك زيارة
+    <Link to="/dev" className="text-[#ab1c1c] font-bold underline hover:text-[#ff5c5c] transition duration-300">
+      بوابة المطورين 
     </Link>
   </p>
-  </div>
+  <div className="absolute inset-0 bg-[#ab1c1c] opacity-5 z-0 transform scale-105 rounded-lg pointer-events-none" />
+  {/* <div className="absolute inset-0 border border-[#d77a7a] z-0 rounded-lg opacity-50 pointer-events-none" style={{ transform: 'scale(0.98)' }} /> */}
+</div>
+
+
+
         <h3 className="text-xl text-[#ab1c1c] font-bold mb-4 ">فريق الدعم</h3>
 
         <div className="flex flex-wrap justify-center gap-8 p-6 bg-gray-100">
@@ -859,6 +864,7 @@ useEffect(() => {
             </div>
           </div>
         </div>
+
       </section>
 
       <Footer />
