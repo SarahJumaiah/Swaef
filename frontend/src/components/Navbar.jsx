@@ -52,7 +52,7 @@ const Navbar = ({ scrollToSection }) => {
                 className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer text-xl"
                 style={{ position: "relative", top: "14px", right: "30px" }}
               >
-من نحن
+تواصل معنا
               </li>
             </ul>
 
@@ -84,7 +84,8 @@ const Navbar = ({ scrollToSection }) => {
                 className="hidden lg:flex hover:text-red-500 font-bold cursor-pointer text-xl"
                 style={{ position: "relative", top: "0px", left: "-9px" }}
               >
-تواصل معنا              </li>
+                من نحن
+              </li>
            
             </ul>
           </div>
@@ -123,11 +124,13 @@ const Navbar = ({ scrollToSection }) => {
               >
                 الرئيسية
               </li>
+            
+            
               <li
-                onClick={() => scrollToSection("about")}
+                onClick={() => scrollToSection("contact")}
                 className="hover:text-red-500 font-bold cursor-pointer"
               >
-                من نحن
+                تواصل معنا
               </li>
               <li
                 onClick={() => scrollToSection("join")}
@@ -136,10 +139,10 @@ const Navbar = ({ scrollToSection }) => {
                 الانضمام كمسعف
               </li>
               <li
-                onClick={() => scrollToSection("contact")}
+                onClick={() => scrollToSection("about")}
                 className="hover:text-red-500 font-bold cursor-pointer"
               >
-                تواصل معنا
+                من نحن
               </li>
             </ul>
 

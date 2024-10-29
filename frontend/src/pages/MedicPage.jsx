@@ -485,7 +485,7 @@ const handleCaseComplete = async (caseItem) => {
               </div>
             </div>
 
-            <div className="mb-8" style={{ height: "400px" }}>
+            <div className="mt-8 mb-8" style={{ height: "400px" }}>
               <Doughnut data={data} options={options} />
             </div>
           </main>

@@ -24,14 +24,14 @@ const Dev = () => {
   }, [location.state]);
 
   return (
-    <div className="dev-container text-white">
+    <div className="dev-container text-white mt-20">
       <DevNav scrollToProducts={scrollToProducts} />
-      <header className="w-full grid grid-cols-12 items-center py-32 bg-gradient-to-br from-[#0a0a0a] via-[#1c1c1c] to-[#3a3a3a] relative overflow-hidden px-10">
+      <header className="w-full grid grid-cols-12 items-center py-32 bg-gradient-to-br from-[#0a0a0a] via-[#1c1c1c] to-[#3a3a3a] relative overflow-hidden px-14">
   {/* خلفية زخرفية */}
   <div className="absolute inset-0 bg-gradient-to-r from-red-600 via-gray-600 to-black opacity-30 blur-3xl transform scale-150 -translate-y-1/2 -rotate-45"></div>
 
   {/* المحتوى النصي في الجهة اليمنى ويأخذ ثمانية أعمدة */}
-  <div className="col-span-8 flex flex-col items-start z-10 text-right">
+  <div className="col-span-8 flex flex-col items-start z-10 text-right pr-7">
   <h1 className="text-5xl font-extrabold text-white text-opacity-0 bg-clip-text bg-gradient-to-r from-white via-gray-300 to-red-500 leading-tight mb-4">
   اربط نظامك ببيانات سواعف المتقدمة
 </h1>

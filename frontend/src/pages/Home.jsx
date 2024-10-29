@@ -439,14 +439,14 @@ useEffect(() => {
   <div className="text-center p-6 rounded-lg animate__animated animate__fadeIn">
     {/* أيقونة "صح" متحركة تشير إلى اكتمال الحالة */}
     <div className="flex justify-center items-center mb-4">
-      <div className="bg-green-800 rounded-full p-4 animate__animated animate__bounceIn">
+      <div className="bg-green-800 rounded-full p-4 px-5 animate__animated animate__bounceIn">
         <i className="fas fa-check text-white text-4xl"></i>
       </div>
     </div>
 
     {/* العبارة */}
-    <h2 className="text-3xl font-bold text-gray-900 mb-2 animate__animated animate__fadeInUp">
-      الحمدلله على السلامة!
+    <h2 className="text-2xl font-bold text-gray-900 mb-2 animate__animated animate__fadeInUp">
+      الحمدلله على السلامه!
     </h2>
     <p className="text-gray-600 mb-4 animate__animated animate__fadeInUp">
       يمكنك تقييم المسعف أدناه:

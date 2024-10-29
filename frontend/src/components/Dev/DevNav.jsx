@@ -13,8 +13,8 @@ const DevNav = ({ scrollToProducts }) => {
 
 
   return (
-    <nav className="bg-[#1f1f1f] text-white p-4 flex items-center justify-between">
-      <div className="flex-1 text-right flex items-center justify-start">
+<nav className="bg-[#1f1f1f] text-white p-4 flex items-center justify-between fixed top-0 left-0 w-full z-10 ">
+<div className="flex-1 text-right flex items-center justify-start">
         <img src={logo} alt="Logo" className="w-12 h-12 inline-block" />
         <span className="text-2xl font-bold text-white">{pageTitle}</span>
       </div>
