@@ -273,25 +273,40 @@ const handleCaseReject = async (caseItem) => {
 
 
 const handleCaseComplete = async (caseItem) => {
+  if (!caseItem || !caseItem._id) { // استخدم _id بدلاً من id
+    console.error("Case ID is undefined or caseItem is invalid.");
+    return;
+  }
+
   try {
     const updatedCase = {
       ...caseItem,
       status: "تم إكمال الحالة",
       is_accepted: false,
     };
-    
-    // تحديث الحالة في الـ API المحلي
-    await axios.put(
-      `${BASE_URL}/cases/${caseItem.id}`,
-      updatedCase
-    );
+
+    // تحديث الحالة في الـ API باستخدام _id
+    await axios.put(`${BASE_URL}/cases/${caseItem._id}`, updatedCase);
 
     // إزالة الحالة المكتملة من القائمة المحلية
-    setCases((prevCases) => prevCases.filter((c) => c.id !== caseItem.id));
+    setCases((prevCases) => prevCases.filter((c) => c._id !== caseItem._id));
+
+    Swal.fire({
+      title: "تم إكمال الحالة بنجاح!",
+      icon: "success",
+      confirmButtonText: "موافق",
+    });
   } catch (error) {
-    console.error("Error completing case:", error);
+    console.error("Error completing case:", error.response?.data || error.message);
+    Swal.fire({
+      title: "حدث خطأ!",
+      text: "تعذر إكمال الحالة. يرجى المحاولة لاحقاً.",
+      icon: "error",
+      confirmButtonText: "موافق",
+    });
   }
 };
+
 
 
   const renderContent = () => {
