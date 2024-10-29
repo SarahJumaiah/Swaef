@@ -28,6 +28,7 @@
     "react-leaflet": "^4.2.1",
     "react-map-gl": "^7.1.7",
     "react-router-dom": "^6.27.0",
+    "react-syntax-highlighter": "^15.6.1",
     "scrollreveal": "^4.0.9",
     "socket.io": "^4.8.0",
     "socket.io-client": "^4.8.0",
