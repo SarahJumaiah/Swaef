@@ -1,6 +1,5 @@
 import DevNav from "../components/Dev/DevNav";
 import DevFooter from "../components/Dev/DevFooter";
-
 import { useNavigate } from "react-router-dom";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
