@@ -61,7 +61,7 @@ const DevDocs = () => {
         </section>
 
         <section className="mb-16 mx-4 md:mx-8 lg:mx-28">
-          <div className="p-6 bg-[#2a2a2a] rounded-lg shadow-lg text-center flex flex-col items-center mx-auto w-full">
+          <div className="p-6 bg-[#2a2a2a] rounded-lg shadow-lg text-center flex flex-col items-center mx-auto ">
             <h2 className="text-xl md:text-2xl font-bold mb-4">كيفية استخدام مفتاح API للوصول المدفوع</h2>
             <p className="text-gray-400 mb-4">
               للوصول إلى البيانات المتقدمة، يجب تضمين مفتاح API الخاص بك في ترويسة الطلبات. يمكنك إضافته كالتالي:
