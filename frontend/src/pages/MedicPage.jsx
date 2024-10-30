@@ -194,7 +194,7 @@ const MedicPage = () => {
     fetchCases();
     
     // تحديث قائمة الحالات كل 10 ثوانٍ
-    const intervalId = setInterval(fetchCases, 5000);
+    const intervalId = setInterval(fetchCases, 1000);
     return () => clearInterval(intervalId);
   }, []);
   

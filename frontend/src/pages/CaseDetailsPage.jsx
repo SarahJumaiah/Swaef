@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 const BASE_URL = import.meta.env.VITE_API_URL;
+import { FaMapMarkerAlt } from 'react-icons/fa';
+
 
 const CaseDetailsPage = () => {
   const { caseId } = useParams();
@@ -15,17 +17,29 @@ const CaseDetailsPage = () => {
     const fetchCaseDetails = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/cases/${caseId}`);
+        console.log("Case details response:", response.data); // تحقق من وجود location.latitude وlocation.longitude
         setCaseInfo(response.data);
       } catch (error) {
         console.error("Error fetching case details:", error);
       }
     };
+    
   
     if (caseId) {
       fetchCaseDetails();
     }
   }, [caseId]);
   
+  // مثال على دالة جلب البيانات من قاعدة البيانات
+const getCaseDetails = async (req, res) => {
+  try {
+    const caseData = await Case.findById(req.params.caseId);
+    res.json(caseData);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching case details" });
+  }
+};
+
   const handleCompleteCase = async () => {
     try {
       setLoading(true);
@@ -99,17 +113,45 @@ const CaseDetailsPage = () => {
           <p className="text-gray-600">جاري تحميل التفاصيل...</p>
         )}
       </div>
-
       <div className="w-full lg:w-1/2 p-8 bg-white">
-        <h3 className="text-3xl font-semibold text-[#892222] mb-6">موقع الحالة</h3>
-        {caseInfo ? (
-          <div className="rounded-lg overflow-hidden shadow-md">
-            <MedicMap caseId={caseId} />
-          </div>
-        ) : (
-          <p className="text-gray-600">جاري تحميل الموقع...</p>
-        )}
-      </div>
+  <div className="flex justify-between items-center mb-6">
+              <h2 className="text-3xl font-semibold text-[#892222]">
+              موقع الحالة
+              </h2>
+              <button 
+                className="text-[#892222] p-2 hover:text-[#c43a3a] transition flex justify-center items-center ml-[38%] sm:ml-0"
+
+  onClick={() => {
+    if (caseInfo && caseInfo.location && caseInfo.location.latitude && caseInfo.location.longitude) {
+      window.open(`https://www.google.com/maps?q=${caseInfo.location.latitude},${caseInfo.location.longitude}`, '_blank');
+    } else {
+      Swal.fire({
+        title: 'حدث خطأ!',
+        text: 'لم يتم العثور على إحداثيات الموقع. يرجى المحاولة لاحقًا.',
+        icon: 'error',
+        confirmButtonColor: '#892222',
+      });
+    }
+  }}
+>
+<FaMapMarkerAlt size={24} className="mr-2" />
+</button>
+            </div>
+  
+  {caseInfo ? (
+    <div className="rounded-lg overflow-hidden shadow-md">
+
+      <MedicMap caseId={caseId} />
+    </div>
+  ) : (
+    <p className="text-gray-600 ">جاري تحميل الموقع...</p>
+  )}
+  
+
+
+
+</div>
+
     </div>
   );
 };

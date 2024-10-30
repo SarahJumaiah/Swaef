@@ -131,9 +131,9 @@ const MedicMap = ({ caseId }) => {
       <div
         ref={mapContainerRef}
         className={`map-container ${isLoading ? 'blur-map' : ''}`}
-        style={{ width: '100%', height: '500px' }}
+        style={{ width: '100%', height: '400px' }}
       />
-      <div className="absolute top-5 left-8 bg-white p-3 rounded-badge shadow-md">
+      <div className="absolute top-3 left-1 bg-white p-3 rounded-badge shadow-md">
         <h3>الوقت المتوقع: {estimatedTime}</h3>
       </div>
     </div>
