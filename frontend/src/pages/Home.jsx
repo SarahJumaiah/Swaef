@@ -439,14 +439,14 @@ useEffect(() => {
   <div className="text-center p-6 rounded-lg animate__animated animate__fadeIn">
     {/* أيقونة "صح" متحركة تشير إلى اكتمال الحالة */}
     <div className="flex justify-center items-center mb-4">
-      <div className="bg-green-800 rounded-full p-4 px-5 animate__animated animate__bounceIn">
+      <div className="bg-green-800 rounded-full p-4 animate__animated animate__bounceIn">
         <i className="fas fa-check text-white text-4xl"></i>
       </div>
     </div>
 
     {/* العبارة */}
-    <h2 className="text-2xl font-bold text-gray-900 mb-2 animate__animated animate__fadeInUp">
-      الحمدلله على السلامه!
+    <h2 className="text-3xl font-bold text-gray-900 mb-2 animate__animated animate__fadeInUp">
+      الحمدلله على السلامة!
     </h2>
     <p className="text-gray-600 mb-4 animate__animated animate__fadeInUp">
       يمكنك تقييم المسعف أدناه:
@@ -759,21 +759,40 @@ useEffect(() => {
           </p>
         </div>
 
-        <div className="my-10 text-center p-6 rounded-lg bg-white shadow-lg border border-[#d77a7a] relative overflow-hidden">
-  <h3 className="text-xl text-[#ab1c1c] font-bold mb-2 relative z-10">بوابة المطورين</h3>
-  <p className="text-gray-700 text-md leading-relaxed mb-4 w-[90%] mx-auto relative z-10">
-    يمكنك الوصول إلى واجهات برمجة التطبيقات (APIs) الخاصة بنا. للمزيد من المعلومات أو للبدء، يمكنك زيارة
-    <Link to="/dev" className="text-[#ab1c1c] font-bold underline hover:text-[#ff5c5c] transition duration-300">
-      بوابة المطورين 
-    </Link>
-  </p>
-  <div className="absolute inset-0 bg-[#ab1c1c] opacity-5 z-0 transform scale-105 rounded-lg pointer-events-none" />
+        <div className="w-full bg-gradient-to-r from-[#fff5f5] to-[#ffeaea] py-10 px-10 text-gray-800 relative overflow-hidden">
+  {/* خلفية تفاعلية */}
+  <div className="absolute inset-0 overflow-hidden">
+    <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-[#ff7a7a] to-[#ffb3b3] rounded-full blur-3xl opacity-20"></div>
+    <div className="absolute bottom-0 left-0 w-40 h-40 bg-gradient-to-br from-[#ff7a7a] to-[#ffb3b3] rounded-full blur-3xl opacity-20"></div>
+  </div>
 
+  <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between max-w-7xl mx-auto">
+    {/* النص */}
+    <div className="lg:w-1/2 text-center lg:text-right mb-4 lg:mb-0">
+      <h2 className="text-2xl font-extrabold text-[#ab1c1c] mb-2 leading-tight">
+        انضم إلى بوابة المطورين
+      </h2>
+      <p className="text-md text-gray-700 mb-4 leading-relaxed">
+        اكتشف إمكانيات لا محدودة مع واجهات برمجة التطبيقات الخاصة بنا، وابدأ في بناء تطبيقاتك بخدمات مبتكرة.
+      </p>
+    </div>
+
+    {/* زر التوجه إلى البوابة */}
+    <Link
+      to="/dev"
+      className="inline-block py-2 px-6 text-white bg-gradient-to-r from-[#ab1c1c] to-[#ff5c5c] rounded-full shadow-md hover:from-[#ff5c5c] hover:to-[#ff7a7a] transform hover:-translate-y-1 transition-all duration-300 font-semibold"
+    >
+      استكشاف بوابة المطورين
+    </Link>
+  </div>
 </div>
 
 
 
-        <h3 className="text-xl text-[#ab1c1c] font-bold mb-4 ">فريق الدعم</h3>
+
+
+
+        <h3 className="text-xl text-[#ab1c1c] font-bold my-4 ">فريق الدعم</h3>
 
         <div className="flex flex-wrap justify-center gap-8 p-6 bg-gray-100">
           <div className="text-center bg-white p-4 shadow-lg rounded-lg transform transition duration-300 hover:scale-105 flex flex-col items-center w-[250px]">

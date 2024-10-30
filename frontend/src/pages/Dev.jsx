@@ -4,6 +4,7 @@ import { useRef, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { FaHeartbeat, FaLock } from "react-icons/fa";
 import logo from "../assets/logo.png";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 const Dev = () => {
   const productsRef = useRef(null);
@@ -125,6 +126,43 @@ const Dev = () => {
           ))}
         </div>
       </section>
+      <section className="py-16 lg:py-20 bg-[#1a1a1a] text-gray-200">
+  <h2 className="text-3xl lg:text-4xl font-extrabold mb-8 lg:mb-12 text-center text-white tracking-wide">
+    فريق الدعم
+  </h2>
+  <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+    {[{
+      name: 'فهد القحطاني',
+      github: 'https://github.com/fl71-1',
+      linkedin: 'https://www.linkedin.com/in/fahd-alghtani246',
+    }, {
+      name: 'ساره الجميعه',
+      github: 'https://github.com/SarahJumaiah',
+      linkedin: 'https://www.linkedin.com/in/sarah-aljumaiah-a6989b234',
+    }, {
+      name: 'زياد المغربي',
+      github: 'https://github.com/zyad87',
+      linkedin: 'https://www.linkedin.com/in/zyad-al-maghrabi-55928a304',
+    }, {
+      name: 'حسناء الصقر',
+      github: 'https://github.com/ha20s',
+      linkedin: 'https://www.linkedin.com/in/ha20s',
+    }].map((member, index) => (
+      <div key={index} className="text-center bg-[#2b2b2b] p-6 rounded-lg shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl">
+        <h4 className="text-lg font-bold mb-4 text-gray-100">{member.name}</h4>
+        <div className="flex justify-center gap-6">
+          <a href={member.github} target="_blank" rel="noopener noreferrer">
+            <FaGithub className="text-4xl text-[#ab1c1c] hover:text-gray-300 transition duration-300" />
+          </a>
+          <a href={member.linkedin} target="_blank" rel="noopener noreferrer">
+            <FaLinkedin className="text-4xl text-[#ab1c1c] hover:text-blue-700 transition duration-300" />
+          </a>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
 
       <DevFooter />
     </div>
