@@ -70,6 +70,8 @@ function Login() {
   //   }
   // };
 
+    
+  const BASE_URL = import.meta.env.VITE_API_URL;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -79,7 +81,7 @@ function Login() {
       navigate('/admin');
     } else {
       // Paramedic login
-      axios.post('http://localhost:3024/api/paramedics/login', formData)
+      axios.post(`${BASE_URL}api/paramedics/login`, formData)
         .then((response) => {
           const { id, name, phone } = response.data;
   

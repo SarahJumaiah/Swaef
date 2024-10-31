@@ -75,8 +75,10 @@ function Sign() {
     formDataToSend.append('phone', phone);
     formDataToSend.append('file-upload', file); // تأكد من مطابقة اسم الحقل هنا لـ file-upload
   
+    const BASE_URL = import.meta.env.VITE_API_URL;
+
     axios
-      .post('http://localhost:3024/api/paramedics/register', formDataToSend, {
+      .post(`${BASE_URL}paramedics/register`, formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
