@@ -33,7 +33,7 @@ const Navbar = ({ scrollToSection }) => {
       } transition-all duration-500 ease-in-out w-full z-1`}
     >
       <div
-        className={`flex items-center justify-between w-full px-8 ${
+        className={`flex items-center justify-between w-full px-8 pl-0 md:pl-24  ${
           isSticky ? "" : "flex-col"
         }`}
       >
