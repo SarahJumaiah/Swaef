@@ -78,7 +78,7 @@ function Sign() {
     const BASE_URL = import.meta.env.VITE_API_URL;
 
     axios
-      .post(`http://localhost:3024/api/paramedics/register`, formDataToSend, {
+      .post(`http://localhost:3024/api/paramedics/register` , formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

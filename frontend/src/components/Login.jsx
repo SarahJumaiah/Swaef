@@ -79,7 +79,7 @@ function Login() {
       navigate('/admin');
     } else {
       // Paramedic login
-      axios.post('http://localhost:3024/api/paramedics/login', formData)
+      axios.post('http://localhost:3024/api/paramedics/login' , formData)
         .then((response) => {
           const { id, name, phone } = response.data;
   
