@@ -76,9 +76,9 @@ function Sign() {
     formDataToSend.append('file-upload', file); // تأكد من مطابقة اسم الحقل هنا لـ file-upload
   
     const BASE_URL = import.meta.env.VITE_API_URL;
-
+//${BASE_URL}paramedics/register
     axios
-      .post(`${BASE_URL}paramedics/register`, formDataToSend, {
+      .post(`https://swaef-backend.onrender.com`, formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
